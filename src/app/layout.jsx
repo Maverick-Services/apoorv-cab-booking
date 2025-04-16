@@ -1,6 +1,5 @@
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/main/navbar/Navbar";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -11,7 +10,6 @@ export const metadata = {
   title: "Apoorv Cab Booking",
   description: "Books cabs instantly.",
 };
-
 
 export default function RootLayout({ children }) {
   return (
