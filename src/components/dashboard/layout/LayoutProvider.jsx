@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
+import { IoClose } from 'react-icons/io5';
+import { FiMenu } from 'react-icons/fi';
+import Image from 'next/image';
 
 function LayoutProvider({ children }) {
     // const { user } = useAuth();
@@ -12,21 +15,18 @@ function LayoutProvider({ children }) {
     // }
 
     return (
-        <main className='flex flex-col sm:flex-row h-screen relative'>
-            <div className="w-full max-[768px]:flex-col flex bg-[#F3F6FE] h-screen">
-                <div className="flex w-full justify-between items-center p-5 bg-white shadow-md md:hidden">
-                    <img src="/logo.png" alt="logo" className="h-7" />
-                    <div onClick={() => setSidebarOpen(prev => !prev)} className="cursor-pointer">
-                        {sidebarOpen
-                            ? <IoClose className="text-2xl ease-in-out transition-all duration-300 focus:rotate-90" />
-                            : <FiMenu className="text-2xl" />
-                        }
-                    </div>
+        <main className='flex flex-col sm:flex-row h-screen'>
+            <div className="flex p-5 justify-between items-center bg-white shadow-md gap-3 sm:hidden">
+                <Image height={100} width={300} src="/logo.png" alt="logo" className="max-h-5 w-auto" />
+                <div onClick={() => setSidebarOpen(prev => !prev)} className="cursor-pointer">
+                    {sidebarOpen
+                        ? <IoClose className="text-2xl ease-in-out transition-all duration-300 focus:rotate-90" />
+                        : <FiMenu className="text-2xl" />
+                    }
                 </div>
-                <Sidebar isOpen={sidebarOpen} setIsSidebarOpen={setSidebarOpen} />
             </div>
-            <div className='hidden sm:block'>
-                <Sidebar />
+            <div className=''>
+                <Sidebar isOpen={sidebarOpen} setIsSidebarOpen={setSidebarOpen} />
             </div>
             <div className='grow h-screen overflow-auto'>
                 {children}
