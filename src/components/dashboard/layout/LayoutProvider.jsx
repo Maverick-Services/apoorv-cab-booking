@@ -16,6 +16,7 @@ function LayoutProvider({ children }) {
 
     return (
         <main className='flex flex-col sm:flex-row h-screen'>
+
             <div className="flex p-5 justify-between items-center bg-white shadow-md gap-3 sm:hidden">
                 <Image height={100} width={300} src="/logo.png" alt="logo" className="max-h-5 w-auto" />
                 <div onClick={() => setSidebarOpen(prev => !prev)} className="cursor-pointer">
@@ -25,9 +26,11 @@ function LayoutProvider({ children }) {
                     }
                 </div>
             </div>
+
             <div className=''>
                 <Sidebar isOpen={sidebarOpen} setIsSidebarOpen={setSidebarOpen} />
             </div>
+
             <div className='grow h-screen overflow-auto'>
                 {children}
             </div>

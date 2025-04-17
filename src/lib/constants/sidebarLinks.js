@@ -14,8 +14,8 @@ export const sidebarLinks = [
     //     icon: <BsBasket3 />
     // },
     {
-        href: "/booking",
-        label: "Booking",
+        href: "/user/my-bookings",
+        label: "My Booking",
         icon: <ReceiptIndianRupee />
     },
     // {

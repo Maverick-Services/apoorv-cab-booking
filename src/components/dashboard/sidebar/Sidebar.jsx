@@ -74,7 +74,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen }) {
                         <p className="text-xs text-gray-500 sm:hidden lg:block ">user@gmail.com</p>
                     </div>
                 </div>
-                <Button className='w-full mt-2 text-white' variant='secondary'><span><LogOut /></span> <span className="sm:hidden lg:block">Logout</span> </Button>
+                <Button className='w-full mt-2 text-white'><span><LogOut /></span> <span className="sm:hidden lg:block">Logout</span> </Button>
             </div>
         </div>
     );
