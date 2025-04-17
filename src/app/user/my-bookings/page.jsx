@@ -4,8 +4,8 @@ import React from 'react'
 function page() {
     return (
         <div>
-            <InnerLayout heading={'User Dashboard'}>
-                user page
+            <InnerLayout heading={'My Bookings'}>
+                my bookings
             </InnerLayout>
         </div>
     )
