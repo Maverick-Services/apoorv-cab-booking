@@ -7,6 +7,11 @@ export const metadata = {
 };
 
 function UserLayout({ children }) {
+
+    // if (!user) {
+    //     return <Auth />;
+    // }
+
     return (
         <div>
             <LayoutProvider>

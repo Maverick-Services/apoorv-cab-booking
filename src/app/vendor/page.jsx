@@ -1,9 +1,12 @@
+import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import React from 'react'
 
 function page() {
     return (
         <div>
-            vendor
+            <InnerLayout heading={'Vendor Dashboard'}>
+                Vendor page
+            </InnerLayout>
         </div>
     )
 }

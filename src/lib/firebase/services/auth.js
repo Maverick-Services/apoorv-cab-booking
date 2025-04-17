@@ -17,8 +17,11 @@ export const signup = async (name, email, phoneNo, password, role) => {
             });
         }
 
+        return user;
+
     } catch (err) {
-        console.log(err)
+        console.log(err);
+        return null;
     }
 }
 

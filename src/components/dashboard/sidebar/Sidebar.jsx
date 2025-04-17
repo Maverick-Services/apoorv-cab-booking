@@ -8,9 +8,12 @@ import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
 import { sidebarLinks } from '@/lib/constants/sidebarLinks';
+import { auth } from "@/lib/firebase/firebase-client";
 
 export default function Sidebar({ isOpen, setIsSidebarOpen }) {
     const pathname = usePathname();
+    const user = auth.currentUser;
+    // console.log("User", user);
 
     function onLinkClick() {
         setIsSidebarOpen(false)
@@ -30,7 +33,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen }) {
             </div>
 
             <div className="w-full flex flex-col gap-3 transition-all duration-300 ease-in-out">
-                {sidebarLinks.map(({ href, label, icon }) => {
+                {sidebarLinks?.map(({ href, label, icon }) => {
                     const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
                     return (
                         <Link

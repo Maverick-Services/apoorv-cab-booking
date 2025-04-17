@@ -4,8 +4,11 @@ import { Link } from 'lucide-react';
 import { ReactLoading } from 'react-loading';
 import React, { useState } from 'react';
 import { signup } from '@/lib/firebase/services/auth';
+import { useRouter } from 'next/navigation';
 
 function page() {
+
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
@@ -16,7 +19,10 @@ function page() {
     const handleSignup = async (e) => {
         e.preventDefault();
         setLoading(true)
-        await signup(name, email, 8700381153, password, "User");
+        const response = await signup(name, email, 8700381153, password, "User");
+        if (response) {
+            router.push('/')
+        }
         setLoading(false);
     };
 

@@ -10,10 +10,6 @@ function LayoutProvider({ children }) {
     // const { user } = useAuth();
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // if (!user) {
-    //     return <Auth />;
-    // }
-
     return (
         <main className='flex flex-col sm:flex-row h-screen'>
 
