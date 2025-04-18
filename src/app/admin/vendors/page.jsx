@@ -3,6 +3,7 @@ import React from 'react'
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 function page() {
     const VENDORS = [
@@ -143,42 +144,44 @@ function page() {
     return (
         <div>
             <InnerLayout heading={"Vendors"}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {VENDORS.map((vendor, idx) => (
-                        <Card key={idx}>
-                            <CardContent className="p-4 space-y-2">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-purple-700">{vendor.name}</h3>
-                                    <p className="text-sm text-muted-foreground">{vendor.address}</p>
-                                </div>
+                <ScrollArea className={'h-full pr-4'}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {VENDORS.map((vendor, idx) => (
+                            <Card key={idx}>
+                                <CardContent className="p-4 space-y-2">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-purple-700">{vendor.name}</h3>
+                                        <p className="text-sm text-muted-foreground">{vendor.address}</p>
+                                    </div>
 
-                                <div className="text-sm">
-                                    <p><strong>Contact:</strong> {vendor.contactNo}</p>
-                                    <p><strong>Email:</strong> {vendor.email}</p>
-                                </div>
+                                    <div className="text-sm">
+                                        <p><strong>Contact:</strong> {vendor.contactNo}</p>
+                                        <p><strong>Email:</strong> {vendor.email}</p>
+                                    </div>
 
-                                <Separator />
+                                    <Separator />
 
-                                <div className="space-y-2">
-                                    <p className="text-sm font-medium">Cabs:</p>
-                                    {vendor.cabs.map((cab, cabIndex) => (
-                                        <div key={cabIndex} className="border rounded-md p-2 bg-muted/30">
-                                            <div className="flex flex-wrap justify-between items-center mb-1">
-                                                <span className="font-semibold">{cab.vehicleName}</span>
-                                                <Badge className="text-xs">
-                                                    {cab.vehicleType}
-                                                </Badge>
+                                    <div className="space-y-2">
+                                        <p className="text-sm font-medium">Cabs:</p>
+                                        {vendor.cabs.map((cab, cabIndex) => (
+                                            <div key={cabIndex} className="border rounded-md p-2 bg-muted/30">
+                                                <div className="flex flex-wrap justify-between items-center mb-1">
+                                                    <span className="font-semibold">{cab.vehicleName}</span>
+                                                    <Badge className="text-xs">
+                                                        {cab.vehicleType}
+                                                    </Badge>
+                                                </div>
+                                                <p className="text-sm">Driver: {cab.driverName}</p>
+                                                <p className="text-sm">Contact: {cab.driverContact}</p>
+                                                <p className="text-sm">Email: {cab.driverEmail}</p>
                                             </div>
-                                            <p className="text-sm">Driver: {cab.driverName}</p>
-                                            <p className="text-sm">Contact: {cab.driverContact}</p>
-                                            <p className="text-sm">Email: {cab.driverEmail}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
+                </ScrollArea>
             </InnerLayout>
         </div>
     )
