@@ -1,7 +1,7 @@
 'use client'
 
 import { Link } from 'lucide-react';
-import { ReactLoading } from 'react-loading';
+// import { ReactLoading } from 'react-loading';
 import React, { useState } from 'react';
 import { signup } from '@/lib/firebase/services/auth';
 import { useRouter } from 'next/navigation';
