@@ -4,9 +4,9 @@ import React from 'react'
 
 function Header() {
     return (
-        <div className='mx-auto flex flex-col md:flex-row items-center justify-center px-4 h-[85vh] gap-7'>
+        <div className='mx-auto flex flex-col-reverse md:flex-row items-start justify-center pt-10 px-4 xl:min-h-[60vh] gap-7'>
             <div className='max-w-2xl lg:pl-28 text-center md:text-left'>
-                <h1 className='mb-6 text-4xl font-bold leading-tight text-gray-900 md:text-5xl lg:text-7xl'>
+                <h1 className='lg:mb-6 text-4xl font-bold leading-tight text-gray-900 md:text-5xl xl:text-7xl'>
                     Find, book and rent a car<br />
                     <span className='text-blue-600'>Easily</span>.
                 </h1>
@@ -19,8 +19,8 @@ function Header() {
                 <Image
                     src={MAIN_WEBSITE.car1}
                     alt='main car'
-                    width={1200}
-                    height={800}
+                    width={1500}
+                    height={1000}
                     className='object-contain max-w-full'
                 />
             </div>
