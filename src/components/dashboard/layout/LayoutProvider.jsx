@@ -6,8 +6,8 @@ import { IoClose } from 'react-icons/io5';
 import { FiMenu } from 'react-icons/fi';
 import Image from 'next/image';
 
-function LayoutProvider({ children }) {
-    // const { user } = useAuth();
+function LayoutProvider({ children, sidebarLinks }) {
+
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (
@@ -24,7 +24,7 @@ function LayoutProvider({ children }) {
             </div>
 
             <div className=''>
-                <Sidebar isOpen={sidebarOpen} setIsSidebarOpen={setSidebarOpen} />
+                <Sidebar isOpen={sidebarOpen} setIsSidebarOpen={setSidebarOpen} sidebarLinks={sidebarLinks} />
             </div>
 
             <div className='grow h-screen overflow-auto'>

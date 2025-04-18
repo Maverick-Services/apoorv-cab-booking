@@ -1,4 +1,5 @@
 import LayoutProvider from '@/components/dashboard/layout/LayoutProvider';
+import { adminSidebarLinks } from '@/lib/constants/sidebarLinks';
 import React from 'react'
 
 export const metadata = {
@@ -9,7 +10,7 @@ export const metadata = {
 function AdminLayout({ children }) {
     return (
         <div>
-            <LayoutProvider>
+            <LayoutProvider sidebarLinks={adminSidebarLinks}>
                 {children}
             </LayoutProvider>
         </div>

@@ -7,12 +7,11 @@ import Image from "next/image";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
-import { sidebarLinks } from '@/lib/constants/sidebarLinks';
-import { auth } from "@/lib/firebase/firebase-client";
+// import { auth } from "@/lib/firebase/firebase-client";
 
-export default function Sidebar({ isOpen, setIsSidebarOpen }) {
+export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
     const pathname = usePathname();
-    const user = auth.currentUser;
+    // const user = auth.currentUser;
     // console.log("User", user);
 
     function onLinkClick() {
@@ -21,7 +20,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen }) {
 
     return (
         <div className={`max-[640px]:max-w-58 w-full max-[640px]:absolute ${!isOpen ? "-left-full" : 'left-0'} max-[640px]:top-0 sm:w-[7rem] lg:w-[18rem] h-screen bg-gradient-to-b overflow-auto from-gray-50 to-white border-r border-gray-100 shadow-xl flex flex-col items-center gap-2 px-6 py-2 transition-all duration-500 ease-in-out`}>
-            <div className="w-full p-4 hover:scale-[1.02] transition-transform duration-300">
+            <div className="w-full py-8 px-4 hover:scale-[1.02] transition-transform duration-300">
                 <Image
                     src={MAIN_WEBSITE.logo}
                     alt="logo"
@@ -34,7 +33,8 @@ export default function Sidebar({ isOpen, setIsSidebarOpen }) {
 
             <div className="w-full flex flex-col gap-3 transition-all duration-300 ease-in-out">
                 {sidebarLinks?.map(({ href, label, icon }) => {
-                    const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
+                    const abc = href.split('/')[1]
+                    const isActive = href === `/${abc}` ? pathname === `/${abc}` : pathname.startsWith(href);
                     return (
                         <Link
                             key={href}
@@ -42,7 +42,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen }) {
                             onClick={onLinkClick}
                             className={`group flex items-center gap-4 px-4 py-2 rounded-lg transition-all duration-300
                                 ${isActive
-                                    ? "bg-gradient-to-r from-primary to-secondary shadow-md text-white"
+                                    ? "bg-gradient-to-r from-primary to-blue-950 shadow-md text-white"
                                     : "hover:bg-gray-100 hover:translate-x-1 text-gray-600 hover:text-gray-900"}
                             `}
                         >
