@@ -148,7 +148,7 @@ function page() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {VENDORS.map((vendor, idx) => (
                             <Card key={idx}>
-                                <CardContent className="p-4 space-y-2">
+                                <CardContent className="p-4 py-0 space-y-2">
                                     <div>
                                         <h3 className="text-lg font-semibold text-purple-700">{vendor.name}</h3>
                                         <p className="text-sm text-muted-foreground">{vendor.address}</p>
