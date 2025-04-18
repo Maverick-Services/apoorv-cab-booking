@@ -156,9 +156,9 @@ function page() {
                         {BOOKINGS_LIST.map((booking, index) => (
                             <Dialog key={index}>
                                 <DialogTrigger asChild>
-                                    <Card
+                                    <div
                                         onClick={() => setSelectedBooking(booking)}
-                                        className="p-4 cursor-pointer hover:shadow-lg transition duration-200"
+                                        className="p-4 cursor-pointer hover:shadow-lg transition duration-200 bg-white rounded-xl shadow-md space-y-2"
                                     >
                                         <div className="text-lg font-semibold text-purple-700">{booking.tripType}</div>
                                         <div className="text-sm text-gray-600">{booking.vehicleType} • {booking.pickUpLocation} → {booking.dropLocation}</div>
@@ -180,7 +180,7 @@ function page() {
                                             </span>
                                         </div>
                                         <div className="text-sm">Customer: {booking.customer.name}</div>
-                                    </Card>
+                                    </div>
                                 </DialogTrigger>
 
                                 <DialogContent>
