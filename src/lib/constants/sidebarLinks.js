@@ -4,6 +4,7 @@ import {
     User,
     Truck,
     Building,
+    Package,
 } from "lucide-react";
 
 // Admin Sidebar
@@ -27,6 +28,11 @@ export const adminSidebarLinks = [
         href: "/admin/vendors",
         label: "Vendors",
         icon: <Building />,
+    },
+    {
+        href: "/admin/packages",
+        label: "Packages",
+        icon: <Package />,
     },
 ];
 
