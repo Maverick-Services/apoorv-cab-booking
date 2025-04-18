@@ -20,11 +20,6 @@ export const adminSidebarLinks = [
         icon: <ReceiptIndianRupee />,
     },
     {
-        href: "/admin/drivers",
-        label: "Drivers",
-        icon: <Truck />,
-    },
-    {
         href: "/admin/vendors",
         label: "Vendors",
         icon: <Building />,
