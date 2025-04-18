@@ -7,12 +7,11 @@ import Image from "next/image";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
-import { sidebarLinks } from '@/lib/constants/sidebarLinks';
-import { auth } from "@/lib/firebase/firebase-client";
+// import { auth } from "@/lib/firebase/firebase-client";
 
-export default function Sidebar({ isOpen, setIsSidebarOpen }) {
+export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
     const pathname = usePathname();
-    const user = auth.currentUser;
+    // const user = auth.currentUser;
     // console.log("User", user);
 
     function onLinkClick() {
@@ -34,7 +33,8 @@ export default function Sidebar({ isOpen, setIsSidebarOpen }) {
 
             <div className="w-full flex flex-col gap-3 transition-all duration-300 ease-in-out">
                 {sidebarLinks?.map(({ href, label, icon }) => {
-                    const isActive = href === "/" ? pathname === "/" : pathname.startsWith(href);
+                    const abc = href.split('/')[1]
+                    const isActive = href === `/${abc}` ? pathname === `/${abc}` : pathname.startsWith(href);
                     return (
                         <Link
                             key={href}

@@ -1,4 +1,5 @@
 import LayoutProvider from '@/components/dashboard/layout/LayoutProvider';
+import { vendorSidebarLinks } from '@/lib/constants/sidebarLinks';
 import React from 'react'
 
 export const metadata = {
@@ -9,7 +10,7 @@ export const metadata = {
 function VendorLayout({ children }) {
     return (
         <div>
-            <LayoutProvider>
+            <LayoutProvider sidebarLinks={vendorSidebarLinks}>
                 {children}
             </LayoutProvider>
         </div>

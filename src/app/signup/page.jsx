@@ -54,13 +54,13 @@ function page() {
                     required
                     className="w-full px-4 py-3 bg-[#f9fafb] text-lg rounded-xl focus:outline-none"
                 />
-                <p className="text-base text-greyText">By continuing you agree to AI Mavs's <Link to={'/t&c'} className="text-purpleText underline">Terms & Conditions</Link>  and <Link to={'/privacyPolicy'} className="text-purpleText underline"> Privacy Policy</Link></p>
+                {/* <p className="text-base text-greyText">By continuing you agree to AI Mavs's <Link to={'/t&c'} className="text-purpleText underline">Terms & Conditions</Link>  and <Link to={'/privacyPolicy'} className="text-purpleText underline"> Privacy Policy</Link></p> */}
 
                 <button
                     type="submit"
                     className="w-full px-4 py-2 bg-mainPurple font-bold rounded-xl text-xl hover:bg-mainPurpleDark transition duration-300 dark:bg-dark-primary dark:hover:bg-dark-primary-light text-center flex items-center justify-center"
                 >
-                    Signup
+                    {loading ? "loading..." : "Signup"}
                     {/* {loading ?
                         <ReactLoading type={"bars"} color={"white"} height={'30px'} width={'30px'} />
                         : 'Signup'

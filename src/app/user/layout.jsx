@@ -1,4 +1,5 @@
 import LayoutProvider from '@/components/dashboard/layout/LayoutProvider';
+import { userSidebarLinks } from '@/lib/constants/sidebarLinks';
 import React from 'react'
 
 export const metadata = {
@@ -14,7 +15,7 @@ function UserLayout({ children }) {
 
     return (
         <div>
-            <LayoutProvider>
+            <LayoutProvider sidebarLinks={userSidebarLinks}>
                 {children}
             </LayoutProvider>
         </div>
