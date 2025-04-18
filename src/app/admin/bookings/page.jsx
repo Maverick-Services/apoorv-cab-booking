@@ -150,7 +150,7 @@ function page() {
     return (
         <div>
             <InnerLayout heading={"Bookings"}>
-                <ScrollArea className="h-full pr-4">
+                <ScrollArea className="h-full sm:pr-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         {BOOKINGS_LIST.map((booking, index) => (
                             <Dialog key={index}>

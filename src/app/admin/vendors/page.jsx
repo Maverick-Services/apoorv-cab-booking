@@ -144,7 +144,7 @@ function page() {
     return (
         <div>
             <InnerLayout heading={"Vendors"}>
-                <ScrollArea className={'h-full pr-4'}>
+                <ScrollArea className={'h-full md:pr-4'}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {VENDORS.map((vendor, idx) => (
                             <Card key={idx}>
