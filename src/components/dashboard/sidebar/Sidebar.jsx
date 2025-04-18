@@ -20,7 +20,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
 
     return (
         <div className={`max-[640px]:max-w-58 w-full max-[640px]:absolute ${!isOpen ? "-left-full" : 'left-0'} max-[640px]:top-0 sm:w-[7rem] lg:w-[18rem] h-screen bg-gradient-to-b overflow-auto from-gray-50 to-white border-r border-gray-100 shadow-xl flex flex-col items-center gap-2 px-6 py-2 transition-all duration-500 ease-in-out`}>
-            <div className="w-full p-4 hover:scale-[1.02] transition-transform duration-300">
+            <div className="w-full py-8 px-4 hover:scale-[1.02] transition-transform duration-300">
                 <Image
                     src={MAIN_WEBSITE.logo}
                     alt="logo"
@@ -42,7 +42,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
                             onClick={onLinkClick}
                             className={`group flex items-center gap-4 px-4 py-2 rounded-lg transition-all duration-300
                                 ${isActive
-                                    ? "bg-gradient-to-r from-primary to-secondary shadow-md text-white"
+                                    ? "bg-gradient-to-r from-primary to-blue-950 shadow-md text-white"
                                     : "hover:bg-gray-100 hover:translate-x-1 text-gray-600 hover:text-gray-900"}
                             `}
                         >
