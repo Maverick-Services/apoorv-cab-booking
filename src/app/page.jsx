@@ -1,3 +1,4 @@
+import Footer from "@/components/main/Footer";
 import Contact from "@/components/main/home/Contact";
 import Header from "@/components/main/home/Header";
 import Testimonials from "@/components/main/home/Testimonials";
@@ -23,6 +24,7 @@ export default function page() {
       <WhyUs />
       <Testimonials />
       <Contact />
+      <Footer />
     </div>
   );
 }

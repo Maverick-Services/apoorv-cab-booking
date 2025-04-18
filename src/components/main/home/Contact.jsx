@@ -33,21 +33,21 @@ export default function Contact() {
                         <FaPhoneAlt className="mt-1 text-xl text-black" />
                         <div>
                             <div className="font-semibold uppercase text-xs">Phone</div>
-                            <div className="text-red-500">03 5432 1234</div>
+                            <div className="text-red-500">+917248772488</div>
                         </div>
                     </div>
-                    <div className="flex items-start gap-2">
+                    {/* <div className="flex items-start gap-2">
                         <FaFax className="mt-1 text-xl text-black" />
                         <div>
                             <div className="font-semibold uppercase text-xs">Fax</div>
                             <div className="text-red-500">03 5432 1234</div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="flex items-start gap-2">
                         <FaEnvelope className="mt-1 text-xl text-black" />
                         <div>
                             <div className="font-semibold uppercase text-xs">Email</div>
-                            <div className="text-red-500">info@marcc.com.au</div>
+                            <div className="text-red-500">help@tapscabs.com</div>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,7 @@ export default function Contact() {
                         scrolling="no"
                         marginHeight={0}
                         marginWidth={0}
-                        src="https://maps.google.com/maps?q=Jakarta&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.520284890859!2d106.81842391538516!3d-6.199785895516195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e8b3cbf3b9%3A0x1a25f8c59e03a6c0!2sHotel%20Ascott%20Jakarta!5e0!3m2!1sen!2sid!4v1713459800000!5m2!1sen!2sid"
                     />
                 </div>
                 {/* Curved effect - simulated corner */}
