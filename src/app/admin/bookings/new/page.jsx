@@ -2,6 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import InnerLayout from '@/components/dashboard/layout/InnerLayout';
+import { cities } from '@/lib/constants/constants';
 
 export default function Page() {
     const {
@@ -24,44 +25,72 @@ export default function Page() {
                     onSubmit={handleSubmit(onSubmit)}
                     className="bg-white p-6 rounded-xl shadow-md space-y-6 w-full max-w-xl"
                 >
+                    {/* Trip Type */}
+                    <div className="flex flex-col">
+                        <label className="text-sm font-medium mb-1">Trip Type</label>
+                        <select
+                            {...register('tripType', { required: 'Trip type is required' })}
+                            className="border p-2 rounded-md"
+                        >
+                            <option value="">Select Trip Type</option>
+                            <option value="One Way">One Way</option>
+                            <option value="Round Trip">Round Trip</option>
+                            <option value="Local Trip">Local Trip</option>
+                        </select>
+                        {errors.tripType && (
+                            <span className="text-red-500 text-xs">{errors.tripType.message}</span>
+                        )}
+                    </div>
+
                     {/* Pickup City */}
                     <div className="flex flex-col">
                         <label htmlFor="pickupCity" className="text-sm font-medium mb-1">
                             Pickup City
                         </label>
-                        <input
-                            type="text"
+                        <select
                             id="pickupCity"
                             {...register('pickupCity', { required: 'Pickup City is required' })}
-                            placeholder="e.g. Delhi, Mumbai"
                             className="border p-2 rounded-md"
-                        />
+                        >
+                            <option value="">Select City</option>
+                            {cities.map((city) => (
+                                <option key={city} value={city}>{city}</option>
+                            ))}
+                        </select>
                         {errors.pickupCity && (
                             <span className="text-red-500 text-xs">{errors.pickupCity.message}</span>
                         )}
                     </div>
 
-                    {/* Drop City */}
-                    <div className="flex flex-col">
-                        <label htmlFor="dropCity" className="text-sm font-medium mb-1">
-                            Drop City
-                        </label>
-                        <input
-                            type="text"
-                            id="dropCity"
-                            {...register('dropCity', { required: 'Drop City is required' })}
-                            placeholder="e.g. Jaipur, Pune"
-                            className="border p-2 rounded-md"
-                        />
-                        {errors.dropCity && (
-                            <span className="text-red-500 text-xs">{errors.dropCity.message}</span>
-                        )}
-                    </div>
+                    {/* Show only when NOT Local Trip */}
+                    {tripType !== 'Local Trip' && (
+                        <>
+                            {/* Drop City */}
+                            <div className="flex flex-col">
+                                <label htmlFor="dropCity" className="text-sm font-medium mb-1">
+                                    Drop City
+                                </label>
+                                <select
+                                    id="dropCity"
+                                    {...register('dropCity', { required: 'Drop City is required' })}
+                                    className="border p-2 rounded-md"
+                                >
+                                    <option value="">Select City</option>
+                                    {cities.map((city) => (
+                                        <option key={city} value={city}>{city}</option>
+                                    ))}
+                                </select>
+                                {errors.dropCity && (
+                                    <span className="text-red-500 text-xs">{errors.dropCity.message}</span>
+                                )}
+                            </div>
+                        </>
+                    )}
 
                     {/* Pickup Time */}
                     <div className="flex flex-col">
                         <label htmlFor="pickupTime" className="text-sm font-medium mb-1">
-                            Pickup Time
+                            Pickup Date & Time
                         </label>
                         <input
                             type="datetime-local"
@@ -74,23 +103,7 @@ export default function Page() {
                         )}
                     </div>
 
-                    {/* Trip Type */}
-                    <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">Trip Type</label>
-                        <select
-                            {...register('tripType', { required: 'Trip type is required' })}
-                            className="border p-2 rounded-md"
-                        >
-                            <option value="">Select Trip Type</option>
-                            <option value="One Way">One Way</option>
-                            <option value="Round Trip">Round Trip</option>
-                        </select>
-                        {errors.tripType && (
-                            <span className="text-red-500 text-xs">{errors.tripType.message}</span>
-                        )}
-                    </div>
-
-                    {/* Return Date - Conditionally visible */}
+                    {/* Return Date - Only for Round Trip */}
                     {tripType === 'Round Trip' && (
                         <div className="flex flex-col">
                             <label htmlFor="returnDate" className="text-sm font-medium mb-1">
@@ -100,7 +113,7 @@ export default function Page() {
                                 type="date"
                                 id="returnDate"
                                 {...register('returnDate', {
-                                    required: tripType === 'Round Trip' ? 'Return Date is required' : false,
+                                    required: 'Return Date is required',
                                 })}
                                 className="border p-2 rounded-md"
                             />

@@ -268,3 +268,10 @@ export const BOOKINGS_LIST = [
         assignedVendor: "VendorUID12345"
     }
 ];
+
+export const cities = [
+    "Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai",
+    "Kolkata", "Pune", "Ahmedabad", "Jaipur", "Surat",
+    "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane",
+    "Bhopal", "Visakhapatnam", "Patna", "Vadodara", "Ludhiana"
+];
