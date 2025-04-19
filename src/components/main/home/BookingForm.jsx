@@ -22,7 +22,7 @@ export default function BookingForm() {
         <section>
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-white p-6 shadow-md space-y-6 border-4 border-primary w-full"
+                className="bg-white p-6 shadow-md space-y-6 border-4 border-primary w-full rounded-b-xl"
             >
                 {/* Trip Type */}
                 <div className="flex flex-col">
