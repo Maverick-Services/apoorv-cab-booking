@@ -204,13 +204,13 @@ function page() {
                                         <p><strong>Email:</strong> {booking.customer.email}</p>
                                         {/* <p><strong>Vendor:</strong> {booking.assignedVendor ? booking.assignedVendor : "Not Assigned"}</p> */}
                                     </div>
-
+                                    {/* 
                                     {booking.confirmationStatus === "Pending" && (
                                         <div className="flex justify-end gap-2 mt-4">
                                             <Button variant="outline" className="text-red-600 border-red-600 hover:bg-red-50">Reject</Button>
                                             <Button className="bg-green-600 hover:bg-green-700 text-white">Accept</Button>
                                         </div>
-                                    )}
+                                    )} */}
                                 </DialogContent>
                             </Dialog>
                         ))}

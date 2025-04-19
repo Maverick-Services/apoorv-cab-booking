@@ -1,8 +1,6 @@
 import InnerLayout from "@/components/dashboard/layout/InnerLayout";
-import ProductName from "./components/ProductName";
 import { Loader } from "lucide-react";
-import ProductDescription from "./components/ProductDescription";
-import PriceDetails from "./components/PriceDetails";
+import ProductName from "./components/ProductName";
 // import { useSearchParams } from "next/navigation";
 
 export default function Page() {
@@ -33,7 +31,7 @@ export default function Page() {
     };
 
     return (
-        <InnerLayout heading={'Add new Package'}>
+        <InnerLayout heading={'Add new Vendor'}>
             {
                 // isLoading
                 false
@@ -45,8 +43,8 @@ export default function Page() {
                             // onSubmit={handleSubmit} 
                             className="h-full flex flex-col gap-5 p-5">
                             <ProductName />
-                            <ProductDescription />
-                            <PriceDetails />
+                            {/* <ProductDescription /> */}
+                            {/* <PriceDetails /> */}
 
                             <button
                                 type="submit"
@@ -56,9 +54,9 @@ export default function Page() {
                                 {false ? (
                                     <Loader className="" color='white' size={10} height={6} />
                                 ) : false ? (
-                                    "Update Package"
+                                    "Update Vendor"
                                 ) : (
-                                    "Create Package"
+                                    "Create Vendor"
                                 )}
                             </button>
                         </form>

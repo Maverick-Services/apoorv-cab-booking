@@ -19,7 +19,7 @@ function Navbar() {
                 <Image
                     src={MAIN_WEBSITE.logo}
                     height={100}
-                    width={300}
+                    width={250}
                     alt='logo'
                 />
 
