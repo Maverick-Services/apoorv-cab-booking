@@ -23,7 +23,9 @@ export default function page() {
       </div>
       <WhyUs />
       <Testimonials />
-      <Contact />
+      <div className="w-full py-4 flex justify-center items-center bg-[#f5faff81]">
+        <Contact />
+      </div>
       <Footer />
     </div>
   );

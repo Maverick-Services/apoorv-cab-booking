@@ -34,57 +34,65 @@ export default function Footer() {
                     </div>
                 </div>
 
-                {/* Our Product */}
+                {/* Cab from Delhi */}
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Our Product</h3>
+                    <h3 className="text-lg font-semibold mb-4">Cab from Delhi</h3>
                     <ul className="space-y-2 text-gray-300">
-                        <li>Career</li>
-                        <li>Car</li>
-                        <li>Packages</li>
-                        <li>Features</li>
-                        <li>Priceline</li>
+                        <li>Taxi from Delhi to Agra</li>
+                        <li>Taxi from Delhi to Jaipur</li>
+                        <li>Taxi from Delhi to Chandigarh</li>
+                        <li>Taxi from Delhi to Amritsar</li>
+                        <li>Taxi from Delhi to Manali</li>
                     </ul>
                 </div>
 
-                {/* Resources */}
+                {/* Cab from Bangalore */}
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Resources</h3>
+                    <h3 className="text-lg font-semibold mb-4">Cab from Bangalore</h3>
                     <ul className="space-y-2 text-gray-300">
-                        <li>Download</li>
-                        <li>Help Centre</li>
-                        <li>Guides</li>
-                        <li>Partner Network</li>
-                        <li>Cruises</li>
-                        <li>Developer</li>
+                        <li>Taxi from Bangalore to Mysore</li>
+                        <li>Taxi from Bangalore to Coorg</li>
+                        <li>Taxi from Bangalore to Ooty</li>
+                        <li>Taxi from Bangalore to Pondicherry</li>
+                        <li>Taxi from Bangalore to Goa</li>
                     </ul>
                 </div>
 
-                {/* About Rentcars */}
+                {/* Cab from Mumbai */}
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">About Tapcabs</h3>
+                    <h3 className="text-lg font-semibold mb-4">Cab from Mumbai</h3>
                     <ul className="space-y-2 text-gray-300">
-                        <li>Why choose us</li>
-                        <li>Our Story</li>
-                        <li>Investor Relations</li>
-                        <li>Press Center</li>
-                        <li>Advertise</li>
+                        <li>Taxi from Mumbai to Shirdi</li>
+                        <li>Taxi from Mumbai to Shani Shingnapur</li>
+                        <li>Taxi from Mumbai to Mahabaleshwar</li>
+                        <li>Taxi from Mumbai to Nashik</li>
+                        <li>Taxi from Mumbai to Pune</li>
                     </ul>
                 </div>
 
-                {/* Follow Us */}
+                {/* Cab from Chennai */}
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
-                    <div className="flex space-x-4 text-gray-300">
-                        <Facebook className="w-6 h-6" />
-                        <Instagram className="w-6 h-6" />
-                        <Youtube className="w-6 h-6" />
-                    </div>
+                    <h3 className="text-lg font-semibold mb-4">Cab from Chennai</h3>
+                    <ul className="space-y-2 text-gray-300">
+                        <li>Taxi from Chennai to Bangalore</li>
+                        <li>Taxi from Chennai to Pondicherry</li>
+                        <li>Taxi from Chennai to Tirupati</li>
+                        <li>Taxi from Chennai to Mahabalipuram</li>
+                        <li>Taxi from Chennai to Kanchipuram</li>
+                    </ul>
                 </div>
             </div>
 
-            {/* Copyright */}
-            <div className="border-t border-gray-700 mt-10 pt-6 text-sm text-gray-400 text-center">
-                <p>Copyright 2025 • <Link href={'https://maverickservices.in/'} target='_blank'>Maverick</Link>, All Rights Reserved</p>
+            {/* Social and Copyright */}
+            <div className="mt-10 border-t border-gray-700 pt-6">
+                <div className="flex justify-center space-x-6 text-gray-300 mb-4">
+                    <Facebook className="w-6 h-6" />
+                    <Instagram className="w-6 h-6" />
+                    <Youtube className="w-6 h-6" />
+                </div>
+                <p className="text-sm text-gray-400 text-center">
+                    Copyright 2025 • <Link href="https://maverickservices.in/" target="_blank">Maverick</Link>, All Rights Reserved
+                </p>
             </div>
         </footer>
     );

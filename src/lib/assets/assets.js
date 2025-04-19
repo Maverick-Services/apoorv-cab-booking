@@ -6,5 +6,6 @@ export const MAIN_WEBSITE = {
     client1: '/client1.png',
     client2: '/client2.png',
     client3: '/client3.jpeg',
-    taxi: '/taxi1.png'
+    taxi: '/taxi1.png',
+    signupImg: '/signup.jpg'
 };

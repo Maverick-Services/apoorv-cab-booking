@@ -7,7 +7,7 @@ import { FaPhoneAlt, FaFax, FaEnvelope } from "react-icons/fa";
 
 export default function Contact() {
     return (
-        <section id="contact" className="flex flex-col lg:flex-row bg-white rounded-3xl shadow-xl overflow-hidden max-w-7xl mx-auto my-16">
+        <section id="contact" className="flex flex-col lg:flex-row rounded-3xl shadow-xl overflow-hidden max-w-7xl mx-auto my-16">
             {/* Left Section: Form */}
             <div className="w-full lg:w-1/2 p-10">
                 <h2 className="text-4xl font-bold mb-2">
