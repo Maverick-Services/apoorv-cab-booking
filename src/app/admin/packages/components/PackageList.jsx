@@ -185,7 +185,7 @@ export const PackageList = () => {
 
     return (
         <div>
-            <ScrollArea className={'h-full md:pr-4'}>
+            <ScrollArea className={'h-full'}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {packages.map((pkg, idx) => (
                         <Card key={idx}>
