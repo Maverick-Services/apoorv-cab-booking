@@ -13,7 +13,7 @@ function page() {
             <InnerLayout heading={'Admin Dashboard'}>
                 <div className='flex flex-col gap-3'>
 
-                    <div className='grid grid-cols-3 w-full gap-3'>
+                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full gap-3'>
                         <div className='flex flex-col gap-3'>
                             <TotalVendors />
                             <TotalCabs />
@@ -23,7 +23,7 @@ function page() {
                         <Clock />
                     </div>
 
-                    <div className='flex gap-4 w-full'>
+                    <div className='flex flex-col md:flex-row gap-4 w-full'>
                         <CustomPieChart />
                         <ConfirmationStatusChart />
                     </div>

@@ -132,3 +132,139 @@ export const VENDORS = [
         ],
     },
 ];
+
+
+export const BOOKINGS_LIST = [
+    {
+        tripType: 'Round Trip',
+        vehicleType: 'Sedan',
+        pickUpLocation: "Delhi",
+        dropLocation: 'Meerut',
+        pickUpDate: '20 Apr 2025',
+        pickUpTime: '12:30 AM',
+        returnDate: "22 Apr 2025",
+        confirmationStatus: "Pending",
+        tripStatus: 'Pending',
+        customer: {
+            name: "Raghav",
+            mobileNo: 9844587856,
+            email: 'raghav@gmail.com'
+        },
+        assignedVendor: null
+    },
+    {
+        tripType: 'One Way',
+        vehicleType: 'Sedan',
+        pickUpLocation: "Delhi",
+        dropLocation: 'Meerut',
+        pickUpDate: '20 Apr 2025',
+        pickUpTime: '12:30 AM',
+        confirmationStatus: "Pending",
+        tripStatus: 'Pending',
+        customer: {
+            name: "Anju",
+            mobileNo: 9856987856,
+            email: 'anju@gmail.com'
+        },
+        assignedVendor: "PtkcL4WAoSWLFUxAN8sHwGAkNY73"
+    },
+    {
+        tripType: 'One Way',
+        vehicleType: 'SUV',
+        pickUpLocation: "Noida",
+        dropLocation: 'Agra',
+        pickUpDate: '21 Apr 2025',
+        pickUpTime: '9:00 AM',
+        confirmationStatus: "Confirmed",
+        tripStatus: 'Scheduled',
+        customer: {
+            name: "Sohail",
+            mobileNo: 9876543210,
+            email: 'sohail@gmail.com'
+        },
+        assignedVendor: "AbcdEfGh123456"
+    },
+    {
+        tripType: 'Round Trip',
+        vehicleType: 'Hatchback',
+        pickUpLocation: "Gurgaon",
+        dropLocation: 'Jaipur',
+        pickUpDate: '22 Apr 2025',
+        pickUpTime: '7:30 AM',
+        returnDate: "24 Apr 2025",
+        confirmationStatus: "Rejected",
+        tripStatus: 'Cancelled',
+        customer: {
+            name: "Pooja",
+            mobileNo: 9123456789,
+            email: 'pooja@yahoo.com'
+        },
+        assignedVendor: null
+    },
+    {
+        tripType: 'One Way',
+        vehicleType: 'Sedan',
+        pickUpLocation: "Chandigarh",
+        dropLocation: 'Delhi',
+        pickUpDate: '23 Apr 2025',
+        pickUpTime: '4:00 PM',
+        confirmationStatus: "Confirmed",
+        tripStatus: 'Completed',
+        customer: {
+            name: "Vikram",
+            mobileNo: 9988776655,
+            email: 'vikram@outlook.com'
+        },
+        assignedVendor: "VendorUID09876"
+    },
+    {
+        tripType: 'Round Trip',
+        vehicleType: 'SUV',
+        pickUpLocation: "Lucknow",
+        dropLocation: 'Varanasi',
+        pickUpDate: '25 Apr 2025',
+        pickUpTime: '10:00 AM',
+        returnDate: "28 Apr 2025",
+        confirmationStatus: "Pending",
+        tripStatus: 'Pending',
+        customer: {
+            name: "Neha",
+            mobileNo: 9001122334,
+            email: 'neha@rediffmail.com'
+        },
+        assignedVendor: null
+    },
+    {
+        tripType: 'One Way',
+        vehicleType: 'Hatchback',
+        pickUpLocation: "Pune",
+        dropLocation: 'Mumbai',
+        pickUpDate: '26 Apr 2025',
+        pickUpTime: '6:45 AM',
+        confirmationStatus: "Confirmed",
+        tripStatus: 'Ongoing',
+        customer: {
+            name: "Arjun",
+            mobileNo: 8899776655,
+            email: 'arjun@gmail.com'
+        },
+        assignedVendor: "VendorXyz789"
+    },
+    {
+        tripType: 'Round Trip',
+        vehicleType: 'Sedan',
+        pickUpLocation: "Hyderabad",
+        dropLocation: 'Vizag',
+        pickUpDate: '27 Apr 2025',
+        pickUpTime: '3:15 PM',
+        returnDate: "29 Apr 2025",
+        confirmationStatus: "Confirmed",
+        tripStatus: 'Scheduled',
+        customer: {
+            name: "Sneha",
+            mobileNo: 9876547890,
+            email: 'sneha@gmail.com'
+        },
+        assignedVendor: "VendorUID12345"
+    }
+];
