@@ -33,7 +33,7 @@ const testimonials = [
         location: 'From New York, US',
         rating: 5,
         text: "Everything was perfect! The process was smooth, and the car delivery was on time.",
-        image: MAIN_WEBSITE.client1,
+        image: MAIN_WEBSITE.client3,
     },
 ];
 
@@ -58,7 +58,7 @@ const sliderSettings = {
 
 export default function Testimonials() {
     return (
-        <section className="bg-[#f5faff] py-16 px-4 md:px-16">
+        <section id='testimonials' className="bg-[#f5faff] py-16 px-4 md:px-16">
             <div className="text-center mb-12">
                 {/* <span className="bg-blue-100 text-blue-700 text-sm font-medium px-4 py-1 rounded-full">
                     TESTIMONIALS

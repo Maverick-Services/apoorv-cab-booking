@@ -27,11 +27,11 @@ function Navbar() {
                 <div className="md:hidden">
                     <button
                         type="button"
-                        className="text-gray-400 hover:text-white focus:outline-none"
+                        className="text-gray-700 hover:text-white focus:outline-none"
                         aria-label="Toggle menu"
                         onClick={handleToggle}
                     >
-                        <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                        <svg className="h-7 w-7 fill-current" viewBox="0 0 24 24">
                             {/* Simple burger icon; you could switch icons when isOpen is true */}
                             <path
                                 fillRule="evenodd"
@@ -44,14 +44,14 @@ function Navbar() {
 
                 {/* Navigation Links (hidden on mobile, visible on md+) */}
                 <div className="hidden md:flex md:space-x-6">
-                    <Link href="/user">
-                        <p className="hover:text-blue-500 transition-colors">User</p>
+                    <Link href="#why-us">
+                        <p className="hover:text-blue-500 transition-colors">Why Us</p>
                     </Link>
-                    <Link href="/admin">
-                        <p className="hover:text-blue-500 transition-colors">Admin</p>
+                    <Link href="#testimonials">
+                        <p className="hover:text-blue-500 transition-colors">Testimonials</p>
                     </Link>
-                    <Link href="/vendor">
-                        <p className="hover:text-blue-500 transition-colors">Vendor</p>
+                    <Link href="#contact">
+                        <p className="hover:text-blue-500 transition-colors">Contact</p>
                     </Link>
                 </div>
 

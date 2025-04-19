@@ -17,7 +17,7 @@ function Header() {
             </div>
             <div className='mb-8 md:mb-0'>
                 <Image
-                    src={MAIN_WEBSITE.taxiAnime}
+                    src={MAIN_WEBSITE.taxi}
                     alt='main car'
                     width={1400}
                     height={900}
