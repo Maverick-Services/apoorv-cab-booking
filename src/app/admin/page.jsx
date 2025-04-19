@@ -1,11 +1,33 @@
 import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import React from 'react'
+import CustomPieChart from './(dashboard)/CustomPieChart'
+import ConfirmationStatusChart from './(dashboard)/ConfirmationStatusChart'
+import TotalVendors from './(dashboard)/TotalVendors'
+import TotalCabs from './(dashboard)/TotalCabs'
+import Clock from './(dashboard)/Clock'
+import VehiclesByType from './(dashboard)/VehiclesByType'
 
 function page() {
     return (
         <div>
             <InnerLayout heading={'Admin Dashboard'}>
-                Admin page
+                <div className='flex flex-col gap-3'>
+
+                    <div className='grid grid-cols-3 w-full gap-3'>
+                        <div className='flex flex-col gap-3'>
+                            <TotalVendors />
+                            <TotalCabs />
+                        </div>
+
+                        <VehiclesByType />
+                        <Clock />
+                    </div>
+
+                    <div className='flex gap-4 w-full'>
+                        <CustomPieChart />
+                        <ConfirmationStatusChart />
+                    </div>
+                </div>
             </InnerLayout>
         </div>
     )
