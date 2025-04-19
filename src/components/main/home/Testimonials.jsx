@@ -60,9 +60,9 @@ export default function Testimonials() {
     return (
         <section className="bg-[#f5faff] py-16 px-4 md:px-16">
             <div className="text-center mb-12">
-                <span className="bg-blue-100 text-blue-700 text-sm font-medium px-4 py-1 rounded-full">
+                {/* <span className="bg-blue-100 text-blue-700 text-sm font-medium px-4 py-1 rounded-full">
                     TESTIMONIALS
-                </span>
+                </span> */}
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mt-4">
                     What people say about us?
                 </h2>

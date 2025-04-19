@@ -17,10 +17,10 @@ function Header() {
             </div>
             <div className='mb-8 md:mb-0'>
                 <Image
-                    src={MAIN_WEBSITE.car1}
+                    src={MAIN_WEBSITE.taxiAnime}
                     alt='main car'
-                    width={1500}
-                    height={1000}
+                    width={1400}
+                    height={900}
                     className='object-contain max-w-full'
                 />
             </div>

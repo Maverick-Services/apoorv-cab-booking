@@ -4,5 +4,6 @@ export const MAIN_WEBSITE = {
     bg: '/bg.png',
     audi: '/audi.png',
     client1: '/client1.png',
-    client2: '/client2.png'
+    client2: '/client2.png',
+    taxiAnime: '/taxi2GIF.gif'
 };
