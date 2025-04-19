@@ -4,11 +4,8 @@ import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-<<<<<<< HEAD
 import Link from 'next/link';
-=======
 import { VENDORS } from '@/lib/constants/constants';
->>>>>>> 51158b6ace862d4cd8a17009a06dbc628ba5d060
 
 function page() {
     return (
