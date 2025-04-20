@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 "use client"
 import React, { Suspense, useEffect } from 'react'
 import InnerLayout from '@/components/dashboard/layout/InnerLayout'
