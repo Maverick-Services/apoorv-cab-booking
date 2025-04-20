@@ -1,6 +1,6 @@
-export const dynamic = "force-dynamic";
 
 "use client"
+export const dynamic = "force-dynamic";
 import React, { Suspense, useEffect } from 'react'
 import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import { useForm } from 'react-hook-form';
