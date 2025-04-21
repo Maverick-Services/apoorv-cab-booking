@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+// import { Suspense } from "react";
 import {
     Dialog,
     DialogContent,
@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowRightCircle } from "lucide-react";
 import BookingForm from "../home/BookingForm";
+// import { dynamic } from 'next/dynamic';
 
 const cabOptions = [
     {
@@ -52,13 +53,14 @@ const cabOptions = [
         facilities: ["6 Seater", "3 Bags", "AC"],
     },
 ];
+// export const dynamic = "force-dynamic";
 
 export const CabDetails = () => {
     const searchParams = useSearchParams();
     const tripDataString = searchParams.get("tripData");
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
 
-    const [openForm, setOpenForm] = useState(false);
+    // const [openForm, setOpenForm] = useState(false);
 
     return (
         <div className="w-full flex justify-center p-4">
@@ -107,7 +109,7 @@ export const CabDetails = () => {
                             </div>
 
                             {/* Edit Button */}
-                            <Dialog open={openForm} onOpenChange={setOpenForm}>
+                            <Dialog>
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="outline"
@@ -120,7 +122,9 @@ export const CabDetails = () => {
                                     <DialogHeader>
                                         <DialogTitle>Edit Trip Details</DialogTitle>
                                     </DialogHeader>
+                                    {/* <Suspense fallback={<div>Loading...</div>}> */}
                                     <BookingForm />
+                                    {/* </Suspense> */}
                                 </DialogContent>
                             </Dialog>
                         </div>

@@ -1,7 +1,9 @@
 import { MAIN_WEBSITE } from '@/lib/assets/assets';
 import Image from 'next/image';
-import React from 'react';
+import React, { Suspense } from 'react';
 import BookingForm from './BookingForm';
+
+export const dynamic = "force-dynamic";
 
 function Header() {
     return (
@@ -19,7 +21,9 @@ function Header() {
                 {/* Booking Form */}
                 <div className="w-full max-w-xl">
                     <h2 className='bg-primary text-white border-4 border-primary text-center text-2xl font-bold pt-2 pb-1 rounded-t-xl'>Find Your Perfect Cab</h2>
-                    <BookingForm />
+                    <Suspense fallback={<div>Loading form...</div>}>
+                        <BookingForm />
+                    </Suspense>
                 </div>
 
                 {/* Image */}
