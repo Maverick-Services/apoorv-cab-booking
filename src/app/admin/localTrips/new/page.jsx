@@ -54,9 +54,9 @@ export default function Page() {
                                 {false ? (
                                     <Loader className="" color='white' size={10} height={6} />
                                 ) : false ? (
-                                    "Update Vendor"
+                                    "Update Local Trip"
                                 ) : (
-                                    "Create Vendor"
+                                    "Create Local Trip"
                                 )}
                             </button>
                         </form>

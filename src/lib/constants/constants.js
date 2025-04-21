@@ -133,6 +133,77 @@ export const VENDORS = [
     },
 ];
 
+export const LOCAL_TRIPS = [
+    {
+        city: "Delhi",
+        cabType: "Sedan",
+        hours: "4",
+        kms: "40",
+        price: "1200",
+        cabs: [
+            {
+                vehicleName: "Verna",
+                vehicleType: "Sedan",
+                driverName: "Harjeet Singh",
+                driverContact: "8965896589",
+                driverEmail: "harjeetsingh@gmail.com",
+            },
+            {
+                vehicleName: "Swift",
+                vehicleType: "Hatchback",
+                driverName: "Rajeev Kumar",
+                driverContact: "7865123456",
+                driverEmail: "rajeevk@gmail.com",
+            },
+        ],
+    },
+    {
+        city: "Delhi",
+        cabType: "Sedan",
+        hours: "8",
+        kms: "80",
+        price: "2400",
+        cabs: [
+            {
+                vehicleName: "Verna",
+                vehicleType: "Sedan",
+                driverName: "Harjeet Singh",
+                driverContact: "8965896589",
+                driverEmail: "harjeetsingh@gmail.com",
+            },
+            {
+                vehicleName: "Swift",
+                vehicleType: "Hatchback",
+                driverName: "Rajeev Kumar",
+                driverContact: "7865123456",
+                driverEmail: "rajeevk@gmail.com",
+            },
+        ],
+    },
+    {
+        city: "Delhi",
+        cabType: "Sedan",
+        hours: "12",
+        kms: "120",
+        price: "5200",
+        cabs: [
+            {
+                vehicleName: "Verna",
+                vehicleType: "Sedan",
+                driverName: "Harjeet Singh",
+                driverContact: "8965896589",
+                driverEmail: "harjeetsingh@gmail.com",
+            },
+            {
+                vehicleName: "Swift",
+                vehicleType: "Hatchback",
+                driverName: "Rajeev Kumar",
+                driverContact: "7865123456",
+                driverEmail: "rajeevk@gmail.com",
+            },
+        ],
+    },
+]
 
 export const BOOKINGS_LIST = [
     {

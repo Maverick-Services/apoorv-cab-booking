@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
-import { VENDORS } from '@/lib/constants/constants';
+import { LOCAL_TRIPS, VENDORS } from '@/lib/constants/constants';
 
 function page() {
     return (
@@ -17,7 +17,7 @@ function page() {
                     <div className='w-full flex flex-col gap-2'>
                         <div className='w-full flex justify-between px-1'>
                             <p className='font-semibold text-primary'>Total Local Trips: {6}</p>
-                            <Link href={'/admin/vendors/new'}>
+                            <Link href={'/admin/localTrips/new'}>
                                 <Badge className="text-base font-bold cursor-pointer">
                                     Add new Local Trip
                                 </Badge>
@@ -26,20 +26,22 @@ function page() {
 
                         {/* Vendor List */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {VENDORS.map((vendor, idx) => (
+                            {LOCAL_TRIPS.map((lt, idx) => (
                                 <Card key={idx}>
                                     <CardContent className="p-4 py-0 space-y-2">
                                         <div>
-                                            <h3 className="text-lg font-semibold text-purple-700">{vendor.name}</h3>
-                                            <p className="text-sm text-muted-foreground">{vendor.address}</p>
+                                            <h3 className="text-lg font-semibold text-purple-700">Local Trip {idx + 1}</h3>
+                                            <p className="text-sm text-muted-foreground">{lt?.city}</p>
                                         </div>
 
                                         <div className="text-sm">
-                                            <p><strong>Contact:</strong> {vendor.contactNo}</p>
-                                            <p><strong>Email:</strong> {vendor.email}</p>
+                                            <p><strong>Cab Type:</strong> {lt?.cabType}</p>
+                                            <p><strong>Hours Included:</strong> {lt?.hours}</p>
+                                            <p><strong>Kilometers Included:</strong> {lt?.kms}</p>
+                                            <p><strong>Price:</strong> {lt?.price}</p>
                                         </div>
 
-                                        <Separator />
+                                        {/* <Separator />
 
                                         <div className="space-y-2">
                                             <p className="text-sm font-medium">Cabs:</p>
@@ -56,7 +58,7 @@ function page() {
                                                     <p className="text-sm">Email: {cab.driverEmail}</p>
                                                 </div>
                                             ))}
-                                        </div>
+                                        </div> */}
                                     </CardContent>
                                 </Card>
                             ))}
