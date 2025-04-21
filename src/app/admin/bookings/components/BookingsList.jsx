@@ -1,18 +1,17 @@
 'use client'
-import { BOOKINGS_LIST } from '@/lib/constants/constants'
 import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-function BookingsList() {
+function BookingsList({ bookings }) {
     const [selectedBooking, setSelectedBooking] = useState(null);
 
     return (
         <div>
             <ScrollArea className="h-full sm:pr-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 pb-4">
-                    {BOOKINGS_LIST.map((booking, index) => (
+                    {bookings && bookings?.map((booking, index) => (
                         <Dialog key={index}>
                             <DialogTrigger asChild>
                                 <div
