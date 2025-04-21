@@ -4,7 +4,7 @@ import fs from 'fs';
 
 if (!admin.apps.length) {
   const serviceAccount = JSON.parse(
-    fs.readFileSync(path.join(process.cwd(), 'serviceAccountKey.json'), 'utf-8')
+    fs.readFileSync(path.join(process.cwd(), 'src', 'lib', 'firebase', 'serviceAccountKey.json'), 'utf-8')
   );
 
   admin.initializeApp({
