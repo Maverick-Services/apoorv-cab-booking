@@ -11,13 +11,13 @@ export default function page() {
   return (
     <div className="flex flex-col">
       <div className="w-full relative overflow-hidden">
-        <Image
+        {/* <Image
           className="absolute -top-2 right-0 -z-10"
           src={MAIN_WEBSITE.bg}
           height={1000}
           width={300}
           alt='Rental Car'
-        />
+        /> */}
         <Navbar />
         <Header />
       </div>

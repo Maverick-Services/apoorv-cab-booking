@@ -7,7 +7,9 @@ import {
     Package,
     MapPinned,
     Car,
+    Pin,
 } from "lucide-react";
+import { FaHelicopter } from "react-icons/fa";
 
 // Admin Sidebar
 export const adminSidebarLinks = [
@@ -40,6 +42,16 @@ export const adminSidebarLinks = [
         href: "/admin/cab-types",
         label: "Cab Types",
         icon: <Car />,
+    },
+    {
+        href: "/admin/airport-trips",
+        label: "Airport Trips",
+        icon: <FaHelicopter />,
+    },
+    {
+        href: "/admin/local-trips",
+        label: "Local Trips",
+        icon: <Pin />,
     },
 ];
 
