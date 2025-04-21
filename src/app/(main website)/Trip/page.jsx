@@ -1,8 +1,10 @@
-'use client'
-import React, { useEffect, useState } from 'react';
+
+import React, { Suspense } from 'react';
 // import L from 'leaflet';
 import { distance, point } from '@turf/turf';
 import BookingForm from '@/components/main/home/BookingForm';
+
+export const dynamic = "force-dynamic";
 
 function page() {
 
@@ -61,7 +63,9 @@ function page() {
 
     return (
         <div className='text-black flex flex-col items-center justify-center py-10'>
-            <BookingForm />
+            <Suspense fallback={<div>Loading form...</div>}>
+                <BookingForm />
+            </Suspense>
             {/* <form onSubmit={handleDistanceCalculation}>
                 <input type="text"
                     placeholder='Pick Up Location'
