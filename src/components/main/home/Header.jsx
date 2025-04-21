@@ -1,7 +1,7 @@
 import { MAIN_WEBSITE } from '@/lib/assets/assets';
 import Image from 'next/image';
 import React from 'react';
-import BookingForm from './BookingForm';
+import BookingForm from '../../../app/(main website)/trip/components/BookingForm';
 
 function Header() {
     return (
