@@ -49,7 +49,7 @@ export const adminSidebarLinks = [
         icon: <FaHelicopter />,
     },
     {
-        href: "/admin/local-trips",
+        href: "/admin/localTrips",
         label: "Local Trips",
         icon: <Pin />,
     },
