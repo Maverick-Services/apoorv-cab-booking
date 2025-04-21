@@ -20,7 +20,7 @@ function ProductName() {
                         <option key={city} value={city}>{city}</option>
                     ))}
                 </select>
-                {errors.pickupCity && <span className="text-red-500 text-xs">{errors.pickupCity.message}</span>}
+                {/* {errors.pickupCity && <span className="text-red-500 text-xs">{errors.pickupCity.message}</span>} */}
             </div>
 
             {/* Cab Type */}
