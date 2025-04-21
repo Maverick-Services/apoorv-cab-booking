@@ -39,8 +39,5 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "tailwindcss": "^4"
-  },
-  "overrides": {
-    "@tailwindcss/oxide": "@tailwindcss/oxide-linux-x64"
   }
 }
