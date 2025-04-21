@@ -2,7 +2,7 @@
 import React, { Suspense } from 'react';
 // import L from 'leaflet';
 import { distance, point } from '@turf/turf';
-import BookingForm from './components/BookingForm';
+import { BookingForm } from '@/app/(main website)/trip/components/BookingForm';
 
 export const dynamic = "force-dynamic";
 
