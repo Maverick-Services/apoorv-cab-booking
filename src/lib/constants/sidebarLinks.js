@@ -5,6 +5,8 @@ import {
     Truck,
     Building,
     Package,
+    MapPinned,
+    Car,
 } from "lucide-react";
 
 // Admin Sidebar
@@ -28,6 +30,16 @@ export const adminSidebarLinks = [
         href: "/admin/packages",
         label: "Packages",
         icon: <Package />,
+    },
+    {
+        href: "/admin/pickup-cities",
+        label: "Pickup Cities",
+        icon: <MapPinned />,
+    },
+    {
+        href: "/admin/cab-types",
+        label: "Cab Types",
+        icon: <Car />,
     },
 ];
 
