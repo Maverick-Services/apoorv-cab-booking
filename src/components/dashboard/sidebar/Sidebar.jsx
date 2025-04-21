@@ -20,7 +20,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
 
     return (
         <div className={`max-[640px]:max-w-58 w-full max-[640px]:absolute ${!isOpen ? "-left-full" : 'left-0'} max-[640px]:top-0 sm:w-[7rem] lg:w-[18rem] h-screen bg-gradient-to-b overflow-auto from-gray-50 to-white border-r border-gray-100 shadow-xl flex flex-col items-center gap-2 px-6 py-2 transition-all duration-500 ease-in-out`}>
-            <div className="w-full py-8 px-4 hover:scale-[1.02] transition-transform duration-300">
+            <div className="w-full pt-4 pb-2 px-4 hover:scale-[1.02] transition-transform duration-300">
                 <Image
                     src={MAIN_WEBSITE.logo}
                     alt="logo"
