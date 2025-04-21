@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 // import L from 'leaflet';
 import { distance, point } from '@turf/turf';
 import BookingForm from '@/components/main/home/BookingForm';
+import { CabDetails } from '@/components/main/bookingPage/CabDetails';
+import Navbar from '@/components/main/navbar/Navbar';
+import Footer from '@/components/main/Footer';
 
 function page() {
 
@@ -60,21 +63,26 @@ function page() {
     // }
 
     return (
-        <div className='text-black flex flex-col items-center justify-center py-10'>
-            <BookingForm />
-            {/* <form onSubmit={handleDistanceCalculation}>
-                <input type="text"
-                    placeholder='Pick Up Location'
-                    name='pickUp'
-                    onChange={handleLoactionInput}
-                />
-                <input type="text"
-                    placeholder='Drop Off Location'
-                    name='dropOff'
-                    onChange={handleLoactionInput}
-                />
-                <button type='submit'>Search</button>
-            </form> */}
+        <div className='bg-gray-100'>
+            <Navbar />
+            <div className='text-black py-10 w-11/12 mx-auto flex justify-between'>
+                {/* <BookingForm /> */}
+                <CabDetails />
+                {/* <form onSubmit={handleDistanceCalculation}>
+                    <input type="text"
+                        placeholder='Pick Up Location'
+                        name='pickUp'
+                        onChange={handleLoactionInput}
+                    />
+                    <input type="text"
+                        placeholder='Drop Off Location'
+                        name='dropOff'
+                        onChange={handleLoactionInput}
+                    />
+                    <button type='submit'>Search</button>
+                </form> */}
+            </div>
+            <Footer />
         </div>
     )
 }
