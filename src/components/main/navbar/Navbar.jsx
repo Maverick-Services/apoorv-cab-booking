@@ -43,7 +43,7 @@ function Navbar() {
                 </div>
 
                 {/* Navigation Links (hidden on mobile, visible on md+) */}
-                <div className="hidden md:flex md:space-x-6">
+                <div className="hidden md:flex md:space-x-6 items-center justify-center">
                     <Link href="#why-us">
                         <p className="hover:text-blue-500 transition-colors">Why Us</p>
                     </Link>
@@ -53,12 +53,12 @@ function Navbar() {
                     <Link href="#contact">
                         <p className="hover:text-blue-500 transition-colors">Contact</p>
                     </Link>
-                </div>
 
-                {/* Login Button (hidden on mobile, visible on md+) */}
-                <button className="hidden md:block bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Login
-                </button>
+                    {/* Login Button (hidden on mobile, visible on md+) */}
+                    <button className="hidden md:block rounded-full bg-blue-800 text-white px-5 py-2 hover:bg-blue-900 cursor-pointer">
+                        Login
+                    </button>
+                </div>
             </div>
 
             {/* Dropdown Menu (visible when toggled on mobile) */}
