@@ -17,9 +17,10 @@ function Navbar() {
             <div className="mx-auto flex items-center justify-between px-4 py-3 md:py-4">
                 {/* Brand */}
                 <Image
+                    className='px-2'
                     src={MAIN_WEBSITE.logo}
                     height={100}
-                    width={250}
+                    width={100}
                     alt='logo'
                 />
 

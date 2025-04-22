@@ -1,44 +1,70 @@
 "use client";
 
 import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { cities } from '@/lib/constants/constants';
-import { useState } from 'react';
-import { ArrowRightCircle } from 'lucide-react';
+import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity';
+import { ArrowRightCircle, ArrowRight, MapPin, CalendarDays, Phone, Clock, Loader2 } from 'lucide-react';
+import { ArrowBigRightDashIcon } from 'lucide-react';
+import { IoCloseCircle } from 'react-icons/io5';
 import { point, distance } from '@turf/turf';
-import { useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
-import { ArrowRight, CalendarDays, MapPin, Phone, Clock } from 'lucide-react';
 
-export default function BookingForm() {
+export default function BookingForm({ editTrip, setEditTrip }) {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const tripData = searchParams.get('tripData');
+    const tripDataString = searchParams.get("tripData");
+    const tripData = tripDataString ? JSON.parse(tripDataString) : null;
 
-    const [dropOffs, setDropOffs] = useState([]);
+    const [pickupCities, setPickupCities] = useState([]);
+    const [dropOffs, setDropOffs] = useState(tripData?.dropOffs || []);
+    const [loading, setLoading] = useState(false);
+
     const {
         register,
         handleSubmit,
         setValue,
-        getValues,
-        formState: { errors },
         watch,
-    } = useForm();
+        formState: { errors },
+    } = useForm({
+        defaultValues: editTrip && tripData
+            ? {
+                pickupCity: tripData.pickupCity,
+                dropCity: tripData.dropCity,
+                pickupTime: tripData.pickupTime,
+                returnDate: tripData.returnDate,
+                mobileNumber: tripData.mobileNumber,
+                tripType: tripData.tripType,
+            }
+            : {},
+    });
 
     const tripType = watch('tripType');
     const pickupCity = watch('pickupCity');
 
+    useEffect(() => {
+        const fetchPickupCities = async () => {
+            setLoading(true);
+            try {
+                const res = await getAllPickupCities();
+                setPickupCities(res || []);
+            } catch (err) {
+                console.error(err);
+            }
+            setLoading(false);
+        };
+        fetchPickupCities();
+    }, []);
+
     const getCoordinates = async (address) => {
-        const encodedAddress = encodeURIComponent(address);
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodedAddress}`;
-        const response = await fetch(url, {
-            headers: { 'User-Agent': 'YourAppName/1.0 (you@email.com)' },
-        });
-        const data = await response.json();
+        const encoded = encodeURIComponent(address);
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`;
+        const res = await fetch(url, { headers: { 'User-Agent': 'MyApp/1.0 (my@email.com)' } });
+        const data = await res.json();
         if (data.length > 0) {
-            const { lat, lon } = data[0];
-            return { lat: parseFloat(lat), lng: parseFloat(lon) };
+            return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
         }
-        throw new Error('Location not found');
+        throw new Error("Location not found");
     };
 
     const onSubmit = async (data) => {
@@ -59,7 +85,7 @@ export default function BookingForm() {
                 }
             }
 
-            if (data.tripType === 'Round Trip') {
+            if (tripType === 'Round Trip') {
                 coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
             }
 
@@ -71,155 +97,159 @@ export default function BookingForm() {
             const bookingData = {
                 ...data,
                 coordinates: coordList,
-                totalDistance,
+                dropOffs,
+                totalDistance: (totalDistance + ((totalDistance * 25) / 100)).toFixed(0),
             };
-            if (dropOffs.length) bookingData.dropOffs = dropOffs;
 
-            if (!tripData) {
-                router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
-            }
+            if (editTrip) setEditTrip(false);
+            router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
         } catch (err) {
-            console.error('Coordinate fetch error:', err);
+            console.error("Error fetching coordinates:", err);
         }
     };
+
+    if (loading && !pickupCities.length) {
+        return <Loader2 className="animate-spin text-primary w-10 h-10 mx-auto" />;
+    }
 
     return (
         <div className="w-full max-w-7xl mx-auto">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-white rounded-2xl p-6 shadow-2xl shadow-primary/20 border border-gray-100"
+                className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-100"
             >
-                <div className="grid grid-cols-1 md:grid-cols-1 gap-4 items-end">
-                    {/* Trip Type Selector */}
-                    <div className="flex gap-2 mb-4">
-                        {['One Way', 'Round Trip', 'Local Trip'].map((type) => (
-                            <button
-                                key={type}
-                                type="button"
-                                onClick={() => setValue('tripType', type)}
-                                className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all ${tripType === type
-                                    ? 'bg-primary text-white shadow-md'
-                                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                    }`}
-                            >
-                                {type}
-                            </button>
-                        ))}
-                    </div>
-
-                    <div className='flex flex-col gap-3'>
-                        {/* Pickup City */}
-                        <div className="relative">
-                            <label className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                                <MapPin size={16} className="text-primary" />
-                                Pickup Location
-                            </label>
-                            <div className="relative">
-                                <select
-                                    {...register('pickupCity', { required: true })}
-                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all appearance-none"
-                                >
-                                    <option value="">Select City</option>
-                                    {cities.map((city) => (
-                                        <option key={city} value={city}>{city}</option>
-                                    ))}
-                                </select>
-                                <MapPin size={18} className="absolute left-3 top-3.5 text-gray-400" />
-                            </div>
-                        </div>
-
-                        {/* Drop City */}
-                        {tripType !== 'Local Trip' && (
-                            <div className="md:col-span-3 relative">
-                                <label className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                                    <MapPin size={16} className="text-primary" />
-                                    {tripType === 'Round Trip' ? 'Via Cities' : 'Drop Location'}
-                                </label>
-                                <div className="relative">
-                                    <select
-                                        disabled={!pickupCity}
-                                        {...register('dropCity', { required: true })}
-                                        className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all appearance-none"
-                                    >
-                                        <option value="">Select City</option>
-                                        {cities.map((city) => (
-                                            <option key={city} value={city}>{city}</option>
-                                        ))}
-                                    </select>
-                                    <ArrowRight size={18} className="absolute left-3 top-3.5 text-gray-400" />
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Date/Time Pickers */}
-                        <div className="relative">
-                            <label className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                                <CalendarDays size={16} className="text-primary" />
-                                Pickup Date
-                            </label>
-                            <div className="relative">
-                                <input
-                                    type="datetime-local"
-                                    {...register('pickupTime', { required: true })}
-                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-                                />
-                                <Clock size={18} className="absolute left-3 top-3.5 text-gray-400" />
-                            </div>
-                        </div>
-
-                        {tripType === 'Round Trip' && (
-                            <div className="md:col-span-2 relative">
-                                <label className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                                    <CalendarDays size={16} className="text-primary" />
-                                    Return Date
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        type="date"
-                                        {...register('returnDate', { required: true })}
-                                        className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-                                    />
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Mobile Number */}
-                        <div className="relative">
-                            <label className="text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">
-                                <Phone size={16} className="text-primary" />
-                                Mobile Number
-                            </label>
-                            <div className="relative">
-                                <input
-                                    type="tel"
-                                    {...register('mobileNumber', {
-                                        required: true,
-                                        pattern: /^[0-9]{10}$/
-                                    })}
-                                    placeholder="10-digit number"
-                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:border-primary focus:ring-2 focus:ring-primary/30 transition-all"
-                                />
-                                <Phone size={18} className="absolute left-3 top-3.5 text-gray-400" />
-                            </div>
-                        </div>
-
-                        {/* Submit Button */}
-                        <div className="">
-                            <button
-                                type="submit"
-                                className="w-full h-[52px] bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg transition-all flex items-center justify-center gap-2"
-                            >
-                                Search Cabs
-                                <ArrowRightCircle size={20} />
-                            </button>
-                        </div>
-                    </div>
+                {/* Trip Type Buttons */}
+                <div className="flex gap-2 mb-4">
+                    {['One Way', 'Round Trip', 'Local Trip'].map(type => (
+                        <button
+                            key={type}
+                            type="button"
+                            onClick={() => setValue('tripType', type)}
+                            className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all ${tripType === type ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'
+                                }`}
+                        >
+                            {type}
+                        </button>
+                    ))}
                 </div>
+
+                {/* Form Fields */}
+                <div className="grid grid-cols-1 gap-4">
+
+                    {/* Pickup City */}
+                    <div>
+                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                            <MapPin size={16} className="text-primary" />
+                            Pickup Location
+                        </label>
+                        <select
+                            {...register('pickupCity', { required: true })}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        >
+                            <option value="">Select City</option>
+                            {pickupCities.map(city => (
+                                <option key={city?.id} value={city?.name}>{city?.name}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Drop or Via Cities */}
+                    {tripType !== 'Local Trip' && (
+                        <div>
+                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                                <ArrowRight size={16} className="text-primary" />
+                                {tripType === 'Round Trip' ? 'Via Cities' : 'Drop Location'}
+                            </label>
+
+                            {tripType === 'Round Trip' && dropOffs.length > 0 && (
+                                <div className="flex flex-wrap gap-2 mb-2">
+                                    <div className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300"> <span className="text-gray-600">{pickupCity}</span> <ArrowBigRightDashIcon /> </div> {dropOffs.map((city, index) => (<div key={index} className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300"> <span className="text-gray-600">{city}</span> <button type="button" onClick={() => setDropOffs((prev) => prev.filter((_, i) => i !== index))} className="text-red-500 hover:text-red-700" > <IoCloseCircle /> </button> <ArrowBigRightDashIcon /> </div>))} <span className="text-sm bg-yellow-300 p-1 px-2 rounded-2xl">{pickupCity}</span>
+                                </div>
+                            )}
+
+                            <select
+                                {...register('dropCity', { required: tripType !== 'Round Trip' })}
+                                onKeyDown={e => {
+                                    if (tripType === 'Round Trip' && e.key === 'Enter') {
+                                        e.preventDefault();
+                                        const value = e.target.value;
+                                        if (value && !dropOffs.includes(value)) {
+                                            setDropOffs(prev => [...prev, value]);
+                                        }
+                                    }
+                                }}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                            >
+                                <option value="">Select City</option>
+                                {cities.map(city => (
+                                    city !== pickupCity && !dropOffs.includes(city) && (
+                                        <option key={city} value={city}>{city}</option>
+                                    )
+                                ))}
+                            </select>
+                        </div>
+                    )}
+
+                    {/* Pickup Time */}
+                    <div>
+                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                            <CalendarDays size={16} className="text-primary" />
+                            Pickup Date & Time
+                        </label>
+                        <input
+                            type="datetime-local"
+                            {...register('pickupTime', { required: true })}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        />
+                    </div>
+
+                    {/* Return Date */}
+                    {tripType === 'Round Trip' && (
+                        <div>
+                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                                <CalendarDays size={16} className="text-primary" />
+                                Return Date
+                            </label>
+                            <input
+                                type="date"
+                                {...register('returnDate', { required: true })}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                            />
+                        </div>
+                    )}
+
+                    {/* Mobile Number */}
+                    <div>
+                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                            <Phone size={16} className="text-primary" />
+                            Mobile Number
+                        </label>
+                        <input
+                            type="tel"
+                            placeholder="10-digit number"
+                            {...register('mobileNumber', {
+                                required: true,
+                                pattern: /^[0-9]{10}$/,
+                            })}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        />
+                    </div>
+
+                    {/* Submit */}
+                    <button
+                        type="submit"
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2"
+                    >
+                        Search Cabs
+                        <ArrowRightCircle size={20} />
+                    </button>
+                </div>
+
                 {/* Error Messages */}
                 <div className="mt-4 space-y-1">
                     {Object.keys(errors).map((error) => (
                         <p key={error} className="text-red-500 text-sm">
-                            {errors[error].message}
+                            {errors[error]?.message || "This field is required"}
                         </p>
                     ))}
                 </div>
