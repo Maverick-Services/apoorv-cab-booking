@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { CircleCheckBig, Loader2, LucideDelete, PlusCircle } from 'lucide-react';
 // import { useSearchParams } from 'next/navigation';
-import { Skeleton } from '@/components/ui/skeleton';
 import {
     Dialog,
     DialogContent,
@@ -16,36 +14,29 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
 import CabVariant from './CabVariant';
-// import { useCabTypeForm } from '../context/CabTypeContext';
+import CityName from './CityName';
+import Terms from './Terms';
+import { usePickupCityForm } from '../context/PickupCityContext';
 
 const PickupCityForm = () => {
     // const searchParams = useSearchParams();
     // const updateCabTypeId = searchParams.get('id');
-    const [isLoading, setIsLoading] = useState(false)
-    const [otherError, setOtherError] = useState(null)
-    const [creating, setCreating] = useState(false)
     const [updateCabTypeId, setUpdateCabTypeId] = useState()
 
-    const [tempTerm, setTempTerm] = useState('');
-    const [termsArray, setTermsArray] = useState([]);
-
-    // const {
-    //     otherError,
-    //     isLoading,
-    //     creating,
-    //     deleting,
-    //     fetchData,
-    //     handleCreate,
-    //     handleUpdate,
-    //     handleDelete,
-    // } = useCabTypeForm();
-
     const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        setValue
-    } = useForm();
+        otherError,
+        isLoading,
+        creating,
+        deleting,
+        fetchData,
+        handleCreate,
+        handleUpdate,
+        handleDelete,
+        data, setData, handleData,
+        handleVariant, variant, setVariant, variantList, setVariantList,
+        tempTerm, setTempTerm, termsArray, setTermsArray,
+    } = usePickupCityForm();
+
 
     // Initially Fetch Product Details if we got Id in URL
     // useEffect(() => {
@@ -62,8 +53,15 @@ const PickupCityForm = () => {
     // }, [updateCabTypeId]);
 
 
-    const onSubmit = async (data) => {
-        console.log('Cab Type Data:', data);
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const finalData = {
+            ...data,
+            terms: [...termsArray],
+            variantList: variantList
+        }
+        console.log('Cab Type Data:', finalData);
+        handleCreate(finalData)
         // if (updateCabTypeId) {
         //     handleUpdate({ ...data, id: updateCabTypeId });
         // } else {
@@ -71,85 +69,22 @@ const PickupCityForm = () => {
         // }
     };
 
-    const handleAddTerm = () => {
-        if (tempTerm.trim() !== '') {
-            setTermsArray([...termsArray, tempTerm.trim()]);
-            setTempTerm('');
-        }
-    };
 
-    const handleRemoveTerm = (index) => {
-        setTermsArray(termsArray.filter((_, i) => i !== index));
-    };
 
     return (
         <div className='w-full'>
             <form
-                onSubmit={handleSubmit(onSubmit)}
+                onSubmit={handleSubmit}
                 className="space-y-6 w-full"
             >
                 <div className=''>
                     <div className='w-full grid grid-cols-1 sm:grid-cols-2 mb-4 gap-4 p-4 bg-white rounded-xl border border-gray-300'>
                         {/* City Name */}
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='name' className="text-sm font-medium">City Name</label>
-                            {isLoading
-                                ? <Skeleton className="h-10 w-full" />
-                                : <input
-                                    type="text"
-                                    id="name"
-                                    placeholder='eg. Delhi / Lucknow / Manali'
-                                    {...register('name', { required: 'City Name is required' })}
-                                    className="border p-2 rounded-md"
-                                />
-                            }
-                            {errors.name && (
-                                <span className="text-red-500 text-xs">{errors.name.message}</span>
-                            )}
-                        </div>
+                        <CityName />
 
                         {/* City Terms and Conditions */}
-                        <div className="flex flex-col gap-2">
-                            <label htmlFor='terms' className="text-sm font-medium">Terms and Conditions</label>
+                        <Terms />
 
-                            <div className="flex gap-2">
-                                <input
-                                    type="text"
-                                    id="terms"
-                                    placeholder='eg. Your Trip has a KM limit.'
-                                    value={tempTerm}
-                                    onChange={(e) => setTempTerm(e.target.value)}
-                                    className="border p-2 rounded-md w-full"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleAddTerm}
-                                    className="bg-green-600 text-white px-3 rounded hover:bg-green-700"
-                                >
-                                    +
-                                </button>
-                            </div>
-
-                            {errors.terms && (
-                                <span className="text-red-500 text-xs">{errors.terms.message}</span>
-                            )}
-
-                            {/* Display List of Terms */}
-                            <ul className="list-disc list-inside text-sm text-gray-700">
-                                {termsArray.map((term, index) => (
-                                    <li key={index} className="flex justify-between items-center">
-                                        {index + 1}. {term}
-                                        <button
-                                            type="button"
-                                            onClick={() => handleRemoveTerm(index)}
-                                            className="text-red-500 hover:text-red-700 ml-2 text-xs cursor-pointer"
-                                        >
-                                            Remove
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
                     </div>
                     <div className='w-full'>
                         {/* Cabs in city Details */}

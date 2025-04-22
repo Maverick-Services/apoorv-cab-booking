@@ -1,12 +1,12 @@
-// import CabTypeFormContextProvider from './context/CabTypeContext'
+import PickupCityFormContexttProvider from './context/PickupCityContext'
 
 function layout({ children }) {
     return (
-        // <CabTypeFormContextProvider>
-        <div>
-            {children}
-        </div>
-        // </CabTypeFormContextProvider>
+        <PickupCityFormContexttProvider>
+            <div>
+                {children}
+            </div>
+        </PickupCityFormContexttProvider>
     )
 }
 

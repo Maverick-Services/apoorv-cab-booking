@@ -1,12 +1,33 @@
+"use client"
+
 import InnerLayout from '@/components/dashboard/layout/InnerLayout'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import PickupCityCards from './components/PickupCityCards';
+import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity'
 
 function page() {
 
+    const [loading, setLoading] = useState(false)
+    const [pickupCities, setPickupCities] = useState([])
 
+    async function fetchPickupCities() {
+        setLoading(true)
+        try {
+            const res = await getAllPickupCities()
+            setPickupCities(res)
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        fetchPickupCities()
+    }, [])
+
+    console.log(pickupCities)
     return (
         <div>
             <InnerLayout heading={"Pickup Cities"}>

@@ -9,7 +9,7 @@ export default function page() {
     return (
         <div>
             <InnerLayout heading={"Add New Pickup City"}>
-                <div className='flex justify-center w-full'>
+                <div className='flex justify-center w-full pb-6'>
                     <Suspense fallback={<div>Loading form...</div>}>
                         <PickupCityForm />
                     </Suspense>

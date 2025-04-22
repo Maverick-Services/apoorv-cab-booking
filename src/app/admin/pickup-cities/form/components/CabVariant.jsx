@@ -3,117 +3,70 @@
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import VariantCard from './VariantCard'
+import VariantName from './variant/VariantName'
+import VariantMinKm from './variant/VariantMinKm'
+import RoundTripPrice from './variant/RoundTripPrice'
+import OneWayPrice from './variant/OneWayPrice'
+import DriverAllowance from './variant/DriverAllowance'
+import { usePickupCityForm } from '../context/PickupCityContext'
 
 function CabVariant() {
-    const [variant, setVariant] = useState({
-        name: '',
-        minKilometers: '',
-        actualPrice: '',
-        discountedPrice: '',
-        driverAllowance: '',
-    })
 
-    const [variantList, setVariantList] = useState([])
-
-    function handleVariant(key, value) {
-        setVariant(prev => ({
-            ...prev,
-            [key]: value
-        }))
-    }
+    const { variant, setVariant, variantList, setVariantList } = usePickupCityForm();
 
     function handleAddVariant() {
-        // Basic validation
-        if (
-            !variant.name ||
-            !variant.minKilometers ||
-            !variant.actualPrice ||
-            !variant.discountedPrice ||
-            !variant.driverAllowance
-        ) {
+        const requiredFields = [
+            'name',
+            'minKilometers',
+            'actualPriceRoundTrip',
+            'discountedPriceRoundTrip',
+            'actualPriceOneWay',
+            'discountedPriceOneWay',
+            'driverAllowance'
+        ];
+
+        if (requiredFields.some(field => !variant[field])) {
             alert("Please fill all the fields before adding the variant.")
             return
         }
 
-        // Add to list
         setVariantList(prev => [...prev, variant])
-
-        // Reset current variant
         setVariant({
             name: '',
             minKilometers: '',
-            actualPrice: '',
-            discountedPrice: '',
+            actualPriceRoundTrip: '',
+            discountedPriceRoundTrip: '',
+            actualPriceOneWay: '',
+            discountedPriceOneWay: '',
             driverAllowance: '',
         })
     }
 
     return (
-        <div className="w-full bg-white border border-gray-200 rounded-lg p-4">
-            <h2 className='text-2xl text-primary font-bold mb-4'>Add Cab Types</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-                <div className="flex flex-col">
-                    <label className="text-sm font-medium text-gray-700 mb-1">Variant Name</label>
-                    <input
-                        type="text"
-                        value={variant.name}
-                        onChange={(e) => handleVariant('name', e.target.value)}
-                        placeholder="Eg. Regular / Premium"
-                        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary"
-                    />
+        <div className="w-full bg-white border border-gray-200 rounded-lg p-6">
+            <h2 className='text-2xl text-primary font-bold mb-3'>Add Cab Types</h2>
+
+            <div className="space-y-4">
+                {/* Variant Details Section */}
+                <div className="border-b pb-7">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <VariantName />
+                        <VariantMinKm />
+                    </div>
                 </div>
 
-                <div className="flex flex-col">
-                    <label className="text-sm font-medium text-gray-700 mb-1">Minimum Kilometers</label>
-                    <input
-                        type="number"
-                        min={0}
-                        value={variant.minKilometers}
-                        onChange={(e) => handleVariant('minKilometers', e.target.value)}
-                        placeholder="Eg. 120"
-                        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary"
-                    />
-                </div>
+                {/* Round Trip Pricing Section */}
+                <RoundTripPrice />
 
-                <div className="flex flex-col">
-                    <label className="text-sm font-medium text-gray-700 mb-1">Price Per Kilometer (Actual)</label>
-                    <input
-                        type="number"
-                        min={0}
-                        value={variant.actualPrice}
-                        onChange={(e) => handleVariant('actualPrice', e.target.value)}
-                        placeholder="Eg. 10"
-                        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary"
-                    />
-                </div>
+                {/* One Way Trip Pricing Section */}
+                <OneWayPrice />
 
-                <div className="flex flex-col">
-                    <label className="text-sm font-medium text-gray-700 mb-1">Price Per Kilometer (Discounted)</label>
-                    <input
-                        type="number"
-                        min={0}
-                        value={variant.discountedPrice}
-                        onChange={(e) => handleVariant('discountedPrice', e.target.value)}
-                        placeholder="Eg. 8"
-                        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary"
-                    />
-                </div>
-
-                <div className="flex flex-col">
-                    <label className="text-sm font-medium text-gray-700 mb-1">Driver Allowance (Per Day)</label>
-                    <input
-                        type="number"
-                        min={0}
-                        value={variant.driverAllowance}
-                        onChange={(e) => handleVariant('driverAllowance', e.target.value)}
-                        placeholder="Eg. 500"
-                        className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-secondary"
-                    />
-                </div>
+                {/* Driver Allowance Section */}
+                <DriverAllowance />
 
                 <Button
                     type="button"
-                    className="w-full mt-2 bg-primary text-white hover:opacity-90 transition-all"
+                    className="w-full bg-primary text-white hover:opacity-90 transition-all p-6 text-lg -mt-4"
                     onClick={handleAddVariant}
                 >
                     Add Cab Type
@@ -122,8 +75,8 @@ function CabVariant() {
 
             {/* Display added variants */}
             {variantList.length > 0 && (
-                <div className="mt-6 space-y-4">
-                    <h3 className="text-lg font-semibold">Variant Details</h3>
+                <div className="mt-8 space-y-4">
+                    <h3 className="text-xl font-semibold">Added Cab Variants</h3>
                     {variantList.map((v, idx) => (
                         <VariantCard key={idx} variant={v} />
                     ))}
