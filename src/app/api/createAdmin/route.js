@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server';
 import admin from '../../../lib/firebase/firebase-admin';
+import { ROLE } from '@/lib/constants/constants';
 
 const db = admin.firestore();
 
 export async function POST(req) {
     try {
-        const { email, password, displayName } = await req.json();
+        const { email, phoneNo, password, name } = await req.json();
 
-        if (!email || !password || !displayName) {
+        if (!email || !phoneNo || !password || !name) {
             // return res.status(400).json({ message: 'Missing required fields' });
             return NextResponse.json({
                 success: false,
@@ -18,9 +19,10 @@ export async function POST(req) {
         // Create a new user in Firebase Authentication
         const userRecord = await admin.auth().createUser({
             email,
+            phoneNo,
             password,
-            displayName,
-            role: 'admin'
+            name,
+            role: ROLE.ADMIN
         });
 
         // Set custom claims to make the user an admin
@@ -29,8 +31,9 @@ export async function POST(req) {
         // Store admin details in Firestore
         await db.collection('user').doc(userRecord.uid).set({
             email,
-            displayName,
-            role: 'admin',
+            phoneNo,
+            name,
+            role: ROLE.ADMIN,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
