@@ -28,7 +28,6 @@ function page() {
         fetchPickupCities()
     }, [])
 
-    console.log(pickupCities)
     return (
         <div>
             <InnerLayout heading={"Pickup Cities"}>
