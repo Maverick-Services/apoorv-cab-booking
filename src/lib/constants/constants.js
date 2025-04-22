@@ -346,3 +346,9 @@ export const cities = [
     "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane",
     "Bhopal", "Visakhapatnam", "Patna", "Vadodara", "Ludhiana"
 ];
+
+export const ROLE = {
+    ADMIN: 'admin',
+    VENDOR: 'vendor',
+    CUSTOMER: 'Customer',
+}
