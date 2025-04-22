@@ -1,45 +1,8 @@
-import { Briefcase, Users, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { MapPin } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
 
-function PickupCityCards() {
-    const pickupCities = [
-        {
-            id: 'city-1',
-            name: 'Delhi',
-            terms: 'Pickup available from 6 AM to 11 PM. ID proof required.',
-            cabTypes: [
-                {
-                    typeName: 'Sedan',
-                    minKilometers: 100,
-                    pricePerKm: 12,
-                    discountedPricePerKm: 10,
-                    driverAllowancePerDay: 300,
-                },
-                {
-                    typeName: 'SUV',
-                    minKilometers: 150,
-                    pricePerKm: 15,
-                    discountedPricePerKm: 13,
-                    driverAllowancePerDay: 400,
-                },
-            ],
-        },
-        {
-            id: 'city-2',
-            name: 'Mumbai',
-            terms: 'Available 24/7. Minimum 2-hour prior booking required.',
-            cabTypes: [
-                {
-                    typeName: 'Hatchback',
-                    minKilometers: 80,
-                    pricePerKm: 10,
-                    discountedPricePerKm: 9,
-                    driverAllowancePerDay: 250,
-                },
-            ],
-        },
-    ];
+function PickupCityCards({ pickupCities }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {pickupCities.map((city) => (
@@ -58,32 +21,31 @@ function PickupCityCards() {
                         <h3 className="text-sm text-gray-700 mb-1 font-semibold">
                             Terms and Conditions
                         </h3>
-                        <p className="text-sm text-muted-foreground">{city.terms}</p>
+                        <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
+                            {city.terms?.map((term, index) => (
+                                <li key={index}>{term}</li>
+                            ))}
+                        </ul>
                     </div>
 
-                    {/* Cab Type Variants */}
+                    {/* Cab Variants */}
                     <div className="grid gap-3">
-                        {city.cabTypes.map((cab, index) => (
+                        {city.variantList?.map((variant, index) => (
                             <div
                                 key={index}
                                 className="border rounded-lg p-3 bg-gray-50 flex flex-col gap-2"
                             >
-                                {/* Badge */}
-                                <Badge className="w-fit text-sm">{cab.typeName}</Badge>
-
-                                <div className="text-sm text-muted-foreground">
-                                    <p>
-                                        <strong>Min. Kilometers:</strong> {cab.minKilometers}
-                                    </p>
-                                    <p>
-                                        <strong>Price/Km:</strong> ₹{cab.pricePerKm}
-                                    </p>
-                                    <p>
-                                        <strong>Discounted Price/Km:</strong> ₹{cab.discountedPricePerKm}
-                                    </p>
-                                    <p>
-                                        <strong>Driver Allowance/Day:</strong> ₹{cab.driverAllowancePerDay}
-                                    </p>
+                                <Badge className="w-fit text-sm">{variant.name}</Badge>
+                                <div className="text-sm text-muted-foreground space-y-1">
+                                    <p><strong>Min. Kilometers:</strong> {variant.minKilometers}</p>
+                                    <Separator />
+                                    <p><strong>Actual Price (One Way):</strong> ₹{variant.actualPriceOneWay}</p>
+                                    <p><strong>Discounted Price (One Way):</strong> ₹{variant.discountedPriceOneWay}</p>
+                                    <Separator />
+                                    <p><strong>Actual Price (Round Trip):</strong> ₹{variant.actualPriceRoundTrip}</p>
+                                    <p><strong>Discounted Price (Round Trip):</strong> ₹{variant.discountedPriceRoundTrip}</p>
+                                    <Separator />
+                                    <p><strong>Driver Allowance/Day:</strong> ₹{variant.driverAllowance}</p>
                                 </div>
                             </div>
                         ))}
@@ -91,7 +53,7 @@ function PickupCityCards() {
                 </div>
             ))}
         </div>
-    );
+    )
 }
 
-export default PickupCityCards;
+export default PickupCityCards
