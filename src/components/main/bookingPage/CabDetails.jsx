@@ -91,6 +91,10 @@ export const CabDetails = () => {
         router.push(`/checkout?bookingData=${JSON.stringify(bookingData)}`);
     }
 
+    function handleLogin() {
+        console.log('handle login')
+    }
+
     if (loading || !currentPickupCity)
         return <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
 
