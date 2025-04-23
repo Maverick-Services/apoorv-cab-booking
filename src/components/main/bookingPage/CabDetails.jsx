@@ -301,7 +301,7 @@ export const CabDetails = () => {
 
                 <LoginDialog
                     open={loginDialog}
-                    onOpenChange={setLoginDialoog}
+                    onOpenChange={setLoginDialog}
                     onSave={handleLogin}
                 />
             </div>
