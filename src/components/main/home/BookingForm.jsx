@@ -102,7 +102,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             };
 
             if (editTrip) setEditTrip(false);
-            router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
+            router.push(`/trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
         } catch (err) {
             console.error("Error fetching coordinates:", err);
         }

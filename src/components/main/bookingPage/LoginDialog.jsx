@@ -1,3 +1,6 @@
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Save } from 'lucide-react'
 import React from 'react'
 
 function LoginDialog({ open, onOpenChange, onSave }) {
@@ -10,8 +13,10 @@ function LoginDialog({ open, onOpenChange, onSave }) {
                         <DialogDescription>Make changes to your item variant here.</DialogDescription>
                     </DialogHeader>
 
+
+
                     <DialogFooter>
-                        <Button variant={'secondary'} onClick={onSave} className="text-white flex items-center gap-2">
+                        <Button onClick={onSave} className="text-white flex items-center gap-2">
                             <Save className="h-4 w-4" />
                             Save Changes
                         </Button>
