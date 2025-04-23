@@ -22,6 +22,7 @@ import { getAllPickupCities } from "@/lib/firebase/admin/pickupCity";
 import { useEffect, useState } from "react";
 import { getAllCabTypes } from "@/lib/firebase/admin/cabType";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
+import LoginDialog from "./LoginDialog";
 
 export const CabDetails = () => {
     const searchParams = useSearchParams();
@@ -268,6 +269,12 @@ export const CabDetails = () => {
                         </div>
                     ))}
                 </div>
+
+                <LoginDialog
+                    open={loginDialog}
+                    onOpenChange={setLoginDialoog}
+                    onSave={handleLogin}
+                />
             </div>
         </div>
     );
