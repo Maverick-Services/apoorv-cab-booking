@@ -17,7 +17,7 @@ function page() {
                     <div className='w-full flex flex-col gap-2'>
                         <div className='w-full flex justify-between px-1'>
                             <p className='font-semibold text-primary'>Total Local Trips: {6}</p>
-                            <Link href={'/admin/localTrips/new'}>
+                            <Link href={'/admin/localTrips/form'}>
                                 <Badge className="text-base font-bold cursor-pointer">
                                     Add new Local Trip
                                 </Badge>
