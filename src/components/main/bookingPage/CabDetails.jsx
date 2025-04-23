@@ -22,16 +22,22 @@ import { getAllPickupCities } from "@/lib/firebase/admin/pickupCity";
 import { useEffect, useState } from "react";
 import { getAllCabTypes } from "@/lib/firebase/admin/cabType";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
+import { useRouter } from "next/router";
+import { auth } from "@/lib/firebase/firebase-client";
 
 export const CabDetails = () => {
     const searchParams = useSearchParams();
+    const router = useRouter();
+
     const tripDataString = searchParams.get("tripData");
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
+
     const [currentPickupCity, setCurrentPickupCity] = useState([]);
     const [cabTypes, setCabTypes] = useState([]);
     const [currentCab, setCurrentCab] = useState(null);
     const [editTrip, setEditTrip] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [loginDialog, setLoginDialog] = useState(false);
 
     async function fetchPickupCities() {
         setLoading(true);
@@ -63,6 +69,26 @@ export const CabDetails = () => {
     }, []);
 
     // console.log(editTrip)
+
+    const handleCabBooking = (cab) => {
+        let bookingData = {
+            tripType: tripData?.tripType,
+            pickupCity: tripData?.pickupCity,
+            dropCity: tripData?.dropCity,
+            dropOffs: tripData?.dropOffs,
+            pickupDate: tripData?.pickupDate,
+            totalDistance: tripData?.totalDistance,
+            price: (tripData?.totalDistance * (tripData?.tripType === "Round Trip"
+                ? cab?.discountedPriceRoundTrip
+                : cab?.discountedPriceOneWay)).toFixed(0)
+        }
+
+        if (!auth.currentUser) {
+            setLoginDialog(true);
+        }
+
+        router.push(`/checkout?bookingData=${JSON.stringify(bookingData)}`);
+    }
 
     if (loading || !currentPickupCity)
         return <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
@@ -262,7 +288,10 @@ export const CabDetails = () => {
                                 </div>
                             </div>
 
-                            <Button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg w-full sm:w-auto">
+                            <Button
+                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg w-full sm:w-auto"
+                                onClick={() => handleCabBooking(cab)}
+                            >
                                 Book Now
                             </Button>
                         </div>
