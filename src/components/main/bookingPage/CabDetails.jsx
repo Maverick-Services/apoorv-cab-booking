@@ -22,7 +22,7 @@ import { getAllPickupCities } from "@/lib/firebase/admin/pickupCity";
 import { useEffect, useState } from "react";
 import { getAllCabTypes } from "@/lib/firebase/admin/cabType";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase/firebase-client";
 import LoginDialog from "./LoginDialog";
 
