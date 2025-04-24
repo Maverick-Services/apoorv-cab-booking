@@ -20,10 +20,7 @@ const authLinks = [
 
 export default function Navbar() {
     const { user, userData, handleLogout } = useAuthStore()
-<<<<<<< HEAD
     // console.log(user)
-=======
->>>>>>> 93e066a6acb6f9031a548e2c420108b78e31c95b
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
