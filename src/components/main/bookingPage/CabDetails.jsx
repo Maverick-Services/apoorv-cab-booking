@@ -76,6 +76,7 @@ export const CabDetails = () => {
             pickupCity: tripData?.pickupCity,
             dropCity: tripData?.dropCity,
             dropOffs: tripData?.dropOffs,
+            cab: cab,
             pickupDate: tripData?.pickupDate,
             totalDistance: tripData?.totalDistance,
             price: (tripData?.totalDistance * (tripData?.tripType === "Round Trip"

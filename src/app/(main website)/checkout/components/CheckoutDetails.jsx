@@ -1,64 +1,128 @@
-'use client'
+// components/checkout/CheckoutDetails.js
+"use client"
 
-import { useSearchParams } from 'next/navigation'
-import React from 'react'
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import React, { useMemo } from 'react'
+import Image from 'next/image'
+import useAuthStore from '@/store/useAuthStore'
 
-function CheckoutDetails() {
-    const searchParams = useSearchParams();
-    const bookingDataString = searchParams.get('bookingData');
-    const bookingData = bookingDataString ? JSON.parse(bookingDataString) : null;
+export default function CheckoutDetails() {
+    const { userData } = useAuthStore()
+    const bookingDataString = typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('bookingData')
+        : null
+    const bookingData = bookingDataString ? JSON.parse(bookingDataString) : null
 
-    if (!bookingData) return <p className="text-center mt-10">No booking data found.</p>;
+    if (!bookingData) {
+        return (
+            <p className="text-center mt-10 text-gray-500">
+                No booking data found.
+            </p>
+        )
+    }
 
-    const isRoundTrip = bookingData.dropOffs && bookingData.dropOffs.length > 0;
+    // Price calculations
+    const basePrice = parseFloat(bookingData.price)
+    const gstAmount = useMemo(() => parseFloat((basePrice * 0.05).toFixed(2)), [basePrice])
+    const totalAmount = useMemo(
+        () => parseFloat((basePrice + gstAmount).toFixed(2)),
+        [basePrice, gstAmount]
+    )
+    const bookingAmount = useMemo(
+        () => parseFloat((totalAmount * 0.2).toFixed(2)),
+        [totalAmount]
+    )
+
+    const isRoundTrip = bookingData.tripType === 'Round Trip' && bookingData.dropOffs?.length > 0
 
     return (
-        <div className="w-full h-full mx-auto p-4 flex flex-col md:flex-row gap-4 justify-between items-stretch">
-            <div className='grow h-full'>
+        <div className="max-w-5xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                {/* Cab Details */}
+                <div className="p-4 bg-gray-100 rounded-lg flex flex-col items-center text-center">
+                    <Image
+                        src={'/car1.png'}
+                        width={400}
+                        height={100}
+                        alt="Car Image"
+                        className="h-24 w-auto rounded-md mb-4"
+                    />
+                    <h3 className="text-xl font-semibold mb-2">
+                        Cab Type: {bookingData.cab.name}
+                    </h3>
+                    <p className="text-gray-700">
+                        Price per km: ₹{bookingData.cab.actualPriceOneWay}
+                    </p>
+                </div>
 
-                <Card>
-                    <CardContent className="p-4 space-y-2">
-                        <p><strong>Pickup City:</strong> {bookingData.pickupCity}</p>
-                        {isRoundTrip ? (
-                            <>
-                                <p className="font-semibold">Drop Offs:</p>
-                                <ul className="list-disc list-inside">
-                                    {bookingData.dropOffs.map((city, idx) => (
-                                        <li key={idx}>{city}</li>
-                                    ))}
-                                </ul>
-                            </>
-                        ) : (
-                            <p><strong>Drop City:</strong> {bookingData.dropCity}</p>
-                        )}
-                        <p><strong>Total Distance:</strong> {bookingData.totalDistance} km</p>
-                        <p><strong>Estimated Price:</strong> ₹{bookingData.price}</p>
-                    </CardContent>
-                </Card>
-            </div>
+                {/* Passenger Info */}
+                <div className="p-4 bg-gray-100 rounded-lg">
+                    <h3 className="text-xl font-semibold mb-2">Passenger Info</h3>
+                    <p>
+                        <span className="font-medium">Name:</span> {userData?.name}
+                    </p>
+                    <p>
+                        <span className="font-medium">Email:</span> {userData?.email}
+                    </p>
+                    <p>
+                        <span className="font-medium">Phone:</span> {userData?.phoneNo}
+                    </p>
+                </div>
 
-            <div className="space-y-4 grow bg-white p-4 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold">Enter Your Details</h3>
-                <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Your full name" />
+                {/* Trip Details */}
+                <div className="p-4 bg-gray-100 rounded-lg">
+                    <h3 className="text-xl font-semibold mb-2">Trip Details</h3>
+                    <p>
+                        <span className="font-medium">Pickup City:</span>{' '}
+                        {bookingData.pickupCity}
+                    </p>
+                    {isRoundTrip ? (
+                        <>
+                            <p className="font-medium mt-2">Drop Offs:</p>
+                            <ul className="list-disc list-inside ml-4">
+                                {bookingData.dropOffs.map((city, idx) => (
+                                    <li key={idx}>{city}</li>
+                                ))}
+                            </ul>
+                        </>
+                    ) : (
+                        <p>
+                            <span className="font-medium">Drop City:</span>{' '}
+                            {bookingData.dropCity}
+                        </p>
+                    )}
+                    <p className="mt-2">
+                        <span className="font-medium">Distance:</span>{' '}
+                        {bookingData.totalDistance} km
+                    </p>
+                    <p>
+                        <span className="font-medium">Trip Type:</span>{' '}
+                        {bookingData.tripType}
+                    </p>
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="you@example.com" />
+
+                {/* Price Calculation */}
+                <div className="p-4 bg-gray-100 rounded-lg">
+                    <h3 className="text-xl font-semibold mb-4">Price Calculation</h3>
+                    <p>
+                        <span className="font-medium">Base Price:</span> ₹
+                        {basePrice.toFixed(2)}
+                    </p>
+                    <p>
+                        <span className="font-medium">GST (5%):</span> ₹
+                        {gstAmount.toFixed(2)}
+                    </p>
+                    <p className="font-medium text-lg mt-2">Total Amount:</p>
+                    <p className="text-2xl font-bold mb-4">₹{totalAmount.toFixed(2)}</p>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                        <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
+                            Pay Booking (20%): ₹{bookingAmount.toFixed(2)}
+                        </button>
+                        <button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded">
+                            Pay Full Amount: ₹{totalAmount.toFixed(2)}
+                        </button>
+                    </div>
                 </div>
-                <div className="space-y-2">
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" placeholder="1234567890" />
-                </div>
-                <Button className="w-full mt-4">Proceed to Payment</Button>
             </div>
         </div>
-    );
+    )
 }
-
-export default CheckoutDetails;
