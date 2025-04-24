@@ -1,3 +1,4 @@
+import { PrivateRoute } from '@/components/auth/PrivateRoute';
 import LayoutProvider from '@/components/dashboard/layout/LayoutProvider';
 import { adminSidebarLinks } from '@/lib/constants/sidebarLinks';
 import React from 'react'
@@ -10,12 +11,12 @@ export const metadata = {
 
 function AdminLayout({ children }) {
     return (
-        <div>
+        <PrivateRoute>
             <Toaster position="top-right" />
             <LayoutProvider sidebarLinks={adminSidebarLinks}>
                 {children}
             </LayoutProvider>
-        </div>
+        </PrivateRoute>
     )
 }
 

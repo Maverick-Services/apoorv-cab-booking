@@ -29,7 +29,7 @@ export async function POST(req) {
         await admin.auth().setCustomUserClaims(userRecord.uid, { role: 'admin' });
 
         // Store admin details in Firestore
-        await db.collection('user').doc(userRecord.uid).set({
+        await db.collection('Users').doc(userRecord.uid).set({
             email,
             phoneNo,
             name,
