@@ -8,6 +8,7 @@ import {
     MapPinned,
     Car,
     Pin,
+    HelpCircleIcon,
 } from "lucide-react";
 import { FaHelicopter } from "react-icons/fa";
 
@@ -17,6 +18,11 @@ export const adminSidebarLinks = [
         href: "/admin",
         label: "Dashboard",
         icon: <Home />,
+    },
+    {
+        href: "/admin/enquiries",
+        label: "Enquiries",
+        icon: <HelpCircleIcon />,
     },
     {
         href: "/admin/bookings",

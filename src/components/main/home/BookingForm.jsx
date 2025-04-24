@@ -9,6 +9,7 @@ import { ArrowRightCircle, ArrowRight, MapPin, CalendarDays, Phone, Clock, Loade
 import { ArrowBigRightDashIcon } from 'lucide-react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { point, distance } from '@turf/turf';
+import { createNewEnquiry } from '@/lib/firebase/admin/enquiry';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
     const router = useRouter();
@@ -102,6 +103,8 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             };
 
             if (editTrip) setEditTrip(false);
+            if (!editTrip) await createNewEnquiry({ data: bookingData });
+
             router.push(`/trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
         } catch (err) {
             console.error("Error fetching coordinates:", err);
@@ -161,11 +164,28 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                 {tripType === 'Round Trip' ? 'Via Cities' : 'Drop Location'}
                             </label>
 
-                            {tripType === 'Round Trip' && dropOffs.length > 0 && (
+                            {
+                                tripType === 'Round Trip' && dropOffs.length > 0 &&
                                 <div className="flex flex-wrap gap-2 mb-2">
-                                    <div className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300"> <span className="text-gray-600">{pickupCity}</span> <ArrowBigRightDashIcon /> </div> {dropOffs.map((city, index) => (<div key={index} className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300"> <span className="text-gray-600">{city}</span> <button type="button" onClick={() => setDropOffs((prev) => prev.filter((_, i) => i !== index))} className="text-red-500 hover:text-red-700" > <IoCloseCircle /> </button> <ArrowBigRightDashIcon /> </div>))} <span className="text-sm bg-yellow-300 p-1 px-2 rounded-2xl">{pickupCity}</span>
+                                    <div className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300">
+                                        <span className="text-gray-600">{pickupCity}</span>
+                                        <ArrowBigRightDashIcon />
+                                    </div>
+                                    {
+                                        dropOffs.map((city, index) => (
+                                            <div key={index} className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300">
+                                                <span className="text-gray-600">{city}</span>
+                                                <button type="button" onClick={() => setDropOffs((prev) => prev.filter((_, i) => i !== index))} className="text-red-500 hover:text-red-700" >
+                                                    <IoCloseCircle />
+                                                </button>
+                                                <ArrowBigRightDashIcon />
+                                            </div>
+                                        ))}
+                                    <span className="text-sm bg-yellow-300 p-1 px-2 rounded-2xl">
+                                        {pickupCity}
+                                    </span>
                                 </div>
-                            )}
+                            }
 
                             <select
                                 {...register('dropCity', { required: tripType !== 'Round Trip' })}
