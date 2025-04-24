@@ -24,10 +24,12 @@ import { getAllCabTypes } from "@/lib/firebase/admin/cabType";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
 import { useRouter } from "next/navigation";
 import LoginDialog from "../LoginDialog";
+import useAuthStore from "@/store/useAuthStore";
 
 export const CabDetails = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { userData } = useAuthStore()
 
     const tripDataString = searchParams.get("tripData");
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
@@ -37,8 +39,7 @@ export const CabDetails = () => {
     const [currentCab, setCurrentCab] = useState(null);
     const [editTrip, setEditTrip] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [loginDialog, setLoginDialog] = useState(false);
-
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
     async function fetchPickupCities() {
         setLoading(true);
         try {
@@ -68,9 +69,14 @@ export const CabDetails = () => {
         fetchAllCabTypes();
     }, []);
 
-    // console.log(editTrip)
 
     const handleCabBooking = (cab) => {
+
+        if (!userData) {
+            setIsDialogOpen(true)
+            return
+        }
+
         let bookingData = {
             tripType: tripData?.tripType,
             pickupCity: tripData?.pickupCity,
@@ -83,21 +89,14 @@ export const CabDetails = () => {
                 ? cab?.discountedPriceRoundTrip
                 : cab?.discountedPriceOneWay)).toFixed(0)
         }
-        // console.log(auth.currentUser)
-        // if (!auth.currentUser) {
-        //     setLoginDialog(true);
-        //     return
-        // }
 
-        router.push(`/checkout?bookingData=${JSON.stringify(bookingData)}`);
-    }
-
-    function handleLogin() {
-        console.log('handle login')
+        router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
 
     if (loading || !currentPickupCity)
-        return <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
+        return <div className="h-52 flex w-full items-center justify-center">
+            <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
+        </div>
 
     return (
         <div className="w-full flex justify-center">
@@ -304,11 +303,7 @@ export const CabDetails = () => {
                     ))}
                 </div>
 
-                <LoginDialog
-                    open={loginDialog}
-                    onOpenChange={setLoginDialog}
-                    onSave={handleLogin}
-                />
+                <LoginDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
             </div>
         </div>
     );

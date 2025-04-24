@@ -52,7 +52,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             } catch (err) {
                 console.error(err);
             }
-            setLoading(false);
+            setLoading(false); ``
         };
         fetchPickupCities();
     }, []);
@@ -105,7 +105,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             if (editTrip) setEditTrip(false);
             if (!editTrip) await createNewEnquiry({ data: bookingData });
 
-            router.push(`/trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
+            router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
         } catch (err) {
             console.error("Error fetching coordinates:", err);
         }
@@ -119,11 +119,11 @@ export default function BookingForm({ editTrip, setEditTrip }) {
         <div className="w-full max-w-7xl mx-auto">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-100"
+                className="bg-white p-6 shadow-2xl border border-gray-100"
             >
                 {/* Trip Type Buttons */}
                 <div className="flex gap-2 mb-4">
-                    {['One Way', 'Round Trip', 'Local Trip'].map(type => (
+                    {['One Way', 'Round Trip', 'Local', 'Airport'].map(type => (
                         <button
                             key={type}
                             type="button"
