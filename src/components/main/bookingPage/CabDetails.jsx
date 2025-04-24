@@ -83,11 +83,11 @@ export const CabDetails = () => {
                 ? cab?.discountedPriceRoundTrip
                 : cab?.discountedPriceOneWay)).toFixed(0)
         }
-        console.log(auth.currentUser)
-        if (!auth.currentUser) {
-            setLoginDialog(true);
-            return
-        }
+        // console.log(auth.currentUser)
+        // if (!auth.currentUser) {
+        //     setLoginDialog(true);
+        //     return
+        // }
 
         router.push(`/checkout?bookingData=${JSON.stringify(bookingData)}`);
     }
