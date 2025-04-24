@@ -23,8 +23,8 @@ import { useEffect, useState } from "react";
 import { getAllCabTypes } from "@/lib/firebase/admin/cabType";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
 import { useRouter } from "next/navigation";
-import LoginDialog from "../LoginDialog";
 import useAuthStore from "@/store/useAuthStore";
+import LoginDialogOuter from "../LoginDialogOuter";
 
 export const CabDetails = () => {
     const searchParams = useSearchParams();
@@ -303,7 +303,7 @@ export const CabDetails = () => {
                     ))}
                 </div>
 
-                <LoginDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+                <LoginDialogOuter open={isDialogOpen} onOpenChange={setIsDialogOpen} />
             </div>
         </div>
     );

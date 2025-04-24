@@ -4,8 +4,9 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { MAIN_WEBSITE } from '@/lib/assets/assets'
-import LoginDialog from '../LoginDialog'
+// import LoginDialog from '../LoginDialog'
 import useAuthStore from '@/store/useAuthStore'
+import LoginDialogOuter from '../LoginDialogOuter'
 
 const navLinks = [
     { href: '#why-us', label: 'Why Us' },
@@ -156,7 +157,7 @@ export default function Navbar() {
                 )}
             </div>
 
-            <LoginDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+            <LoginDialogOuter open={isDialogOpen} onOpenChange={setIsDialogOpen} />
         </nav>
     )
 }

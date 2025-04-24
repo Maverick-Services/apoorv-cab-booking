@@ -1,4 +1,3 @@
-// components/checkout/CheckoutDetails.js
 "use client"
 
 import React, { useMemo } from 'react'
@@ -9,7 +8,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 export default function CheckoutDetails() {
     const router = useRouter();
     const { userData } = useAuthStore()
+
     const searchParams = useSearchParams();
+
     const bookingDataString = searchParams.get("bookingData")
     const bookingData = bookingDataString ? JSON.parse(bookingDataString) : null
 
