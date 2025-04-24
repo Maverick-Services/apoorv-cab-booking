@@ -2,6 +2,7 @@ import { Outfit } from "next/font/google";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import "./globals.css";
+import AuthProvider from "@/components/main/AuthProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -19,7 +20,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${outfit.className} antialiased`}
       >
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

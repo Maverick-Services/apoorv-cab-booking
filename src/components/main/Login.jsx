@@ -1,0 +1,59 @@
+// components/auth/Login.js
+"use client";
+import React, { useState } from "react";
+import useAuthStore from "@/store/useAuthStore";
+
+export default function Login({ onSuccess, onClose }) {
+    const { handleSignInWithEmail, isLoading, error } = useAuthStore();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await handleSignInWithEmail(email, password);
+            onSuccess?.();
+            onClose?.();
+        } catch (err) {
+            console.error(err)
+        }
+    };
+
+    return (
+        <div className="w-full mx-auto">
+            <h2 className="text-3xl font-bold text-[#007BFF] mb-1">Welcome Back</h2>
+            <h1 className="text-4xl font-extrabold text-gray-900 mb-6">
+                Log In to Your Account
+            </h1>
+
+            {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+
+            <form onSubmit={onSubmit} className="space-y-5">
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={8}
+                    className="w-full border border-gray-300 rounded-lg px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full bg-[#007BFF] hover:bg-blue-600 text-white font-bold py-3 rounded-lg transition disabled:opacity-50"
+                >
+                    {isLoading ? "Logging in..." : "LOG IN"}
+                </button>
+            </form>
+        </div>
+    );
+}
