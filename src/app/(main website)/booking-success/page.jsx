@@ -1,7 +1,7 @@
 import Footer from '@/components/main/Footer';
 import Navbar from '@/components/main/navbar/Navbar';
 import React, { Suspense } from 'react';
-import CheckoutDetails from './components/CheckoutDetails';
+import BookingData from './components/BookingData';
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +13,7 @@ function page() {
             </div>
             <div className='text-black pb-10 pt-1 w-11/12 mx-auto flex flex-col justify-between'>
                 <Suspense fallback={<div>Loading...</div>}>
-                    <CheckoutDetails />
+                    <BookingData />
                 </Suspense>
             </div>
             <Footer />
