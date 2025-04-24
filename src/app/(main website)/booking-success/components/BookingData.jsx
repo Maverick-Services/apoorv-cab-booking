@@ -2,9 +2,8 @@
 
 import React, { useMemo } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import Image from 'next/image'
 import useAuthStore from '@/store/useAuthStore'
-import { CheckCircle, MapPin, Car, User, CreditCard, Home } from 'lucide-react' // Import icons
+import { CheckCircle, MapPin, Car, User, CreditCard, Home } from 'lucide-react'
 
 export default function BookingData() {
     const searchParams = useSearchParams()
@@ -49,6 +48,8 @@ export default function BookingData() {
                                 Booking ID: <span className="font-bold">{bookingId}</span>
                             </p>
                         )}
+                        <p className='text-white'>Thanks for booking trip with us. Our team will reachout to you soon.</p>
+                        <p className='text-white'>For any queries, contact us at - 9869855698</p>
                     </div>
 
                     {/* Content */}

@@ -4,12 +4,13 @@
 import React, { useMemo } from 'react'
 import Image from 'next/image'
 import useAuthStore from '@/store/useAuthStore'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function CheckoutDetails() {
+    const router = useRouter();
     const { userData } = useAuthStore()
-    const bookingDataString = typeof window !== 'undefined'
-        ? new URLSearchParams(window.location.search).get('bookingData')
-        : null
+    const searchParams = useSearchParams();
+    const bookingDataString = searchParams.get("bookingData")
     const bookingData = bookingDataString ? JSON.parse(bookingDataString) : null
 
     if (!bookingData) {
@@ -33,6 +34,11 @@ export default function CheckoutDetails() {
     )
 
     const isRoundTrip = bookingData.tripType === 'Round Trip' && bookingData.dropOffs?.length > 0
+
+
+    function handleBookingSuccess() {
+        router.push(`/booking-success?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
+    }
 
     return (
         <div className="max-w-5xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-5">
@@ -114,10 +120,10 @@ export default function CheckoutDetails() {
                     <p className="font-medium text-lg mt-2">Total Amount:</p>
                     <p className="text-2xl font-bold mb-4">₹{totalAmount.toFixed(2)}</p>
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
+                        <button onClick={handleBookingSuccess} className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded">
                             Pay Booking (20%): ₹{bookingAmount.toFixed(2)}
                         </button>
-                        <button className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded">
+                        <button onClick={handleBookingSuccess} className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded">
                             Pay Full Amount: ₹{totalAmount.toFixed(2)}
                         </button>
                     </div>

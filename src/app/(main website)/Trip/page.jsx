@@ -8,8 +8,10 @@ export const dynamic = "force-dynamic";
 function page() {
     return (
         <div className='bg-gray-100'>
-            <Navbar />
-            <div className='text-black py-10 w-11/12 mx-auto flex justify-between'>
+            <div className='sticky top-0'>
+                <Navbar />
+            </div>
+            <div className='text-black pb-14 pt-7 w-11/12 mx-auto flex justify-between'>
                 {/* <BookingForm /> */}
                 <Suspense fallback={<div>Loading...</div>}>
                     <CabDetails />
