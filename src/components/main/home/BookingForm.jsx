@@ -164,11 +164,28 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                 {tripType === 'Round Trip' ? 'Via Cities' : 'Drop Location'}
                             </label>
 
-                            {tripType === 'Round Trip' && dropOffs.length > 0 && (
+                            {
+                                tripType === 'Round Trip' && dropOffs.length > 0 &&
                                 <div className="flex flex-wrap gap-2 mb-2">
-                                    <div className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300"> <span className="text-gray-600">{pickupCity}</span> <ArrowBigRightDashIcon /> </div> {dropOffs.map((city, index) => (<div key={index} className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300"> <span className="text-gray-600">{city}</span> <button type="button" onClick={() => setDropOffs((prev) => prev.filter((_, i) => i !== index))} className="text-red-500 hover:text-red-700" > <IoCloseCircle /> </button> <ArrowBigRightDashIcon /> </div>))} <span className="text-sm bg-yellow-300 p-1 px-2 rounded-2xl">{pickupCity}</span>
+                                    <div className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300">
+                                        <span className="text-gray-600">{pickupCity}</span>
+                                        <ArrowBigRightDashIcon />
+                                    </div>
+                                    {
+                                        dropOffs.map((city, index) => (
+                                            <div key={index} className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300">
+                                                <span className="text-gray-600">{city}</span>
+                                                <button type="button" onClick={() => setDropOffs((prev) => prev.filter((_, i) => i !== index))} className="text-red-500 hover:text-red-700" >
+                                                    <IoCloseCircle />
+                                                </button>
+                                                <ArrowBigRightDashIcon />
+                                            </div>
+                                        ))}
+                                    <span className="text-sm bg-yellow-300 p-1 px-2 rounded-2xl">
+                                        {pickupCity}
+                                    </span>
                                 </div>
-                            )}
+                            }
 
                             <select
                                 {...register('dropCity', { required: tripType !== 'Round Trip' })}
