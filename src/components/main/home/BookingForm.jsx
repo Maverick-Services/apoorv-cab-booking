@@ -9,6 +9,7 @@ import { ArrowRightCircle, ArrowRight, MapPin, CalendarDays, Phone, Clock, Loade
 import { ArrowBigRightDashIcon } from 'lucide-react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { point, distance } from '@turf/turf';
+import { createNewEnquiry } from '@/lib/firebase/admin/enquiry';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
     const router = useRouter();
@@ -102,6 +103,8 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             };
 
             if (editTrip) setEditTrip(false);
+            if (!editTrip) await createNewEnquiry({ data: bookingData });
+
             router.push(`/trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
         } catch (err) {
             console.error("Error fetching coordinates:", err);
