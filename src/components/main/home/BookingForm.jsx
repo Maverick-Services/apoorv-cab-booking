@@ -10,6 +10,7 @@ import { ArrowBigRightDashIcon } from 'lucide-react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { point, distance } from '@turf/turf';
 import { createNewEnquiry } from '@/lib/firebase/admin/enquiry';
+import LocationSearch from './DropSuggestionForm';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
     const router = useRouter();
@@ -209,6 +210,9 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                             </select>
                         </div>
                     )}
+
+                    {/* suggestion box */}
+                    <LocationSearch />
 
                     {/* Pickup Time */}
                     <div>
