@@ -1,7 +1,7 @@
 import React from 'react'
 // import { useProductForm } from '../contexts/ProductFormContext';
 
-function ProductName() {
+function ProductName({ register, pickupCities }) {
 
     // const { data, handleData } = useProductForm();
 
@@ -15,9 +15,9 @@ function ProductName() {
                 <input
                     type="text"
                     placeholder="Enter Name"
-                    // value={data?.name ?? ""}
-                    value={""}
-                    // onChange={(e) => handleData('name', e.target.value)}
+                    {...register("name", {
+                        required: true,
+                    })}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
                     required
                 />
@@ -33,9 +33,9 @@ function ProductName() {
                     <input
                         type="text"
                         placeholder="e.g., Delhi, Noida"
-                        // value={data?.name ?? ""}
-                        value={""}
-                        // onChange={(e) => handleData('name', e.target.value)}
+                        {...register("email", {
+                            required: true,
+                        })}
                         className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
                         required
                     />
@@ -49,26 +49,59 @@ function ProductName() {
                     <input
                         type="tel"
                         placeholder="e.g., Delhi, Noida"
-                        // value={data?.name ?? ""}
-                        value={""}
-                        // onChange={(e) => handleData('name', e.target.value)}
+                        {...register("phoneNo", {
+                            required: true,
+                        })}
                         className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
                         required
                     />
                 </div>
             </div>
 
-            {/* Location */}
-            <div>
+            <div className='flex gap-4 flex-col sm:flex-row'>
+                {/* Pickup City */}
+                <div className='grow'>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        City <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                        {...register('city', { required: true })}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
+                    >
+                        <option value="">Select City</option>
+                        {pickupCities.map(city => (
+                            <option key={city?.id} value={city?.name}>{city?.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                {/* Location */}
+                <div className='grow'>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Location <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        placeholder="eg, Rohini, Delhi"
+                        {...register("location", {
+                            required: true,
+                        })}
+                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
+                        required
+                    />
+                </div>
+            </div>
+
+            {/* Password  */}
+            <div className=''>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location <span className="text-red-500">*</span>
+                    Pssword <span className="text-red-500">*</span>
                 </label>
                 <input
-                    type="text"
-                    placeholder="eg, Rohini, Delhi"
-                    // value={data?.name ?? ""}
-                    value={""}
-                    // onChange={(e) => handleData('name', e.target.value)}
+                    type="password"
+                    {...register("password", {
+                        required: true,
+                    })}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
                     required
                 />

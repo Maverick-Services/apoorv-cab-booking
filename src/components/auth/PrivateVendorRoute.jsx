@@ -4,7 +4,7 @@ import Navigate from "./Navigate";
 import useAuthStore from "@/store/useAuthStore";
 import Login from "@/components/main/Login";
 
-export const PrivateRoute = ({ children }) => {
+export const PrivateVendorRoute = ({ children }) => {
 
     const { userData } = useAuthStore()
 
@@ -15,7 +15,7 @@ export const PrivateRoute = ({ children }) => {
             </div>
         </div>;
 
-    if (userData?.role !== 'admin') {
+    if (userData?.role !== 'vendor') {
         return <Navigate to='/' />;
     }
 
