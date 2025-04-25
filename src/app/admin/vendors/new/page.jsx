@@ -1,34 +1,58 @@
+"use client";
+
 import InnerLayout from "@/components/dashboard/layout/InnerLayout";
-import { Loader } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 import ProductName from "./components/ProductName";
+import { useForm } from "react-hook-form";
+import { getAllPickupCities } from "@/lib/firebase/admin/pickupCity";
+import { useEffect, useState } from "react";
+import { createVendor } from "@/lib/firebase/admin/vendor";
+import { useRouter } from "next/navigation";
 // import { useSearchParams } from "next/navigation";
 
 export default function Page() {
     // const searchParams = useSearchParams();
     // const updateProductId = searchParams.get('id');
 
-    // const {
-    //     isLoading,
-    //     handleCreate,
-    //     handleUpdate,
-    //     fetchData,
-    // } = useProductForm();
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    const [pickupCities, setPickupCities] = useState([]);
 
-    // Initially Fetch Product Details if we got Id in URL
-    // useEffect(() => {
-    //     if (updateProductId) {
-    //         fetchData(updateProductId);
-    //     }
-    // }, [updateProductId]);
+    const {
+        register,
+        reset,
+        setValue,
+        watch,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
 
-    const handleSubmit = (e) => {
-        // e.preventDefault();
-        // if (updateProductId) {
-        //     handleUpdate();
-        // } else {
-        //     handleCreate();
-        // }
+    const handleCreateVendor = async (data) => {
+        setLoading(true);
+
+        const result = await createVendor(data);
+        if (result)
+            router.push('/admin/vendors');
+
+        setLoading(false);
     };
+
+    useEffect(() => {
+        const fetchPickupCities = async () => {
+            setLoading(true);
+            try {
+                const res = await getAllPickupCities();
+                setPickupCities(res || []);
+            } catch (err) {
+                console.error(err);
+            }
+            setLoading(false);
+        };
+        fetchPickupCities();
+    }, []);
+
+    if (!pickupCities)
+        return <Loader2 className="w-10 h-10 text-gray-500 animate-spin" />
 
     return (
         <InnerLayout heading={'Add new Vendor'}>
@@ -40,12 +64,12 @@ export default function Page() {
                     </section>
                     : <section className="bg-white rounded-xl shadow-lg border border-gray-100 h-fit min-h-full">
                         <form
-                            // onSubmit={handleSubmit} 
+                            onSubmit={handleSubmit(handleCreateVendor)}
                             className="h-full flex flex-col gap-5 p-5">
-                            <ProductName />
-                            {/* <ProductDescription /> */}
-                            {/* <PriceDetails /> */}
-
+                            {
+                                pickupCities?.length > 0 &&
+                                <ProductName register={register} pickupCities={pickupCities} />
+                            }
                             <button
                                 type="submit"
                                 // disabled={isLoading}

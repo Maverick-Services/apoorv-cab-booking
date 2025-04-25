@@ -32,7 +32,7 @@ export async function POST(req) {
         await admin.auth().setCustomUserClaims(userRecord.uid, { role: 'admin' });
 
         // Store admin details in Firestore
-        const newUser = await db.collection('user').doc(userRecord.uid).set({
+        const newUser = await db.collection('Users').doc(userRecord.uid).set({
             email,
             phoneNo,
             name,
@@ -41,7 +41,7 @@ export async function POST(req) {
             location,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
-        console.log("New db User", newUser);
+        // console.log("New db User", newUser);
 
         // const mailResponse = await mailSender(
         //     newUser?.email,
@@ -66,7 +66,7 @@ export async function POST(req) {
         return NextResponse.json({
             success: true,
             message: 'Vendor created successfully',
-            uid: userRecord.uid,
+            data: { userId: userRecord?.uid },
         }, { status: 201 });
 
     } catch (error) {
