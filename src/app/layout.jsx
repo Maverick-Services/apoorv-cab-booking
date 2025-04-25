@@ -3,6 +3,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import "./globals.css";
 import AuthProvider from "@/components/main/AuthProvider";
+import { Toaster } from "react-hot-toast";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -22,6 +23,7 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           {children}
+          <Toaster position="top-right" reverseOrder={false} />
         </AuthProvider>
       </body>
     </html>

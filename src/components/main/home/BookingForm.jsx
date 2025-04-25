@@ -11,6 +11,8 @@ import { IoCloseCircle } from 'react-icons/io5';
 import { point, distance } from '@turf/turf';
 import { createNewEnquiry } from '@/lib/firebase/admin/enquiry';
 import LocationSearch from './DropSuggestionForm';
+import useAuthStore from '@/store/useAuthStore';
+import { toast } from 'react-hot-toast';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
     const router = useRouter();
@@ -18,6 +20,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     const tripDataString = searchParams.get("tripData");
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
 
+    const { userData } = useAuthStore();
     const [pickupCities, setPickupCities] = useState([]);
     const [dropOffs, setDropOffs] = useState(tripData?.dropOffs || []);
     const [loading, setLoading] = useState(false);
@@ -71,6 +74,13 @@ export default function BookingForm({ editTrip, setEditTrip }) {
 
     const onSubmit = async (data) => {
         try {
+
+            if (userData && userData?.role !== 'user') {
+                toast.error("You are not authorized to book a cab.");
+                // alert("You are not authorized to book a cab.");
+                return;
+            }
+
             const coordList = [];
             const pickupCoords = await getCoordinates(data.pickupCity);
             coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
@@ -187,7 +197,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                     </span>
                                 </div>
                             }
-
+                            {/* 
                             <select
                                 {...register('dropCity', { required: tripType !== 'Round Trip' })}
                                 onKeyDown={e => {
@@ -207,12 +217,22 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                         <option key={city} value={city}>{city}</option>
                                     )
                                 ))}
-                            </select>
+                            </select> */}
                         </div>
                     )}
 
                     {/* suggestion box */}
-                    <LocationSearch />
+                    {
+                        tripType !== 'Local' && tripType !== 'Airport' &&
+                        <LocationSearch
+                            register={register}
+                            setValue={setValue}
+                            dropOffs={dropOffs}
+                            setDropOffs={setDropOffs}
+                            tripType={tripType}
+                            pickupCity={pickupCity}
+                        />
+                    }
 
                     {/* Pickup Time */}
                     <div>
