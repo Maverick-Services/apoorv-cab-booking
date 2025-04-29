@@ -352,3 +352,10 @@ export const ROLE = {
     VENDOR: 'vendor',
     CUSTOMER: 'Customer',
 }
+
+export const TRIP_TYPES = {
+    local: "Local",
+    airport: "Airport",
+    oneWay: "OneWay",
+    roundTrip: "RoundTrip"
+}
