@@ -149,12 +149,12 @@ export const CabDetails = () => {
                                 <DialogTrigger asChild>
                                     <Button
                                         variant="outline"
-                                        className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200 shadow-sm"
+                                        className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
                                     >
                                         Edit Trip
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="max-w-xl h-full overflow-x-hidden overflow-y-auto">
+                                <DialogContent className="max-w-xl overflow-x-hidden overflow-y-auto">
                                     <DialogHeader>
                                         <DialogTitle>Edit Trip Details</DialogTitle>
                                     </DialogHeader>

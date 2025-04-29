@@ -4,7 +4,7 @@ import React from 'react'
 function PickupDate({ register }) {
     return (
         <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1 mb-1">
                 <CalendarDays size={16} className="text-primary" />
                 Pickup Date & Time
             </label>

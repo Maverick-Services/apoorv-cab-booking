@@ -1,9 +1,10 @@
+import { TRIP_TYPES } from '@/lib/constants/constants'
 import React from 'react'
 
 function TripType({ tripType, setValue }) {
     return (
         <div className="flex gap-2 mb-4">
-            {['One Way', 'Round Trip', 'Local', 'Airport'].map(type => (
+            {Object.values(TRIP_TYPES).map(type => (
                 <button
                     key={type}
                     type="button"

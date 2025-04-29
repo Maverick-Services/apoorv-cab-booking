@@ -354,8 +354,8 @@ export const ROLE = {
 }
 
 export const TRIP_TYPES = {
+    oneWay: "One Way",
+    roundTrip: "Round Trip",
     local: "Local",
     airport: "Airport",
-    oneWay: "OneWay",
-    roundTrip: "RoundTrip"
 }

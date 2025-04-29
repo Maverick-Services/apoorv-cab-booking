@@ -4,7 +4,7 @@ import React from 'react'
 function MobileNo({ register }) {
     return (
         <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1 mb-1">
                 <Phone size={16} className="text-primary" />
                 Mobile Number
             </label>

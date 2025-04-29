@@ -1,16 +1,12 @@
 "use client";
 
 import { useForm } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { cities } from '@/lib/constants/constants';
-import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity';
-import { ArrowRightCircle, ArrowRight, MapPin, CalendarDays, Phone, Clock, Loader2 } from 'lucide-react';
-import { ArrowBigRightDashIcon } from 'lucide-react';
-import { IoCloseCircle } from 'react-icons/io5';
+import { TRIP_TYPES } from '@/lib/constants/constants';
+import { ArrowRightCircle, Loader2 } from 'lucide-react';
 import { point, distance } from '@turf/turf';
 import { createNewEnquiry } from '@/lib/firebase/admin/enquiry';
-import LocationSearch from './DropSuggestionForm';
 import Pickup from './bookingForm/Pickup';
 import PickupDate from './bookingForm/PickupDate';
 import MobileNo from './bookingForm/MobileNo';
@@ -18,20 +14,17 @@ import TripType from './bookingForm/TripType';
 import ReturnDate from './bookingForm/ReturnDate';
 import useAuthStore from '@/store/useAuthStore';
 import { toast } from 'react-hot-toast';
+import LocationSearch from './bookingForm/DropSuggestionForm';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
-
     const router = useRouter();
     const searchParams = useSearchParams();
-    const tripDataString = searchParams.get("tripData");
-    const tripData = tripDataString ? JSON.parse(tripDataString) : null;
-
     const { userData } = useAuthStore();
-    const [pickupCities, setPickupCities] = useState([]);
-    const [dropOffs, setDropOffs] = useState(tripData?.dropOffs || []);
-    const [loading, setLoading] = useState(false);
 
-    // const [tripTypeState, setTripTypeState] = useState(TRIP_TYPES.oneWay)
+    const [tripData, setTripData] = useState(null);
+    const [pickupCities, setPickupCities] = useState([]);
+    const [dropOffs, setDropOffs] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const {
         register,
@@ -39,40 +32,46 @@ export default function BookingForm({ editTrip, setEditTrip }) {
         setValue,
         watch,
         formState: { errors },
+        getValues,
+        reset,
+        unregister
     } = useForm({
-        defaultValues: editTrip && tripData
-            ? {
-                pickupCity: tripData.pickupCity,
-                dropCity: tripData.dropCity,
-                pickupTime: tripData.pickupTime,
-                returnDate: tripData.returnDate,
-                mobileNumber: tripData.mobileNumber,
-                tripType: tripData.tripType,
-            }
-            : {},
+        defaultValues: {
+            tripType: TRIP_TYPES.oneWay,
+        },
     });
 
     const tripType = watch('tripType');
     const pickupCity = watch('pickupCity');
 
+    // Load trip data if present in URL
     useEffect(() => {
-        const fetchPickupCities = async () => {
-            setLoading(true);
+        const tripDataString = searchParams.get("tripData");
+        if (tripDataString) {
             try {
-                const res = await getAllPickupCities();
-                setPickupCities(res || []);
+                const parsed = JSON.parse(decodeURIComponent(tripDataString));
+                setTripData(parsed);
+                setDropOffs(parsed.dropOffs || []);
+                reset({
+                    pickupCity: parsed.pickupCity || "",
+                    dropCity: parsed.dropCity || "",
+                    pickupTime: parsed.pickupTime || "",
+                    returnDate: parsed.returnDate || "",
+                    mobileNumber: parsed.mobileNumber || "",
+                    tripType: parsed.tripType || TRIP_TYPES.oneWay,
+                });
             } catch (err) {
-                console.error(err);
+                console.error("Error parsing tripData from URL:", err);
             }
-            setLoading(false); ``
-        };
-        fetchPickupCities();
-    }, []);
+        }
+    }, [searchParams, reset]);
 
     const getCoordinates = async (address) => {
         const encoded = encodeURIComponent(address);
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encoded}`;
-        const res = await fetch(url, { headers: { 'User-Agent': 'MyApp/1.0 (my@email.com)' } });
+        const res = await fetch(url, {
+            headers: { 'User-Agent': 'MyApp/1.0 (my@email.com)' },
+        });
         const data = await res.json();
         if (data.length > 0) {
             return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
@@ -80,12 +79,17 @@ export default function BookingForm({ editTrip, setEditTrip }) {
         throw new Error("Location not found");
     };
 
-    const onSubmit = async (data) => {
-        try {
 
-            if (userData && userData?.role !== 'user') {
+    const onSubmit = async (data) => {
+        setLoading(true);
+        try {
+            if (userData && userData.role !== 'user') {
                 toast.error("You are not authorized to book a cab.");
-                // alert("You are not authorized to book a cab.");
+                return;
+            }
+
+            if (tripType === TRIP_TYPES.roundTrip && dropOffs.length === 0) {
+                toast.error("Please add at least one drop-off location.");
                 return;
             }
 
@@ -93,7 +97,8 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             const pickupCoords = await getCoordinates(data.pickupCity);
             coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
 
-            if (tripType !== 'Local Trip') {
+            if (tripType === TRIP_TYPES.roundTrip) {
+                // Handle Round Trip drop-offs
                 if (dropOffs.length) {
                     for (let city of dropOffs) {
                         const coords = await getCoordinates(city);
@@ -103,17 +108,26 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                     const dropCoords = await getCoordinates(data.dropCity);
                     coordList.push(point([dropCoords.lng, dropCoords.lat]));
                 }
-            }
-
-            if (tripType === 'Round Trip') {
+                // Return to pickup point for round trip
                 coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
+            } else if (tripType === TRIP_TYPES.oneWay) {
+                // Handle One Way drop city
+                if (data.dropCity) {
+                    const dropCoords = await getCoordinates(data.dropCity);
+                    coordList.push(point([dropCoords.lng, dropCoords.lat]));
+                } else {
+                    toast.error("Drop city is required for one-way trips.");
+                    return;
+                }
             }
 
+            // Calculate total distance
             let totalDistance = 0;
             for (let i = 0; i < coordList.length - 1; i++) {
-                totalDistance += distance(coordList[i], coordList[i + 1], { units: 'kilometers' });
+                totalDistance += distance(coordList[i], coordList[i + 1], {
+                    units: 'kilometers',
+                });
             }
-
             const bookingData = {
                 ...data,
                 coordinates: coordList,
@@ -126,13 +140,11 @@ export default function BookingForm({ editTrip, setEditTrip }) {
 
             router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
         } catch (err) {
-            console.error("Error fetching coordinates:", err);
+            console.error("Error during form submission:", err);
+        } finally {
+            setLoading(false);
         }
     };
-
-    if (loading && !pickupCities.length) {
-        return <Loader2 className="animate-spin text-primary w-10 h-10 mx-auto" />;
-    }
 
     return (
         <div className="w-full max-w-7xl mx-auto">
@@ -141,52 +153,58 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                 className="bg-white p-6 shadow-2xl border border-gray-100"
             >
                 {/* Trip Type Buttons */}
-                <TripType
-                    setValue={setValue}
-                    tripType={tripType}
-                />
+                <TripType setValue={setValue} tripType={tripType} />
 
-                {/* Form Fields */}
                 <div className="grid grid-cols-1 gap-4">
-
                     {/* Pickup City */}
                     <Pickup
                         register={register}
+                        setValue={setValue}
                         pickupCities={pickupCities}
                         setPickupCities={setPickupCities}
                     />
 
-
-                    {/* suggestion box */}
-                    {
-                        tripType !== 'Local' && tripType !== 'Airport' &&
-                        <LocationSearch
-                            register={register}
-                            setValue={setValue}
-                            dropOffs={dropOffs}
-                            setDropOffs={setDropOffs}
-                            tripType={tripType}
-                            pickupCity={pickupCity}
-                        />
-                    }
-
+                    {/* Drop suggestions */}
+                    {tripType !== TRIP_TYPES.airport &&
+                        tripType !== TRIP_TYPES.local && (
+                            <LocationSearch
+                                register={register}
+                                unregister={unregister}
+                                setValue={setValue}
+                                dropOffs={dropOffs}
+                                setDropOffs={setDropOffs}
+                                tripType={tripType}
+                                pickupCity={pickupCity}
+                            />
+                        )}
 
                     {/* Pickup Date and Time */}
                     <PickupDate register={register} />
 
                     {/* Return Date */}
-                    <ReturnDate register={register} tripType={tripType} />
+                    {tripType === TRIP_TYPES.roundTrip && (
+                        <ReturnDate register={register} tripType={tripType} />
+                    )}
 
                     {/* Mobile Number */}
                     <MobileNo register={register} />
+
+                    {Object.keys(errors).length > 0 && (
+                        <p className="text-red-500 text-sm">Please fill all the required fields.</p>
+                    )}
 
                     {/* Submit */}
                     <button
                         type="submit"
                         className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2"
                     >
-                        Search Cabs
-                        <ArrowRightCircle size={20} />
+                        {loading ? (
+                            <Loader2 className="animate-spin" size={20} />
+                        ) : (
+                            <>
+                                Search Cabs <ArrowRightCircle size={20} />
+                            </>
+                        )}
                     </button>
                 </div>
             </form>
@@ -194,6 +212,21 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     );
 }
 
+
+// code to fetch cities list from firebase
+// useEffect(() => {
+//     const fetchPickupCities = async () => {
+//         setLoading(true);
+//         try {
+//             const res = await getAllPickupCities();
+//             setPickupCities(res || []);
+//         } catch (err) {
+//             console.error(err);
+//         }
+//         setLoading(false); ``
+//     };
+//     fetchPickupCities();
+// }, []);
 
 {/* <div className="flex gap-2 mb-4">
                     {['One Way', 'Round Trip', 'Local', 'Airport'].map(type => (

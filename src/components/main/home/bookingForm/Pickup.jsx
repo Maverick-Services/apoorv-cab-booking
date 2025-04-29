@@ -1,43 +1,91 @@
 "use client"
-import { MapPin } from 'lucide-react'
-import React, { useEffect } from 'react'
 
-function Pickup({ register, pickupCities, setPickupCities }) {
+import React, { useEffect, useState } from "react"
+import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity'
+import { Skeleton } from "@/components/ui/skeleton"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { MapPin, ChevronsUpDown } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-    useEffect(() => {
-        const fetchPickupCities = async () => {
-            setLoading(true);
-            try {
-                const res = await getAllPickupCities();
-                setPickupCities(res || []);
-            } catch (err) {
-                console.error(err);
-            }
-            setLoading(false); ``
-        };
-        fetchPickupCities();
-    }, []);
+function Pickup({ register, setValue, pickupCities, setPickupCities }) {
+  const [loading, setLoading] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [selectedCity, setSelectedCity] = useState(null)
 
-    return (
-        <div>
-            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
-                <MapPin size={16} className="text-primary" />
-                Pickup Location
-            </label>
-            <select
-                {...register(
-                    'pickupCity',
-                    { required: true }
+  useEffect(() => {
+    const fetchPickupCities = async () => {
+      setLoading(true)
+      try {
+        const res = await getAllPickupCities()
+        setPickupCities(res || [])
+      } catch (error) {
+        console.error(error)
+      }
+      setLoading(false)
+    }
+    fetchPickupCities()
+  }, [])
+
+  const handleCitySelect = (city) => {
+    setSelectedCity(city)
+    setValue('pickupCity', city.name)
+    setOpen(false)
+  }
+
+  return (
+    <div className="w-full">
+      <label className="text-sm font-semibold text-gray-700 flex items-center gap-1 mb-1">
+        <MapPin size={16} className="text-primary" />
+        Pickup Location
+      </label>
+
+      {loading ? (
+        <Skeleton className="w-full h-10 rounded-lg" />
+      ) : (
+        <>
+          <input
+            type="hidden"
+            {...register('pickupCity', { required: true })}
+          />
+
+          <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className={cn(
+                  "w-full flex justify-between items-center rounded-lg border border-gray-300 bg-white px-4 py-3  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-100",
+                  !selectedCity && "text-gray-400"
                 )}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300"
-            >
-                <option value="">Select City</option>
-                {pickupCities.map(city => (
-                    <option key={city?.id} value={city?.name}>{city?.name}</option>
-                ))}
-            </select>
-        </div>
-    )
+              >
+                {selectedCity?.name || "Select Pickup City"}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </button>
+            </PopoverTrigger>
+
+            <PopoverContent className="w-96 p-0">
+              <Command>
+                <CommandInput placeholder="Search city..." className="h-10" />
+                <CommandEmpty>No city found.</CommandEmpty>
+                <CommandGroup>
+                  {pickupCities.map((city) => (
+                    <CommandItem
+                      key={city.id}
+                      value={city.name}
+                      onSelect={() => handleCitySelect(city)}
+                    >
+                      {city.name}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </>
+      )}
+    </div>
+  )
 }
+
 
 export default Pickup

@@ -1,3 +1,4 @@
+import { TRIP_TYPES } from '@/lib/constants/constants';
 import { ArrowBigRightDashIcon, ArrowRight } from 'lucide-react';
 import React from 'react'
 import { IoCloseCircle } from 'react-icons/io5';
@@ -36,7 +37,7 @@ function DropLocation({ register, tripType, dropOffs, pickupCity, setDropOffs, c
                     }
 
                     <select
-                        {...register('dropCity', { required: tripType !== 'Round Trip' })}
+                        {...register('dropCity', { required: tripType === 'Round Trip' || tripType === 'One Way' })}
                         onKeyDown={e => {
                             if (tripType === 'Round Trip' && e.key === 'Enter') {
                                 e.preventDefault();
