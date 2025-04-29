@@ -11,8 +11,19 @@ import { IoCloseCircle } from 'react-icons/io5';
 import { point, distance } from '@turf/turf';
 import { createNewEnquiry } from '@/lib/firebase/admin/enquiry';
 import LocationSearch from './DropSuggestionForm';
+import Pickup from './bookingForm/Pickup';
+import PickupDate from './bookingForm/PickupDate';
+import MobileNo from './bookingForm/MobileNo';
+import TripType from './bookingForm/TripType';
+import ReturnDate from './bookingForm/ReturnDate';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
+    const TRIP_TYPES = {
+        local: "Local",
+        airport: "Airport",
+        oneWay: "OneWay",
+        roundTrip: "RoundTrip"
+    }
     const router = useRouter();
     const searchParams = useSearchParams();
     const tripDataString = searchParams.get("tripData");
@@ -21,6 +32,8 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     const [pickupCities, setPickupCities] = useState([]);
     const [dropOffs, setDropOffs] = useState(tripData?.dropOffs || []);
     const [loading, setLoading] = useState(false);
+
+    // const [tripTypeState, setTripTypeState] = useState(TRIP_TYPES.oneWay)
 
     const {
         register,
@@ -123,7 +136,50 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                 className="bg-white p-6 shadow-2xl border border-gray-100"
             >
                 {/* Trip Type Buttons */}
-                <div className="flex gap-2 mb-4">
+                <TripType
+                    setValue={setValue}
+                    tripType={tripType}
+                />
+
+                {/* Form Fields */}
+                <div className="grid grid-cols-1 gap-4">
+
+                    {/* Pickup City */}
+                    <Pickup
+                        register={register}
+                        pickupCities={pickupCities}
+                        setPickupCities={setPickupCities}
+                    />
+
+
+                    {/* suggestion box */}
+                    <LocationSearch />
+
+                    {/* Pickup Date and Time */}
+                    <PickupDate register={register} />
+
+                    {/* Return Date */}
+                    <ReturnDate register={register} tripType={tripType} />
+
+                    {/* Mobile Number */}
+                    <MobileNo register={register} />
+
+                    {/* Submit */}
+                    <button
+                        type="submit"
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2"
+                    >
+                        Search Cabs
+                        <ArrowRightCircle size={20} />
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+}
+
+
+{/* <div className="flex gap-2 mb-4">
                     {['One Way', 'Round Trip', 'Local', 'Airport'].map(type => (
                         <button
                             key={type}
@@ -135,13 +191,10 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                             {type}
                         </button>
                     ))}
-                </div>
+                </div> */}
 
-                {/* Form Fields */}
-                <div className="grid grid-cols-1 gap-4">
-
-                    {/* Pickup City */}
-                    <div>
+// pickup city
+{/* <div>
                         <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
                             <MapPin size={16} className="text-primary" />
                             Pickup Location
@@ -155,10 +208,60 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                 <option key={city?.id} value={city?.name}>{city?.name}</option>
                             ))}
                         </select>
-                    </div>
+                    </div> */}
 
-                    {/* Drop or Via Cities */}
-                    {tripType !== 'Local Trip' && (
+
+{/* Pickup Time */ }
+{/* <div>
+                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                            <CalendarDays size={16} className="text-primary" />
+                            Pickup Date & Time
+                        </label>
+                        <input
+                            type="datetime-local"
+                            {...register('pickupTime', { required: true })}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        />
+                    </div> */}
+
+
+{/* Return Date */ }
+{/* {tripType === 'Round Trip' && (
+                        <div>
+                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                                <CalendarDays size={16} className="text-primary" />
+                                Return Date
+                            </label>
+                            <input
+                                type="date"
+                                {...register('returnDate', { required: true })}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                            />
+                        </div>
+                    )} */}
+
+
+{/* Mobile Number */ }
+{/* <div>
+                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                            <Phone size={16} className="text-primary" />
+                            Mobile Number
+                        </label>
+                        <input
+                            type="tel"
+                            placeholder="10-digit number"
+                            {...register('mobileNumber', {
+                                required: true,
+                                pattern: /^[0-9]{10}$/,
+                            })}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        />
+                    </div> */}
+
+
+
+{/* Drop or Via Cities */ }
+{/* {tripType !== 'Local' && (
                         <div>
                             <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
                                 <ArrowRight size={16} className="text-primary" />
@@ -209,75 +312,4 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                 ))}
                             </select>
                         </div>
-                    )}
-
-                    {/* suggestion box */}
-                    <LocationSearch />
-
-                    {/* Pickup Time */}
-                    <div>
-                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
-                            <CalendarDays size={16} className="text-primary" />
-                            Pickup Date & Time
-                        </label>
-                        <input
-                            type="datetime-local"
-                            {...register('pickupTime', { required: true })}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
-                        />
-                    </div>
-
-                    {/* Return Date */}
-                    {tripType === 'Round Trip' && (
-                        <div>
-                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
-                                <CalendarDays size={16} className="text-primary" />
-                                Return Date
-                            </label>
-                            <input
-                                type="date"
-                                {...register('returnDate', { required: true })}
-                                className="w-full px-4 py-3 rounded-lg border border-gray-300"
-                            />
-                        </div>
-                    )}
-
-                    {/* Mobile Number */}
-                    <div>
-                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
-                            <Phone size={16} className="text-primary" />
-                            Mobile Number
-                        </label>
-                        <input
-                            type="tel"
-                            placeholder="10-digit number"
-                            {...register('mobileNumber', {
-                                required: true,
-                                pattern: /^[0-9]{10}$/,
-                            })}
-                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
-                        />
-                    </div>
-
-                    {/* Submit */}
-                    <button
-                        type="submit"
-                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2"
-                    >
-                        Search Cabs
-                        <ArrowRightCircle size={20} />
-                    </button>
-                </div>
-
-                {/* Error Messages */}
-                <div className="mt-4 space-y-1">
-                    {Object.keys(errors).map((error) => (
-                        <p key={error} className="text-red-500 text-sm">
-                            {errors[error]?.message || "This field is required"}
-                        </p>
-                    ))}
-                </div>
-            </form>
-        </div>
-    );
-}
+                    )} */}

@@ -5,18 +5,18 @@ import React, { useEffect, useState } from 'react'
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
-import { getAllLocalTrips } from '@/lib/firebase/admin/localTrips';
 import { Loader2 } from 'lucide-react';
+import { getAllAirportTrips } from '@/lib/firebase/admin/airportTrips';
 
 function page() {
     const [loading, setLoading] = useState(false)
-    const [localTrips, setLocalTrips] = useState([])
+    const [airportTrips, setAirportTrips] = useState([])
 
-    async function fetchLocalTrips() {
+    async function fetchAirportTrips() {
         setLoading(true)
         try {
-            const res = await getAllLocalTrips()
-            setLocalTrips(res)
+            const res = await getAllAirportTrips()
+            setAirportTrips(res)
             console.log(res)
         } catch (error) {
             console.log(error)
@@ -25,19 +25,19 @@ function page() {
     }
 
     useEffect(() => {
-        fetchLocalTrips()
+        fetchAirportTrips()
     }, [])
 
     return (
         <div>
-            <InnerLayout heading={"Local Trips"}>
+            <InnerLayout heading={"airport Trips"}>
                 <ScrollArea className={'h-full md:pr-4'}>
                     <div className='w-full flex flex-col gap-2'>
                         <div className='w-full flex justify-between px-1'>
-                            <p className='font-semibold text-primary'>Total Local Trips: {localTrips?.length}</p>
-                            <Link href={'/admin/localTrips/form'}>
+                            <p className='font-semibold text-primary'>Total airport Trips: {airportTrips?.length}</p>
+                            <Link href={'/admin/airport-trips/form'}>
                                 <Badge className="text-base font-bold cursor-pointer">
-                                    Add new Local Trip
+                                    Add new airport Trip
                                 </Badge>
                             </Link>
                         </div>
@@ -47,12 +47,12 @@ function page() {
                                 <div className="col-span-full flex justify-center py-10">
                                     <Loader2 className="animate-spin w-8 h-8 text-primary" />
                                 </div>
-                            ) : localTrips.length === 0 ? (
+                            ) : airportTrips.length === 0 ? (
                                 <div className="col-span-full text-center text-muted-foreground py-10">
-                                    No local trips found.
+                                    No airport trips found.
                                 </div>
                             ) : (
-                                localTrips.map((trip) => (
+                                airportTrips.map((trip) => (
                                     <div key={trip.id} className="bg-white p-4 border rounded-lg shadow-sm flex flex-col gap-2">
                                         <h2 className="text-lg font-bold text-primary">{trip.cityName}</h2>
                                         <p className="text-sm text-muted-foreground">Distance: {trip.tripDistance} km</p>
