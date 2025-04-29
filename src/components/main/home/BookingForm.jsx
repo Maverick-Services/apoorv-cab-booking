@@ -11,11 +11,16 @@ import { IoCloseCircle } from 'react-icons/io5';
 import { point, distance } from '@turf/turf';
 import { createNewEnquiry } from '@/lib/firebase/admin/enquiry';
 import LocationSearch from './DropSuggestionForm';
+<<<<<<< HEAD
 import Pickup from './bookingForm/Pickup';
 import PickupDate from './bookingForm/PickupDate';
 import MobileNo from './bookingForm/MobileNo';
 import TripType from './bookingForm/TripType';
 import ReturnDate from './bookingForm/ReturnDate';
+=======
+import useAuthStore from '@/store/useAuthStore';
+import { toast } from 'react-hot-toast';
+>>>>>>> 4c775ad40aa318da6dac4f27f7f060db2743508d
 
 export default function BookingForm({ editTrip, setEditTrip }) {
     const TRIP_TYPES = {
@@ -29,6 +34,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     const tripDataString = searchParams.get("tripData");
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
 
+    const { userData } = useAuthStore();
     const [pickupCities, setPickupCities] = useState([]);
     const [dropOffs, setDropOffs] = useState(tripData?.dropOffs || []);
     const [loading, setLoading] = useState(false);
@@ -84,6 +90,13 @@ export default function BookingForm({ editTrip, setEditTrip }) {
 
     const onSubmit = async (data) => {
         try {
+
+            if (userData && userData?.role !== 'user') {
+                toast.error("You are not authorized to book a cab.");
+                // alert("You are not authorized to book a cab.");
+                return;
+            }
+
             const coordList = [];
             const pickupCoords = await getCoordinates(data.pickupCity);
             coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
@@ -290,7 +303,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                     </span>
                                 </div>
                             }
-
+                            {/* 
                             <select
                                 {...register('dropCity', { required: tripType !== 'Round Trip' })}
                                 onKeyDown={e => {
@@ -310,6 +323,91 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                         <option key={city} value={city}>{city}</option>
                                     )
                                 ))}
-                            </select>
+                            </select> */}
                         </div>
+<<<<<<< HEAD
                     )} */}
+=======
+                    )}
+
+                    {/* suggestion box */}
+                    {
+                        tripType !== 'Local' && tripType !== 'Airport' &&
+                        <LocationSearch
+                            register={register}
+                            setValue={setValue}
+                            dropOffs={dropOffs}
+                            setDropOffs={setDropOffs}
+                            tripType={tripType}
+                            pickupCity={pickupCity}
+                        />
+                    }
+
+                    {/* Pickup Time */}
+                    <div>
+                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                            <CalendarDays size={16} className="text-primary" />
+                            Pickup Date & Time
+                        </label>
+                        <input
+                            type="datetime-local"
+                            {...register('pickupTime', { required: true })}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        />
+                    </div>
+
+                    {/* Return Date */}
+                    {tripType === 'Round Trip' && (
+                        <div>
+                            <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                                <CalendarDays size={16} className="text-primary" />
+                                Return Date
+                            </label>
+                            <input
+                                type="date"
+                                {...register('returnDate', { required: true })}
+                                className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                            />
+                        </div>
+                    )}
+
+                    {/* Mobile Number */}
+                    <div>
+                        <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+                            <Phone size={16} className="text-primary" />
+                            Mobile Number
+                        </label>
+                        <input
+                            type="tel"
+                            placeholder="10-digit number"
+                            {...register('mobileNumber', {
+                                required: true,
+                                pattern: /^[0-9]{10}$/,
+                            })}
+                            className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        />
+                    </div>
+
+                    {/* Submit */}
+                    <button
+                        type="submit"
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-lg flex items-center justify-center gap-2"
+                    >
+                        Search Cabs
+                        <ArrowRightCircle size={20} />
+                    </button>
+                </div>
+
+                {/* Error Messages */}
+                <div className="mt-4 space-y-1">
+                    {Object.keys(errors).map((error) => (
+                        <p key={error} className="text-red-500 text-sm">
+                            {errors[error]?.message || "This field is required"}
+                        </p>
+                    ))}
+                </div>
+            </form>
+        </div>
+    );
+}
+>>>>>>> 4c775ad40aa318da6dac4f27f7f060db2743508d
