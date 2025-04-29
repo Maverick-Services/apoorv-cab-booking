@@ -150,7 +150,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
         <div className="w-full max-w-7xl mx-auto">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-white p-6 shadow-2xl border border-gray-100"
+                className="bg-white px-6 py-4 shadow-2xl border border-gray-100"
             >
                 {/* Trip Type Buttons */}
                 <TripType setValue={setValue} tripType={tripType} />
