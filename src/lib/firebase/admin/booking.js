@@ -1,12 +1,27 @@
+import { addDoc, collection, doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "../firebase-client";
-import { collection } from 'firebase/firestore';
 
+export const createNewBooking = async ({ data }) => {
+    try {
+        const collectionRef = collection(db, "bookings");
 
-export async function createNewBooking(bookingData) {
-    const bookingRef = await db.collection('bookings').add({
-        ...bookingData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-    });
-    return bookingRef.id;
+        // Add document
+        const docRef = await addDoc(collectionRef, {
+            ...data,
+            createdAt: Timestamp.now(),
+            updatedAt: Timestamp.now(),
+        });
+
+        // Update document with its ID
+        await updateDoc(docRef, { id: docRef.id });
+
+        return { success: true, message: "Booking Added Successfully.", data: docRef.id };
+    } catch (error) {
+        console.error("Error adding Booking:", error);
+        throw new Error(error.message || "Something went wrong.");
+    }
+};
+
+export const getBookingDetails = async (id) => {
+    return await getDoc(doc(db, `bookings/${id}`)).then((snap) => snap.data());
 }

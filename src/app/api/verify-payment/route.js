@@ -1,35 +1,40 @@
 // app/api/verify-payment/route.js
-import { createNewBooking } from '@/lib/firebase/admin/booking';
+export const runtime = 'nodejs';
+
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import Razorpay from 'razorpay';
-
-const razorpay = new Razorpay({
-    key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+import { createNewBooking } from '@/lib/firebase/admin/booking';
 
 export async function POST(request) {
+    let body;
     try {
-        const {
-            razorpay_payment_id,
-            razorpay_order_id,
-            razorpay_signature,
-            bookingData,
-            isFullPayment
-        } = await request.json();
+        body = await request.json();
+    } catch (e) {
+        console.error('[verify-payment] invalid JSON:', e);
+        return NextResponse.json({ success: false, error: 'Invalid JSON' }, { status: 400 });
+    }
 
-        const generatedSignature = crypto
-            .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
-            .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-            .digest('hex');
+    const {
+        razorpay_payment_id,
+        razorpay_order_id,
+        razorpay_signature,
+        bookingData,
+        isFullPayment,
+        userData
+    } = body;
 
-        if (generatedSignature !== razorpay_signature) {
-            return NextResponse.json({ success: false, error: 'Invalid signature' }, { status: 400 });
-        }
+    const generatedSignature = crypto
+        .createHmac('sha256', process.env.RAZORPAY_KEY_SECRET)
+        .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+        .digest('hex');
 
-        // Persist booking
-        const bookingId = await createNewBooking({
+    if (generatedSignature !== razorpay_signature) {
+        console.error('[verify-payment] ❌ signature mismatch');
+        return NextResponse.json({ success: false, error: 'Invalid signature' }, { status: 400 });
+    }
+
+    try {
+        const finalBookingData = {
             ...bookingData,
             payment: {
                 paymentId: razorpay_payment_id,
@@ -44,10 +49,20 @@ export async function POST(request) {
                 vendor: 'not assigned',
                 driver: 'not assigned',
             },
-        });
+            ...userData
+        }
 
-        return NextResponse.json({ success: true, bookingId }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+        const bookingResult = await createNewBooking({ data: finalBookingData });
+
+        ; return NextResponse.json(
+            { success: true, bookingId: bookingResult.data },
+            { status: 200 }
+        );
+    } catch (err) {
+        console.error('[verify-payment] createNewBooking error:', err);
+        return NextResponse.json(
+            { success: false, error: err.message || 'Unknown error' },
+            { status: 500 }
+        );
     }
 }

@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { FaCar, FaUser, FaWallet, FaReceipt, FaMapMarkerAlt } from 'react-icons/fa'
 import Script from 'next/script';
 import toast from 'react-hot-toast'
+import axios from 'axios'
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -14,7 +15,6 @@ export default function CheckoutDetails() {
     const searchParams = useSearchParams();
     const bookingDataString = searchParams.get("bookingData")
     const bookingData = bookingDataString ? JSON.parse(bookingDataString) : null
-
     if (!bookingData) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -24,7 +24,7 @@ export default function CheckoutDetails() {
             </div>
         )
     }
-
+    console.log(userData)
     // Price calculations
     const basePrice = parseFloat(bookingData.price)
     const gstAmount = useMemo(() => parseFloat((basePrice * 0.05).toFixed(2)), [basePrice])
@@ -55,15 +55,19 @@ export default function CheckoutDetails() {
         try {
             const amount = isFullPayment ? totalAmount : bookingAmount;
             // Create order
-            const orderResponse = await fetch('/api/create-razorpay-order', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount })
-            });
-            console.log(orderResponse)
+            const { data: orderData } = await axios.post(
+                '/api/create-razorpay-order',
+                { amount: amount },
+                { headers: { 'Content-Type': 'application/json' } }
+            )
 
-            const orderData = await orderResponse.json();
-            console.log(orderData)
+            // 2) If server returned an error payload instead of orderData.id, bail
+            if (!orderData.id || !orderData.amount) {
+                console.error("Bad order response:", orderData)
+                toast.error("Unable to create payment order. Try again.")
+                return
+            }
+
             const options = {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                 amount: orderData.amount,
@@ -72,29 +76,34 @@ export default function CheckoutDetails() {
                 description: "Cab Booking Payment",
                 order_id: orderData.id,
                 handler: async (response) => {
-                    // Verify payment
-                    const verificationResponse = await fetch('/api/verify-payment', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            ...response,
-                            bookingData: {
-                                ...bookingData,
-                                basePrice,
-                                gstAmount,
-                                totalAmount,
-                                bookingAmount
+                    try {
+                        const { data: verificationData } = await axios.post(
+                            '/api/verify-payment',
+                            {
+                                ...response,
+                                bookingData: {
+                                    ...bookingData,
+                                    basePrice,
+                                    gstAmount,
+                                    totalAmount,
+                                    bookingAmount,
+                                    userData
+                                },
+                                isFullPayment
                             },
-                            isFullPayment
-                        })
-                    });
+                            {
+                                headers: { 'Content-Type': 'application/json' }
+                            }
+                        );
 
-                    const verificationData = await verificationResponse.json();
-
-                    if (verificationData.success) {
-                        router.push(`/booking-success?bookingId=${verificationData.bookingId}`);
-                    } else {
-                        toast.error("Payment verification failed");
+                        if (verificationData.success) {
+                            router.push(`/booking-success?bookingId=${verificationData.bookingId}`);
+                        } else {
+                            toast.error("Payment verification failed");
+                        }
+                    } catch (err) {
+                        console.error("Verification error:", err.response?.data || err.message);
+                        toast.error("Could not verify payment. Please contact support.");
                     }
                 },
                 prefill: {
@@ -106,15 +115,20 @@ export default function CheckoutDetails() {
                     color: "#3399cc"
                 }
             };
+
             const razorpay = new window.Razorpay(options);
             razorpay.open();
-        } catch (error) {
-            toast.error("Payment failed: " + error.message);
+        } catch (err) {
+            console.error("✖️ initiatePayment error:", err.response?.data || err.message)
+            toast.error(
+                err.response?.data?.error ||
+                "Payment failed. Please try again."
+            )
         }
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-4 xl:px-8 py-4 sm:py-8">
             <div className="bg-white rounded-sm sm:rounded-2xl shadow-xl overflow-hidden">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6">
