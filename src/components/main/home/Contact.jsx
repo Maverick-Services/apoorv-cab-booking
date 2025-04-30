@@ -7,9 +7,9 @@ import { FaPhoneAlt, FaFax, FaEnvelope } from "react-icons/fa";
 
 export default function Contact() {
     return (
-        <section id="contact" className="flex flex-col lg:flex-row rounded-3xl shadow-xl overflow-hidden max-w-7xl mx-auto my-16">
+        <section id="contact" className="flex px-10 flex-col lg:flex-row gap-7 rounded-3xl overflow-hidden max-w-7xl mx-auto my-16">
             {/* Left Section: Form */}
-            <div className="w-full lg:w-1/2 p-10">
+            <div className="w-full lg:w-1/2">
                 <h2 className="text-4xl font-bold mb-2">
                     Get in <span className="text-blue-600">Touch</span>
                 </h2>
@@ -54,11 +54,11 @@ export default function Contact() {
             </div>
 
             {/* Right Section: Map */}
-            <div className="w-full lg:w-1/2 relative bg-[#123645] flex items-center justify-center">
-                <div className="w-full h-[400px] md:h-full">
+            <div className="w-full lg:w-1/2 relative flex items-center justify-center">
+                <div className="w-full h-[400px] md:h-full rounded-2xl">
                     <iframe
                         title="Map"
-                        className="w-full h-full"
+                        className="w-full h-full  rounded-4xl bg-transparent z-0"
                         frameBorder="0"
                         scrolling="no"
                         marginHeight={0}
@@ -67,7 +67,7 @@ export default function Contact() {
                     />
                 </div>
                 {/* Curved effect - simulated corner */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-bl-[4rem] z-10"></div>
+                {/* <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-bl-[4rem] z-10"></div> */}
             </div>
         </section>
     );

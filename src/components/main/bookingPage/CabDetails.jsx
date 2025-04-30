@@ -33,6 +33,7 @@ export const CabDetails = () => {
 
     const tripDataString = searchParams.get("tripData");
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
+    console.log(tripData)
 
     const [currentPickupCity, setCurrentPickupCity] = useState([]);
     const [cabTypes, setCabTypes] = useState([]);
@@ -40,6 +41,7 @@ export const CabDetails = () => {
     const [editTrip, setEditTrip] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+
     async function fetchPickupCities() {
         setLoading(true);
         try {
@@ -77,6 +79,11 @@ export const CabDetails = () => {
             return
         }
 
+        const finalBookingPrice = (
+            tripData?.totalDistance * (tripData?.tripType === "Round Trip"
+                ? cab?.discountedPriceRoundTrip
+                : cab?.discountedPriceOneWay)).toFixed(0)
+
         let bookingData = {
             tripType: tripData?.tripType,
             pickupCity: tripData?.pickupCity,
@@ -85,9 +92,7 @@ export const CabDetails = () => {
             cab: cab,
             pickupDate: tripData?.pickupDate,
             totalDistance: tripData?.totalDistance,
-            price: (tripData?.totalDistance * (tripData?.tripType === "Round Trip"
-                ? cab?.discountedPriceRoundTrip
-                : cab?.discountedPriceOneWay)).toFixed(0)
+            price: finalBookingPrice
         }
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);

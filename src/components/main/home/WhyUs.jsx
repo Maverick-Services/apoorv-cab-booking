@@ -5,26 +5,21 @@ import { FaDollarSign, FaUser, FaClock, FaHeadset } from 'react-icons/fa';
 
 function WhyUs() {
     return (
-        <section id='why-us' className="py-24">
-            <div className='max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:gap-10 items-center'>
+        <section id='why-us' className="py-24 px-10">
+            <div className='max-w-[1200px] mx-auto flex flex-col-reverse sm:flex-row lg:gap-10 items-center'>
                 {/* Left Side - Car Image */}
-                <div className="mb-12 lg:mb-0">
+                <div className="mb-12 sm:mb-0 sm:w-1/2 mt-12 sm:mt-0">
                     <Image
                         src={MAIN_WEBSITE.mobile}
                         height={800}
                         width={2000}
                         alt='Rental Car'
+                        className="w-full h-auto"
                     />
-
                 </div>
 
                 {/* Right Side - Content */}
-                <div className="">
-                    {/* <div className="mb-4">
-                    <span className="bg-blue-100 text-blue-700 text-sm font-medium px-4 py-1 rounded-full">
-                        WHY CHOOSE US
-                    </span>
-                </div> */}
+                <div className="sm:w-1/2">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
                         We offer the best experience <br /> with our rental deals
                     </h2>
@@ -48,9 +43,9 @@ function WhyUs() {
                                 <FaUser className="text-blue-500 text-xl" />
                             </div>
                             <div>
-                                <h4 className="font-semibold text-lg text-gray-900">Experience driver</h4>
+                                <h4 className="font-semibold text-lg text-gray-900">Experienced driver</h4>
                                 <p className="text-gray-500 text-sm">
-                                    Don’t have driver? Don’t worry, we have many experienced driver for you.
+                                    Don’t have a driver? Don’t worry, we have many experienced drivers for you.
                                 </p>
                             </div>
                         </div>
@@ -74,7 +69,7 @@ function WhyUs() {
                             <div>
                                 <h4 className="font-semibold text-lg text-gray-900">24/7 technical support</h4>
                                 <p className="text-gray-500 text-sm">
-                                    Have a question? Contact Rentcars support any time when you have problem.
+                                    Have a question? Contact Rentcars support any time when you have a problem.
                                 </p>
                             </div>
                         </div>
