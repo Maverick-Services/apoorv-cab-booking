@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "../firebase-client";
 
 export const createNewBooking = async ({ data }) => {
@@ -22,6 +22,24 @@ export const createNewBooking = async ({ data }) => {
     }
 };
 
+// get one booking all details
 export const getBookingDetails = async (id) => {
     return await getDoc(doc(db, `bookings/${id}`)).then((snap) => snap.data());
 }
+
+// get all bookings
+export const getAllBookings = async () => {
+    return await getDocs(collection(db, 'bookings')).then((snaps) => snaps.docs.map((d) => d.data()))
+}
+
+// update booking
+export const updateBooking = async (data) => {
+    try {
+        const bookingRef = doc(db, 'bookings', data.id);
+        await updateDoc(bookingRef, data);
+        return { success: true, message: 'Booking updated successfully.' };
+    } catch (error) {
+        console.error('Error updating booking:', error);
+        throw new Error(error.message || 'Something went wrong.');
+    }
+};
