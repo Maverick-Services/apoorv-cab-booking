@@ -15,6 +15,8 @@ import ReturnDate from './bookingForm/ReturnDate';
 import useAuthStore from '@/store/useAuthStore';
 import { toast } from 'react-hot-toast';
 import LocationSearch from './bookingForm/DropSuggestionForm';
+import { getLocalTripDetails } from '@/lib/firebase/admin/localTrips';
+import { getAirportTripDetails } from '@/lib/firebase/admin/airportTrips';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
     const router = useRouter();
@@ -55,6 +57,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                 reset({
                     pickupCity: parsed.pickupCity || "",
                     dropCity: parsed.dropCity || "",
+                    pickupDate: parsed.pickupDate || "",
                     pickupTime: parsed.pickupTime || "",
                     returnDate: parsed.returnDate || "",
                     mobileNumber: parsed.mobileNumber || "",
@@ -94,8 +97,11 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             }
 
             const coordList = [];
-            const pickupCoords = await getCoordinates(data.pickupCity);
-            coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
+            // console.log(data)
+            if (tripType === TRIP_TYPES.oneWay || tripType === TRIP_TYPES.roundTrip) {
+                const pickupCoords = await getCoordinates(data.pickupCity);
+                coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
+            }
 
             if (tripType === TRIP_TYPES.roundTrip) {
                 // Handle Round Trip drop-offs
@@ -123,11 +129,14 @@ export default function BookingForm({ editTrip, setEditTrip }) {
 
             // Calculate total distance
             let totalDistance = 0;
-            for (let i = 0; i < coordList.length - 1; i++) {
-                totalDistance += distance(coordList[i], coordList[i + 1], {
-                    units: 'kilometers',
-                });
+            if (tripType === TRIP_TYPES.oneWay || tripType === TRIP_TYPES.roundTrip) {
+                for (let i = 0; i < coordList.length - 1; i++) {
+                    totalDistance += distance(coordList[i], coordList[i + 1], {
+                        units: 'kilometers',
+                    });
+                }
             }
+
             const bookingData = {
                 ...data,
                 coordinates: coordList,
@@ -136,6 +145,12 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             };
 
             if (editTrip) setEditTrip(false);
+
+            for (let obj in bookingData) {
+                if (bookingData[obj] === undefined)
+                    bookingData[obj] = ""
+            }
+
             if (!editTrip) await createNewEnquiry({ data: bookingData });
 
             router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
@@ -145,6 +160,8 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             setLoading(false);
         }
     };
+
+    // console.log(errors);
 
     return (
         <div className="w-full max-w-7xl mx-auto">
@@ -160,6 +177,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                     <Pickup
                         register={register}
                         setValue={setValue}
+                        tripType={tripType}
                         pickupCities={pickupCities}
                         setPickupCities={setPickupCities}
                     />

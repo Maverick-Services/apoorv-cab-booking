@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import useAuthStore from '@/store/useAuthStore'
 import { CheckCircle, MapPin, Car, User, CreditCard, Home } from 'lucide-react'
 import { getBookingDetails } from '@/lib/firebase/admin/booking'
+import { TRIP_TYPES } from '@/lib/constants/constants'
 
 export default function BookingData() {
     const searchParams = useSearchParams()
@@ -89,27 +90,53 @@ export default function BookingData() {
                                     <h3 className="text-lg font-semibold text-gray-800 mb-1">Trip Details</h3>
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
+                                            <span className="text-gray-600">Trip Type:</span>
+                                            <span className="font-medium">{bookingData.tripType}</span>
+                                        </div>
+                                        <div className="flex justify-between">
                                             <span className="text-gray-600">From:</span>
                                             <span className="font-medium">{bookingData.pickupCity}</span>
                                         </div>
-                                        <div className="flex justify-between gap-2">
-                                            <span className="text-gray-600">To:</span>
-                                            {isRoundTrip && bookingData.dropOffs?.length > 0 ? (
-                                                <span className="font-medium text-right self-end">
-                                                    {bookingData.dropOffs.join(' → ')}
-                                                </span>
-                                            ) : (
-                                                <span className="font-medium  self-end">{bookingData.dropCity}</span>
-                                            )}
-                                        </div>
+                                        {
+                                            bookingData?.tripType === TRIP_TYPES.roundTrip ||
+                                            bookingData?.tripType === TRIP_TYPES.oneWay &&
+                                            <div className="flex justify-between gap-2">
+                                                <span className="text-gray-600">To:</span>
+                                                {isRoundTrip && bookingData.dropOffs?.length > 0 ? (
+                                                    <span className="font-medium text-right self-end">
+                                                        {bookingData.dropOffs.join(' → ')}
+                                                    </span>
+                                                ) : (
+                                                    <span className="font-medium  self-end">{bookingData.dropCity}</span>
+                                                )}
+                                            </div>
+                                        }
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Distance:</span>
                                             <span className="font-medium">{bookingData.totalDistance} km</span>
                                         </div>
+                                        {
+                                            bookingData?.totalHours &&
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Hours:</span>
+                                                <span className="font-medium">{bookingData.totalHours} km</span>
+                                            </div>
+                                        }
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Trip Type:</span>
-                                            <span className="font-medium">{bookingData.tripType}</span>
+                                            <span className="text-gray-600">Pickup Date:</span>
+                                            <span className="font-medium">{bookingData.pickupDate}</span>
                                         </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Pickup Time:</span>
+                                            <span className="font-medium">{bookingData.pickupTime}</span>
+                                        </div>
+                                        {
+                                            isRoundTrip && bookingData?.returnDate &&
+                                            <div className="flex justify-between">
+                                                <span className="text-gray-600">Return Date:</span>
+                                                <span className="font-medium">{bookingData.returnDate}</span>
+                                            </div>
+                                        }
                                     </div>
                                 </div>
                             </div>

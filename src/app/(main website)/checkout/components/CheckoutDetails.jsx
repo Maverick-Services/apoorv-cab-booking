@@ -8,6 +8,7 @@ import { FaCar, FaUser, FaWallet, FaReceipt, FaMapMarkerAlt } from 'react-icons/
 import Script from 'next/script';
 import toast from 'react-hot-toast'
 import axios from 'axios'
+import { TRIP_TYPES } from '@/lib/constants/constants'
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -150,8 +151,8 @@ export default function CheckoutDetails() {
                             <div className="flex flex-col items-center">
                                 <Image
                                     src={'/car1.png'}
-                                    width={400}
-                                    height={200}
+                                    width={350}
+                                    height={150}
                                     alt="Car Image"
                                     className="w-full max-w-xs h-48 object-contain mb-6"
                                 />
@@ -168,6 +169,10 @@ export default function CheckoutDetails() {
                                 <h2 className="text-xl font-semibold text-gray-800">Trip Details</h2>
                             </div>
                             <div className="space-y-4">
+                                <div className="flex justify-between items-center pb-2 border-b border-gray-200">
+                                    <span className="text-gray-600">Trip Type:</span>
+                                    <span className="font-medium text-gray-800">{bookingData.tripType}</span>
+                                </div>
                                 <div className="flex justify-between items-center pb-2 border-b border-gray-200">
                                     <span className="text-gray-600">Pickup City:</span>
                                     <span className="font-medium text-gray-800">{bookingData.pickupCity}</span>
@@ -187,7 +192,7 @@ export default function CheckoutDetails() {
                                             ))}
                                         </ul>
                                     </div>
-                                ) : (
+                                ) : bookingData?.tripType === TRIP_TYPES.oneWay && (
                                     <div className="flex justify-between items-center pb-2 border-b border-gray-200">
                                         <span className="text-gray-600">Drop City:</span>
                                         <span className="font-medium text-gray-800">{bookingData.dropCity}</span>
@@ -196,8 +201,32 @@ export default function CheckoutDetails() {
 
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-600">Distance:</span>
-                                    <span className="font-medium text-blue-600">{bookingData.totalDistance} km</span>
+                                    <span className="font-medium text-blue-600">{bookingData.totalDistance} kms</span>
                                 </div>
+                                {
+                                    bookingData?.totalHours &&
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-600">Hours:</span>
+                                        <span className="font-medium text-blue-600">{bookingData.totalHours} Hrs</span>
+                                    </div>
+                                }
+
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">Pickup Date:</span>
+                                    <span className="font-medium text-blue-600">{bookingData.pickupDate}</span>
+                                </div>
+
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">Pickup Time:</span>
+                                    <span className="font-medium text-blue-600">{bookingData.pickupTime}</span>
+                                </div>
+                                {
+                                    isRoundTrip && bookingData?.returnDate &&
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-600">Return Date:</span>
+                                        <span className="font-medium text-blue-600">{bookingData.returnDate}</span>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
