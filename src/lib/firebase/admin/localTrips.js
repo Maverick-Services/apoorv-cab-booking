@@ -28,6 +28,13 @@ export const getAllLocalTrips = async () => {
     return await getDocs(collection(db, 'localTrips')).then((snaps) => snaps.docs.map((d) => d.data()))
 }
 
+// fetch details of all pickup cities
+export const getLocalTripsByCity = async (cityName) => {
+    return await getDocs(
+        query(collection(db, 'localTrips'), where('cityName', '==', cityName))
+    ).then((snaps) => snaps.docs.map((d) => d.data()))
+}
+
 // fetch the pickup city
 export const getLocalTripDetails = async (id) => {
     return await getDoc(doc(db, `localTrips/${id}`));

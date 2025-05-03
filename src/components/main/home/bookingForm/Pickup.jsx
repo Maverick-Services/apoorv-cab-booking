@@ -7,29 +7,60 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { MapPin, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { getAllLocalTrips } from "@/lib/firebase/admin/localTrips"
+import { TRIP_TYPES } from "@/lib/constants/constants"
+import { getAllAirportTrips } from "@/lib/firebase/admin/airportTrips"
 
-function Pickup({ register, setValue, pickupCities, setPickupCities }) {
+function Pickup({ register, setValue, tripType, pickupCities, setPickupCities }) {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const [selectedCity, setSelectedCity] = useState(null)
 
-  useEffect(() => {
-    const fetchPickupCities = async () => {
-      setLoading(true)
-      try {
-        const res = await getAllPickupCities()
-        setPickupCities(res || [])
-      } catch (error) {
-        console.error(error)
-      }
-      setLoading(false)
+  const fetchPickupCities = async () => {
+    setLoading(true)
+    try {
+      const res = await getAllPickupCities()
+      setPickupCities(res || [])
+    } catch (error) {
+      console.error(error)
     }
-    fetchPickupCities()
-  }, [])
+    setLoading(false)
+  }
+
+  const fetchLocalTrips = async () => {
+    setLoading(true)
+    try {
+      const res = await (
+        tripType === TRIP_TYPES.local ? getAllLocalTrips()
+          : getAllAirportTrips()
+      )
+      // console.log("local", )
+      setPickupCities(Array.from(
+        new Map(
+          res?.map(lc => [lc?.cityName, { id: lc?.id, name: lc?.cityName }])
+        ).values()
+      ) || [])
+
+    } catch (error) {
+      console.error(error)
+    }
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    // console.log("Trip Type", tripType);
+    if (tripType === TRIP_TYPES.local || tripType === TRIP_TYPES.airport)
+      fetchLocalTrips();
+    else
+      fetchPickupCities();
+
+  }, [tripType])
+  // console.log("Pikup Cities", pickupCities);
 
   const handleCitySelect = (city) => {
     setSelectedCity(city)
     setValue('pickupCity', city.name)
+    if (tripType === TRIP_TYPES.local || tripType === TRIP_TYPES.airport) setValue('tripId', city.id);
     setOpen(false)
   }
 

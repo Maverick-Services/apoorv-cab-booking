@@ -11,8 +11,12 @@ const LocationSearch = ({ register, unregister, setValue, dropOffs, setDropOffs,
 
     useEffect(() => {
         if (tripType === TRIP_TYPES.oneWay) {
-            register("dropCity", { required: "Drop city is required" });
-        } else {
+            // console.log("registering")
+            register("dropCity",
+                // { required: "Drop city is required" }
+            );
+        }
+        else {
             unregister("dropCity");
         }
     }, [tripType, register, unregister]);

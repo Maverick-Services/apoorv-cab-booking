@@ -27,6 +27,13 @@ export const getAllAirportTrips = async () => {
     return await getDocs(collection(db, 'airportTrips')).then((snaps) => snaps.docs.map((d) => d.data()))
 }
 
+// fetch details of all pickup cities
+export const getAirpotTripsByCity = async (cityName) => {
+    return await getDocs(
+        query(collection(db, 'airportTrips'), where('cityName', '==', cityName))
+    ).then((snaps) => snaps.docs.map((d) => d.data()))
+}
+
 // fetch the pickup city
 export const getAirportTripDetails = async (id) => {
     return await getDoc(doc(db, `airportTrips/${id}`));
