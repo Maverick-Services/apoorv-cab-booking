@@ -21,12 +21,14 @@ function VariantCard({ variant, onEdit, onDelete }) {
 
                 <div className="flex flex-col items-center gap-2 ml-4">
                     <button
+                        type='button'
                         onClick={onEdit}
                         className="p-2 hover:bg-blue-50 rounded-lg text-gray-500 hover:text-blue-600"
                     >
                         <Pencil className="w-5 h-5" />
                     </button>
                     <button
+                        type='button'
                         onClick={onDelete}
                         className="p-2 hover:bg-red-50 rounded-lg text-gray-500 hover:text-red-600"
                     >
