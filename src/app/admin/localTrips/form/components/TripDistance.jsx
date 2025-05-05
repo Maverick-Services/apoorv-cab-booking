@@ -16,7 +16,7 @@ function TripDistance({ updateLocalTripId }) {
                     id="tripDistance"
                     placeholder='eg. 8 / 10'
                     onChange={(e) => handleData('tripDistance', e.target.value)}
-                    value={updateLocalTripId ? data.tripDistance : ""}
+                    value={data.tripDistance || ""}
                     className="border p-2 rounded-md"
                 />
             }

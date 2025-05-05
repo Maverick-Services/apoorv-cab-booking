@@ -15,7 +15,7 @@ function TripHours({ updateLocalTripId }) {
                     id="tripHours"
                     placeholder='eg. 8 / 10'
                     onChange={(e) => handleData('tripHours', e.target.value)}
-                    value={updateLocalTripId ? data.tripHours : ""}
+                    value={data.tripHours || ""}
                     className="border p-2 rounded-md"
                 />
             }
