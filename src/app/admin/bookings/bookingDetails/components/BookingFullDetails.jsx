@@ -145,7 +145,7 @@ function BookingFullDetails({ booking, vendor }) {
                             ? booking?.cab?.actualPriceOneWay
                             : booking?.cab?.actualPriceRoundTrip}`],
                     ].map(([label, value], idx) => (
-                        <div key={idx}>
+                        value !== undefined && <div key={idx}>
                             <p className="text-gray-500 text-xs mb-1">{label}</p>
                             <p className="font-medium text-gray-900">{value}</p>
                         </div>
