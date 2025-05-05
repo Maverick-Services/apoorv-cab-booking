@@ -65,13 +65,10 @@ const LocalTripForm = () => {
 
 
     return (
-        <div className='w-full'>
-            <form
-                onSubmit={handleSubmit}
-                className="space-y-6 w-full"
-            >
-                <div className=''>
-                    <div className='w-full grid grid-cols-1 sm:grid-cols-2 mb-4 gap-4 p-4 bg-white rounded-xl border border-gray-300'>
+        <div className='w-full max-w-4xl mx-auto p-4'>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div className='bg-white shadow-sm rounded-2xl p-6 border border-gray-100'>
+                    <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-5'>
                         {/* City Name */}
                         <CityName updateLocalTripId={updateLocalTripId} />
 
@@ -82,72 +79,77 @@ const LocalTripForm = () => {
                         <TripDistance updateLocalTripId={updateLocalTripId} />
                     </div>
 
-                    <div className='w-full'>
-                        {/* LocalTrip Variants in city */}
+                    {/* LocalTrip Variants in city */}
+                    <div className='space-y-6'>
                         <TripVariant updateLocalTripId={updateLocalTripId} />
                     </div>
                 </div>
-                {otherError
-                    && <p className="text-red-500 text-base">Error: {otherError}</p>
-                }
 
-                {/* Submit Button */}
-                <button
-                    type="submit"
-                    disabled={creating}
-                    className="bg-primary w-full flex gap-2 items-center justify-center text-white py-2 px-4 rounded-md hover:bg-blue-800 cursor-pointer transition"
-                >
-                    {creating ? (
-                        <Loader2 className="animate-spin" size={20} />
-                    ) : (
-                        <>
-                            {!updateLocalTripId ?
-                                <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Add </div>
-                                : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update </div>
-                            }
-                        </>
-                    )}
-                </button>
-
-                {/* Delete Button */}
-                {updateLocalTripId && (
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button
-                                type="button"
-                                className="bg-red-600 w-full flex gap-2 items-center justify-center text-white py-2 px-4 rounded-md hover:bg-red-800 cursor-pointer transition"
-                            >
-                                <LucideDelete size={20} /> Delete
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                                <DialogTitle>Delete Cab Type</DialogTitle>
-                                <DialogDescription>
-                                    Are you sure you want to delete this Local Trip?
-                                </DialogDescription>
-                            </DialogHeader>
-
-                            <DialogFooter>
-                                <Button
-                                    type="button"
-                                    onClick={() => handleDelete(data.id)}
-                                    disabled={deleting}
-                                    className="bg-red-600 w-full flex gap-2 items-center justify-center text-white py-2 px-4 rounded-md hover:bg-red-800 cursor-pointer transition"
-                                >
-                                    {deleting ? (
-                                        <Loader2 className="animate-spin" size={20} />
-                                    ) : (
-                                        <>
-                                            <LucideDelete size={20} /> Delete
-                                        </>
-                                    )}
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                {otherError && (
+                    <div className="p-4 bg-red-50 rounded-lg">
+                        <p className="text-red-600 font-medium">Error: {otherError}</p>
+                    </div>
                 )}
 
+                <div className="grid grid-cols-2 items-center gap-4">
+                    <button
+                        type="submit"
+                        disabled={creating}
+                        className="h-12 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                        {creating ? (
+                            <Loader2 className="animate-spin w-5 h-5" />
+                        ) : !updateLocalTripId ? (
+                            <>
+                                <PlusCircle className="w-5 h-5" />
+                                Add Local Trip
+                            </>
+                        ) : (
+                            <>
+                                <CircleCheckBig className="w-5 h-5" />
+                                Update Trip
+                            </>
+                        )}
+                    </button>
+
+                    {updateLocalTripId && (
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <button
+                                    type="button"
+                                    className="h-12 bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                >
+                                    <LucideDelete className="w-5 h-5" />
+                                    Delete Trip
+                                </button>
+                            </DialogTrigger>
+                            <DialogContent className="rounded-2xl max-w-md">
+                                <DialogHeader>
+                                    <DialogTitle className="text-xl font-bold text-gray-900">
+                                        Confirm Deletion
+                                    </DialogTitle>
+                                    <DialogDescription className="text-gray-600">
+                                        This action cannot be undone. All associated data will be permanently removed.
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter>
+                                    <Button
+                                        type="button"
+                                        onClick={() => handleDelete(data.id)}
+                                        disabled={deleting}
+                                        className="h-12 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl w-full"
+                                    >
+                                        {deleting ? (
+                                            <Loader2 className="animate-spin w-5 h-5" />
+                                        ) : (
+                                            'Confirm Delete'
+                                        )}
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    )}
+                </div>
             </form>
         </div>
     )

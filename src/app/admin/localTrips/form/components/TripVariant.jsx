@@ -7,6 +7,7 @@ import CabType from './variant/CabType'
 import { useLocalTripFromForm } from '../context/localTripContext'
 import VariantPrice from './variant/VariantPrice'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { PlusCircle } from 'lucide-react'
 
 function TripVariant({ updateLocalTripId }) {
     const { variant, setVariant, variantList, setVariantList, data } = useLocalTripFromForm();
@@ -77,38 +78,36 @@ function TripVariant({ updateLocalTripId }) {
 
     return (
         <div className="w-full bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className='text-2xl text-primary font-bold mb-3'>Add Cab Types</h2>
-            <div className='flex gap-3 w-full items-center justify-between'>
+            <h2 className="text-xl font-bold text-gray-900 mb-6">Cab Types & Pricing</h2>
+            <div className="space-y-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-4">
-                    {/* Variant Details Section */}
-                    <div className="border-b pb-7">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <CabType />
-                            <VariantPrice />
-                        </div>
+                    <div className="space-y-4">
+                        <CabType />
+                        <VariantPrice />
                     </div>
-
-                    <Button
+                    <button
                         type="button"
-                        className="w-full bg-primary text-white hover:opacity-90 transition-all p-6 text-lg -mt-4"
                         onClick={handleAddVariant}
+                        className="w-full h-12 bg-primary hover:bg-blue-950 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
                     >
+                        <PlusCircle className="w-5 h-5" />
                         Add Cab Type
-                    </Button>
+                    </button>
                 </div>
 
-                {/* Display added variants */}
                 {variantList.length > 0 && (
-                    <div className="mt-8 space-y-4">
-                        <h3 className="text-xl font-semibold">Added Cab Variants</h3>
-                        {variantList.map((v, idx) => (
-                            <VariantCard
-                                key={idx}
-                                variant={v}
-                                onEdit={() => handleEdit(idx)}
-                                onDelete={() => handleDelete(idx)}
-                            />
-                        ))}
+                    <div className="space-y-4 bg-gray-50 border p-3 rounded-xl">
+                        <h3 className="text-lg font-bold text-blue-900">Added Cab Types</h3>
+                        <div className="grid gap-3">
+                            {variantList.map((v, idx) => (
+                                <VariantCard
+                                    key={idx}
+                                    variant={v}
+                                    onEdit={() => handleEdit(idx)}
+                                    onDelete={() => handleDelete(idx)}
+                                />
+                            ))}
+                        </div>
                     </div>
                 )}
             </div>

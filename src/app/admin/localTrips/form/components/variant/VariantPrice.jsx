@@ -25,7 +25,7 @@ function VariantPrice({
     }
 
     return (
-        <div className="max-w-xs">
+        <div className="w-full">
             <div className="flex flex-col">
                 <label className="text-sm font-medium text-gray-700 mb-1">Trip Actual Price</label>
                 <input

@@ -39,9 +39,9 @@ function CityName({ updateLocalTripId }) {
 
     return (
         <div className="flex flex-col gap-2">
-            <label htmlFor='name' className="text-sm font-medium">City Name</label>
+            <label className="text-sm font-medium text-gray-700">City Name</label>
             {loading ? (
-                <Skeleton className="h-10 w-full rounded-md" />
+                <Skeleton className="h-11 w-full rounded-lg" />
             ) : (
                 <select
                     value={selectedCity?.name || ''}
@@ -49,9 +49,9 @@ function CityName({ updateLocalTripId }) {
                         handleData('cityName', e.target.value)
                         setSelectedCity(citiesList?.find(i => i.name === e.target.value))
                     }}
-                    className="input-field h-10 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="h-11 w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all outline-none appearance-none bg-white bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2NzY3NjciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jaGV2cm9uLWRvd24iPjxwYXRoIGQ9Im02IDkgNiA2IDYtNiIvPjwvc3ZnPg==')] bg-no-repeat bg-[center_right_1rem]"
                 >
-                    <option value="">Select City Name</option>
+                    <option value="">Select City</option>
                     {citiesList.map((city) => (
                         <option key={city.id} value={city.name}>
                             {city.name}
