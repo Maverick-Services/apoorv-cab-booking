@@ -42,3 +42,10 @@ export const getPickupCityDetails = async (id) => {
     return await getDoc(doc(db, `pickupCities/${id}`));
 }
 
+// fetch the pickup city by city name
+export const getPickupCityDetailsbyCityName = async (cityName) => {
+    return await getDocs(
+        query(collection(db, 'pickupCities'), where('name', '==', cityName))
+    ).then((snaps) => snaps.docs.map((d) => d.data())[0]);
+}
+
