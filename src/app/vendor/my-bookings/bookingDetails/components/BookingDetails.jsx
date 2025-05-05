@@ -8,11 +8,13 @@ import BookingSkeleton from "./BookingSkeleton";
 import BookingFullDetails from "./BookingFullDetails";
 import UpdateBookingDialog from "./UpdateBookingDialog";
 import { getVendorDetails } from "@/lib/firebase/admin/vendor";
+import useAuthStore from "@/store/useAuthStore";
 
 function BookingDetails() {
     const searchParams = useSearchParams();
     const bookingId = searchParams.get("id");
 
+    const { userData } = useAuthStore();
     const [loading, setLoading] = useState(false);
     const [booking, setBooking] = useState({});
     const [assignedVendor, setAssignedVendor] = useState(null)
@@ -82,6 +84,7 @@ function BookingDetails() {
                     onOpenChange={setIsDialogOpen}
                     booking={booking}
                     fetchOneBookingDetails={fetchOneBookingDetails}
+                    userData={userData}
                 />
             </div>
         </div>
