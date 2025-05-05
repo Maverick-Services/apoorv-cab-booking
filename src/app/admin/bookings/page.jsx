@@ -13,19 +13,6 @@ function page() {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(false)
 
-    // useEffect(() => {
-    //     let bookingArr = BOOKINGS_LIST;
-
-    //     if (timeFilter !== "all") {
-    //         bookingArr = bookingArr?.filter(bk =>
-    //             timeFilter == "past" ? new Date(bk?.pickUpDate) < Date.now()
-    //                 : timeFilter == "upcoming" ? new Date(bk?.pickUpDate) > Date.now() : new Date(bk?.pickUpDate) == Date.now()
-    //         )
-    //     }
-
-    //     setBookings(bookingArr);
-    // }, [timeFilter])
-
     async function fetchAllBookings() {
         setLoading(true)
         try {
@@ -40,9 +27,6 @@ function page() {
     useEffect(() => {
         fetchAllBookings()
     }, [])
-
-    console.log(loading)
-    console.log(bookings)
 
     return (
         <div>
@@ -67,7 +51,6 @@ function page() {
                             </Badge>
                         </Link>
                     </div>
-
 
                     <div>
                         <BookingList bookings={bookings} />
