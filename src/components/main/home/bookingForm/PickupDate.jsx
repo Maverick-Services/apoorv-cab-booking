@@ -6,7 +6,7 @@ function PickupDate({ register }) {
         <div>
             <label className="text-sm font-semibold text-gray-700 flex items-center gap-1 mb-2">
                 <CalendarDays size={16} className="text-primary" />
-                Pickup Date & Time
+                Pickup Date & Time <span className="text-red-500">*</span>
             </label>
 
             <div className="flex flex-col sm:flex-row gap-4">

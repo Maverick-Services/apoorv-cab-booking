@@ -2,40 +2,86 @@
 
 import { useForm } from 'react-hook-form';
 import InnerLayout from '@/components/dashboard/layout/InnerLayout';
-import { cities } from '@/lib/constants/constants';
+import { TRIP_TYPES } from '@/lib/constants/constants';
+import { useState } from 'react';
+import ManualDrop from '@/components/admin/ManualDrop';
+import PickupDate from '@/components/main/home/bookingForm/PickupDate';
+import TripPrice from '@/components/main/home/bookingForm/TripPrice';
+import ManualCabType from '@/components/main/home/bookingForm/ManualCabType';
+import { createNewBooking } from '@/lib/firebase/admin/booking';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+
+    const router = useRouter();
+    const [dropOffs, setDropOffs] = useState([]);
+
     const {
         register,
+        unregister,
         handleSubmit,
+        setValue,
         formState: { errors },
         watch,
     } = useForm();
 
     const tripType = watch('tripType');
+    const pickupCity = watch('pickupCity');
 
-    const onSubmit = (data) => {
-        console.log('Booking Data:', data);
+    const onSubmit = async (data) => {
+
+        // console.log('Booking Data:', data);
+        data = {
+            userData: {
+                name: data?.name,
+                email: data?.email,
+                phoneNo: data?.phoneNo,
+            },
+            tripType: data?.tripType,
+            pickupCity: data?.pickupCity,
+            dropCity: data?.dropCity ? data?.dropCity : "",
+            cab: {
+                name: data?.cabType
+            },
+            basePrice: data?.basePrice,
+            totalAmount: data?.totalAmount,
+            bookingAmount: 0,
+            dropOffs: dropOffs ? dropOffs : [],
+            gstAmount: data?.gstAmount,
+            price: data?.basePrice,
+            payment: {
+                amount: data?.totalAmount,
+                isFullPayment: false,
+                status: "pending",
+            },
+            status: {
+                booking: "accepted",
+                trip: "Not Started",
+            }
+        }
+        // console.log('Update Data:', data);
+        const result = await createNewBooking({ data });
+        if (result)
+            router.push('/admin/bookings')
     };
 
     return (
-        <InnerLayout heading="Add New Booking">
+        <InnerLayout heading="Manual Booking">
             <section>
+
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="bg-white p-6 rounded-xl shadow-md space-y-6 w-full max-w-xl"
                 >
                     {/* Trip Type */}
                     <div className="flex flex-col">
-                        <label className="text-sm font-medium mb-1">Trip Type</label>
+                        <label className="text-sm font-medium mb-1">Trip Type <span className="text-red-500">*</span></label>
                         <select
                             {...register('tripType', { required: 'Trip type is required' })}
                             className="border p-2 rounded-md"
                         >
-                            <option value="">Select Trip Type</option>
-                            <option value="One Way">One Way</option>
-                            <option value="Round Trip">Round Trip</option>
-                            <option value="Local Trip">Local Trip</option>
+                            <option value={TRIP_TYPES.oneWay}>{TRIP_TYPES.oneWay}</option>
+                            <option value={TRIP_TYPES.roundTrip}>{TRIP_TYPES.roundTrip}</option>
                         </select>
                         {errors.tripType && (
                             <span className="text-red-500 text-xs">{errors.tripType.message}</span>
@@ -45,63 +91,39 @@ export default function Page() {
                     {/* Pickup City */}
                     <div className="flex flex-col">
                         <label htmlFor="pickupCity" className="text-sm font-medium mb-1">
-                            Pickup City
+                            Pickup City <span className="text-red-500">*</span>
                         </label>
-                        <select
+                        <input
+                            type="text"
                             id="pickupCity"
-                            {...register('pickupCity', { required: 'Pickup City is required' })}
+                            {...register('pickupCity', {
+                                required: 'Pickup City is required',
+                            })}
+                            placeholder="Eg. Delhi, UP, Bihar"
                             className="border p-2 rounded-md"
-                        >
-                            <option value="">Select City</option>
-                            {cities.map((city) => (
-                                <option key={city} value={city}>{city}</option>
-                            ))}
-                        </select>
+                        />
                         {errors.pickupCity && (
                             <span className="text-red-500 text-xs">{errors.pickupCity.message}</span>
                         )}
                     </div>
 
-                    {/* Show only when NOT Local Trip */}
-                    {tripType !== 'Local Trip' && (
-                        <>
-                            {/* Drop City */}
-                            <div className="flex flex-col">
-                                <label htmlFor="dropCity" className="text-sm font-medium mb-1">
-                                    Drop City
-                                </label>
-                                <select
-                                    id="dropCity"
-                                    {...register('dropCity', { required: 'Drop City is required' })}
-                                    className="border p-2 rounded-md"
-                                >
-                                    <option value="">Select City</option>
-                                    {cities.map((city) => (
-                                        <option key={city} value={city}>{city}</option>
-                                    ))}
-                                </select>
-                                {errors.dropCity && (
-                                    <span className="text-red-500 text-xs">{errors.dropCity.message}</span>
-                                )}
-                            </div>
-                        </>
-                    )}
-
-                    {/* Pickup Time */}
-                    <div className="flex flex-col">
-                        <label htmlFor="pickupTime" className="text-sm font-medium mb-1">
-                            Pickup Date & Time
-                        </label>
-                        <input
-                            type="datetime-local"
-                            id="pickupTime"
-                            {...register('pickupTime', { required: 'Pickup Time is required' })}
-                            className="border p-2 rounded-md"
-                        />
-                        {errors.pickupTime && (
-                            <span className="text-red-500 text-xs">{errors.pickupTime.message}</span>
+                    {/* Drop suggestions */}
+                    {
+                        tripType !== TRIP_TYPES.airport &&
+                        tripType !== TRIP_TYPES.local && (
+                            <ManualDrop
+                                register={register}
+                                unregister={unregister}
+                                setValue={setValue}
+                                dropOffs={dropOffs}
+                                setDropOffs={setDropOffs}
+                                tripType={tripType}
+                                pickupCity={pickupCity}
+                            />
                         )}
-                    </div>
+
+                    {/* Pickup Date & Time */}
+                    <PickupDate register={register} />
 
                     {/* Return Date - Only for Round Trip */}
                     {tripType === 'Round Trip' && (
@@ -123,15 +145,58 @@ export default function Page() {
                         </div>
                     )}
 
-                    {/* Mobile Number */}
+                    <ManualCabType register={register} />
+
+                    {/* Trip Price  */}
+                    <TripPrice register={register} watch={watch} setValue={setValue} />
+
+                    {/* Customer Name */}
                     <div className="flex flex-col">
-                        <label htmlFor="mobileNumber" className="text-sm font-medium mb-1">
-                            Mobile Number
+                        <label htmlFor="name" className="text-sm font-medium mb-1">
+                            Customer Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="name"
+                            {...register('name', {
+                                required: 'Name is required',
+                            })}
+                            placeholder="Eg., Rahul, Mukesh"
+                            className="border p-2 rounded-md"
+                        />
+                        {errors.name && (
+                            <span className="text-red-500 text-xs">{errors.name.message}</span>
+                        )}
+                    </div>
+
+                    {/* Customer Email */}
+                    <div className="flex flex-col">
+                        <label htmlFor="email" className="text-sm font-medium mb-1">
+                            Customer Email <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            {...register('email', {
+                                required: 'Email is required',
+                            })}
+                            placeholder="rahul@gmailcom"
+                            className="border p-2 rounded-md"
+                        />
+                        {errors.email && (
+                            <span className="text-red-500 text-xs">{errors.email.message}</span>
+                        )}
+                    </div>
+
+                    {/* Customer Mobile Number */}
+                    <div className="flex flex-col">
+                        <label htmlFor="phoneNo" className="text-sm font-medium mb-1">
+                            Customer Mobile Number <span className="text-red-500">*</span>
                         </label>
                         <input
                             type="tel"
-                            id="mobileNumber"
-                            {...register('mobileNumber', {
+                            id="phoneNo"
+                            {...register('phoneNo', {
                                 required: 'Mobile Number is required',
                                 pattern: {
                                     value: /^[0-9]{10}$/,
@@ -141,8 +206,8 @@ export default function Page() {
                             placeholder="Enter 10-digit mobile number"
                             className="border p-2 rounded-md"
                         />
-                        {errors.mobileNumber && (
-                            <span className="text-red-500 text-xs">{errors.mobileNumber.message}</span>
+                        {errors.phoneNo && (
+                            <span className="text-red-500 text-xs">{errors.phoneNo.message}</span>
                         )}
                     </div>
 
@@ -154,6 +219,7 @@ export default function Page() {
                         Book Cab
                     </button>
                 </form>
+
             </section>
         </InnerLayout>
     );
