@@ -90,6 +90,7 @@ function page() {
                         <AirportTripList
                             airportTrips={airportTrips}
                             loading={loading}
+                            fetchAirportTrips={fetchAirportTrips}
                         />
                     </div>
                 </ScrollArea>

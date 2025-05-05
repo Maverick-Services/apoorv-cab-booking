@@ -71,7 +71,7 @@ export default function AirportTripFormContextProvider({ children }) {
         try {
             await createNewAirportTrip({ data });
             toast.success('Airport Trip Added Successfully!');
-            // router.push('/admin/cab-types');
+            router.push('/admin/airport-trips');
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error adding cab type');

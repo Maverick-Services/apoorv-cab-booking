@@ -1,4 +1,5 @@
-import React from 'react'
+"use client"
+import React, { useState } from 'react'
 import { Loader2, Pencil, MapPin, Clock, Route, IndianRupee, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -12,10 +13,14 @@ import {
 } from "@/components/ui/dialog"
 import { deleteAirportTrip } from '@/lib/firebase/admin/airportTrips'
 
-function AirportTripList({ loading, airportTrips }) {
+function AirportTripList({ loading, airportTrips, fetchAirportTrips }) {
+    const [deleting, setDeleting] = useState(false)
 
     async function confirmDelete(id) {
+        setDeleting(true)
         await deleteAirportTrip(id)
+        fetchAirportTrips()
+        setDeleting(false)
     }
 
     return (
@@ -71,14 +76,22 @@ function AirportTripList({ loading, airportTrips }) {
                                     <DialogHeader>
                                         <DialogTitle>Delete Variant</DialogTitle>
                                     </DialogHeader>
-                                    <p>Are you sure you want to delete this Airport Trip?.</p>
+                                    <p>Are you sure you want to delete this Airport Trip?</p>
                                     <DialogFooter className="mt-4">
-                                        <Button variant="outline">
-                                            Cancel
-                                        </Button>
+
                                         <Button variant="destructive" onClick={() => confirmDelete(trip.id)}>
-                                            Yes, Delete
+                                            {deleting ?
+                                                <div className="flex items-center py-12 gap-3 justify-center text-white">
+                                                    <Loader2 className="animate-spin w-10 h-10 text-white" />
+                                                    <p className="text-white">Deleting...</p>
+                                                </div>
+                                                :
+                                                <div className="flex items-center py-12 gap-3 justify-center text-white">
+                                                    <Trash2 /> Delete
+                                                </div>
+                                            }
                                         </Button>
+
                                     </DialogFooter>
                                 </DialogContent>
                             </Dialog>
