@@ -20,7 +20,9 @@ function VehicleDetails({ register }) {
         } catch (err) {
             console.error(err);
         }
-        setLoading(false);
+        finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -71,12 +73,12 @@ function VehicleDetails({ register }) {
                 {/* Vehicle Nubmer */}
                 <div className='grow'>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Vehicle Nubmer <span className="text-red-500">*</span>
+                        Vehicle Number <span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
                         placeholder="eg, DLG16578"
-                        {...register("vehicleNubmer", {
+                        {...register("vehicleNumber", {
                             required: true,
                         })}
                         className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"

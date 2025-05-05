@@ -9,6 +9,7 @@ import { createVendor } from "@/lib/firebase/admin/vendor";
 import { useRouter } from "next/navigation";
 import VehicleDetails from "./components/VehicleDetails";
 import useAuthStore from "@/store/useAuthStore";
+import { createNewDriver } from "@/lib/firebase/vendor/driver";
 // import { useSearchParams } from "next/navigation";
 
 export default function Page() {
@@ -33,11 +34,11 @@ export default function Page() {
             ...data,
             vendor: userData?.id
         }
-        console.log(data);
+        // console.log(data);
 
-        const result = null;
+        const result = await createNewDriver({ data });
         if (result)
-            router.push('/admin/drivers');
+            router.push('/vendor/drivers');
 
         setLoading(false);
     };
@@ -100,7 +101,7 @@ export default function Page() {
                                     </label>
                                     <input
                                         type="tel"
-                                        placeholder="e.g., Delhi, Noida"
+                                        placeholder="1234567890"
                                         {...register("phoneNo", {
                                             required: true,
                                         })}
