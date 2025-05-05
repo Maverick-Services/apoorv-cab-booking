@@ -28,7 +28,7 @@ export const getAllAirportTrips = async () => {
 }
 
 // fetch details of all pickup cities
-export const getAirpotTripsByCity = async (cityName) => {
+export const getAirportTripsByCity = async (cityName) => {
     return await getDocs(
         query(collection(db, 'airportTrips'), where('cityName', '==', cityName))
     ).then((snaps) => snaps.docs.map((d) => d.data()))
@@ -39,3 +39,10 @@ export const getAirportTripDetails = async (id) => {
     return await getDoc(doc(db, `airportTrips/${id}`));
 }
 
+// delete airport trip
+export const deleteAirportTrip = async (id) => {
+    if (!id) {
+        throw new Error("Id is required");
+    }
+    await deleteDoc(doc(db, `airportTrips/${id}`));
+}

@@ -40,3 +40,23 @@ export const getLocalTripDetails = async (id) => {
     return await getDoc(doc(db, `localTrips/${id}`));
 }
 
+// Update local trip
+export const updateLocalTrip = async ({ data }) => {
+    try {
+        const collectionRef = doc(db, `localTrips/${data?.id}`);
+        await updateDoc(collectionRef, data);
+        return { success: true, message: "Local Trip Updated Successfully." };
+
+    } catch (error) {
+        console.error("Error updating Local Trip:", error);
+        throw new Error(error.message || "Something went wrong.");
+    }
+};
+
+// delete local trip
+export const deleteLocalTrip = async (id) => {
+    if (!id) {
+        throw new Error("Id is required");
+    }
+    await deleteDoc(doc(db, `localTrips/${id}`));
+}

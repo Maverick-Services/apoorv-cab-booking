@@ -2,17 +2,22 @@
 
 import React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
-import { LogOut } from "lucide-react";
+import { Loader2, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
-// import { auth } from "@/lib/firebase/firebase-client";
+import useAuthStore from "@/store/useAuthStore";
 
 export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
     const pathname = usePathname();
-    // const user = auth.currentUser;
-    // console.log("User", user);
+    const router = useRouter()
+    const { handleLogout, isLoading, userData } = useAuthStore()
+
+    const onLogoutClick = async () => {
+        await handleLogout()
+        router.push('/')
+    }
 
     function onLinkClick() {
         setIsSidebarOpen(false)
@@ -73,11 +78,27 @@ export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
                         className="rounded-full"
                     />
                     <div>
-                        <p className="text-sm font-medium sm:hidden lg:block ">Apoorv Cab Booking</p>
-                        <p className="text-xs text-gray-500 sm:hidden lg:block ">user@gmail.com</p>
+                        <p className="text-sm font-medium sm:hidden lg:block ">{userData?.name}</p>
+                        <p className="text-xs text-gray-500 sm:hidden lg:block ">{userData?.role}</p>
                     </div>
                 </div>
-                <Button className='w-full mt-2 text-white'><span><LogOut /></span> <span className="sm:hidden lg:block">Logout</span> </Button>
+                <Button
+                    onClick={onLogoutClick}
+                    disabled={isLoading}
+                    className="w-full mt-2 text-white bg-red-600 hover:bg-red-700 transition"
+                >
+                    {isLoading ? (
+                        <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Logging out...
+                        </>
+                    ) : (
+                        <>
+                            <LogOut className="mr-2 h-4 w-4" />
+                            <span className="sm:hidden lg:block">Logout</span>
+                        </>
+                    )}
+                </Button>
             </div>
         </div>
     );

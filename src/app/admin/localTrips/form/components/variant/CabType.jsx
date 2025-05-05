@@ -1,3 +1,4 @@
+// CabType.jsx
 "use client"
 
 import React, { useEffect, useState } from 'react'
@@ -5,7 +6,7 @@ import { useLocalTripFromForm } from '../../context/localTripContext'
 import { getAllCabTypes } from '@/lib/firebase/admin/cabType'
 import { Skeleton } from "@/components/ui/skeleton"
 
-function CabType() {
+function CabType({ value, onChange }) {
     const [cabTypes, setCabTypes] = useState([])
     const [loading, setLoading] = useState(true)
 
@@ -22,9 +23,14 @@ function CabType() {
                 setLoading(false)
             }
         }
-
         fetchCabTypes()
     }, [])
+
+    const selectedValue = value !== undefined ? value : variant.cabType
+    const triggerChange = (val) => {
+        if (onChange) onChange(val)
+        else handleVariant('cabType', val)
+    }
 
     return (
         <div className="flex flex-col">
@@ -34,16 +40,17 @@ function CabType() {
                 <Skeleton className="h-10 w-full rounded-md" />
             ) : (
                 <select
-                    value={variant.name}
-                    onChange={(e) => handleVariant('cabType', e.target.value)}
+                    value={selectedValue}
+                    onChange={(e) => triggerChange(e.target.value)}
                     className="input-field h-10 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="">Select a Cab Type</option>
                     {cabTypes.map((cab) => (
-                        selectedCity?.variantList?.filter(i => i.name === cab.name).length > 0 &&
-                        <option key={cab.id} value={cab.name}>
-                            {cab.name}
-                        </option>
+                        selectedCity?.variantList?.filter(i => i.name === cab.name).length > 0 && (
+                            <option key={cab.id} value={cab.name}>
+                                {cab.name}
+                            </option>
+                        )
                     ))}
                 </select>
             )}

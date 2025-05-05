@@ -5,19 +5,42 @@ import React, { useEffect, useState } from 'react'
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
-import { getAllLocalTrips } from '@/lib/firebase/admin/localTrips';
-import { Loader2 } from 'lucide-react';
+import { getLocalTripsByCity } from '@/lib/firebase/admin/localTrips';
+import LocalTripList from './components/LocalTripList';
+import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 function page() {
     const [loading, setLoading] = useState(false)
+    const [loadingPickupCities, setLoadingPickupCities] = useState(false)
     const [localTrips, setLocalTrips] = useState([])
+    const [pickupCities, setPickupCities] = useState([])
+    const [selectedPickupCity, setSelectedPickupCity] = useState()
+
+    async function fetchPickupCities() {
+        setLoadingPickupCities(true)
+        try {
+            const res = await getAllPickupCities()
+            setPickupCities(res)
+            if (res.length > 0) {
+                setSelectedPickupCity(res[0].name)  // 👈 Set default to first city
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        setLoadingPickupCities(false)
+    }
+
+
+    useEffect(() => {
+        fetchPickupCities()
+    }, [])
 
     async function fetchLocalTrips() {
         setLoading(true)
         try {
-            const res = await getAllLocalTrips()
+            let res = await getLocalTripsByCity(selectedPickupCity)
             setLocalTrips(res)
-            console.log(res)
         } catch (error) {
             console.log(error)
         }
@@ -26,51 +49,51 @@ function page() {
 
     useEffect(() => {
         fetchLocalTrips()
-    }, [])
+    }, [selectedPickupCity])
+
 
     return (
         <div>
             <InnerLayout heading={"Local Trips"}>
                 <ScrollArea className={'h-full md:pr-4'}>
                     <div className='w-full flex flex-col gap-2'>
+
                         <div className='w-full flex justify-between px-1'>
+
                             <p className='font-semibold text-primary'>Total Local Trips: {localTrips?.length}</p>
-                            <Link href={'/admin/localTrips/form'}>
-                                <Badge className="text-base font-bold cursor-pointer">
-                                    Add new Local Trip
-                                </Badge>
-                            </Link>
-                        </div>
 
-                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-                            {loading ? (
-                                <div className="col-span-full flex justify-center py-10">
-                                    <Loader2 className="animate-spin w-8 h-8 text-primary" />
-                                </div>
-                            ) : localTrips.length === 0 ? (
-                                <div className="col-span-full text-center text-muted-foreground py-10">
-                                    No local trips found.
-                                </div>
-                            ) : (
-                                localTrips.map((trip) => (
-                                    <div key={trip.id} className="bg-white p-4 border rounded-lg shadow-sm flex flex-col gap-2">
-                                        <h2 className="text-lg font-bold text-primary">{trip.cityName}</h2>
-                                        <p className="text-sm text-muted-foreground">Distance: {trip.tripDistance} km</p>
-                                        <p className="text-sm text-muted-foreground">Duration: {trip.tripHours} hours</p>
-                                        <div className="mt-2 flex flex-col gap-2">
-                                            {trip.variantList.map((variant, index) => (
-                                                <div key={index} className="border p-2 rounded-md bg-muted">
-                                                    <p className="font-semibold">{variant.cabType}</p>
-                                                    <p className="text-sm">Actual Price: ₹{variant.variantAcutalPrice}</p>
-                                                    <p className="text-sm">Discounted Price: ₹{variant.variantDiscountedPrice}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))
-                            )}
+                            <div className='flex gap-3 items-center justify-center'>
+                                <Link href={'/admin/localTrips/form'}>
+                                    <Badge className="text-base font-bold cursor-pointer">
+                                        Add new Local Trip
+                                    </Badge>
+                                </Link>
+
+                                <Select
+                                    value={selectedPickupCity}
+                                    onValueChange={(value) => setSelectedPickupCity(value)}
+                                    disabled={loadingPickupCities}
+                                >
+                                    <SelectTrigger className="w-[220px] bg-white">
+                                        <SelectValue placeholder={loadingPickupCities ? "Loading cities..." : "Filter by Pickup City"} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {pickupCities?.map((city) => (
+                                            <SelectItem key={city.id} value={city.name}>
+                                                {city.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+
+                            </div>
 
                         </div>
+
+                        <LocalTripList
+                            loading={loading}
+                            localTrips={localTrips}
+                        />
                     </div>
                 </ScrollArea>
             </InnerLayout>
