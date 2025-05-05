@@ -9,6 +9,15 @@ import Script from 'next/script';
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { TRIP_TYPES } from '@/lib/constants/constants'
+import {
+    Breadcrumb,
+    BreadcrumbEllipsis,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -129,8 +138,24 @@ export default function CheckoutDetails() {
     }
 
     return (
-        <div className="max-w-6xl mx-auto px-4 sm:px-4 xl:px-8 py-4 sm:py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-4 xl:px-8 py-4 sm:py-3">
+            <Breadcrumb className='mb-3'>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink onClick={() => router.back()} className={'cursor-pointer'}>Trip Details</BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Checkout</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
             <div className="bg-white rounded-sm sm:rounded-2xl shadow-xl overflow-hidden">
+
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6">
                     <h1 className="text-2xl font-bold text-white flex items-center gap-3">

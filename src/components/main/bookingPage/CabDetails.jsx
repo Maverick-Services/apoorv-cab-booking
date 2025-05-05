@@ -3,6 +3,15 @@
 import { useSearchParams } from "next/navigation";
 import { MdOutlineLuggage, MdAirlineSeatReclineExtra } from "react-icons/md";
 import {
+    Breadcrumb,
+    BreadcrumbEllipsis,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
+import {
     Dialog,
     DialogContent,
     DialogHeader,
@@ -35,7 +44,6 @@ export const CabDetails = () => {
 
     const tripDataString = searchParams.get("tripData");
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
-    // console.log(tripData)
 
     const [currentPickupCity, setCurrentPickupCity] = useState([]);
     const [cabTypes, setCabTypes] = useState([]);
@@ -110,7 +118,17 @@ export const CabDetails = () => {
     return (
         <div className="w-full flex justify-center">
             <div className="w-full max-w-5xl space-y-6">
-
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>Trip Details</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
                 {/* Trip Header */}
                 {tripData && (
                     <div className="bg-white rounded-2xl shadow-md p-5 space-y-4">
