@@ -35,9 +35,14 @@ export const adminSidebarLinks = [
         icon: <Building />,
     },
     {
-        href: "/admin/packages",
-        label: "Packages",
-        icon: <Package />,
+        href: "/admin/localTrips",
+        label: "Local Trips",
+        icon: <Pin />,
+    },
+    {
+        href: "/admin/airport-trips",
+        label: "Airport Trips",
+        icon: <FaHelicopter />,
     },
     {
         href: "/admin/pickup-cities",
@@ -50,14 +55,9 @@ export const adminSidebarLinks = [
         icon: <Car />,
     },
     {
-        href: "/admin/airport-trips",
-        label: "Airport Trips",
-        icon: <FaHelicopter />,
-    },
-    {
-        href: "/admin/localTrips",
-        label: "Local Trips",
-        icon: <Pin />,
+        href: "/admin/packages",
+        label: "Packages",
+        icon: <Package />,
     },
 ];
 

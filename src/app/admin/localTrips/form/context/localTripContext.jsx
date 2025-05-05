@@ -1,6 +1,6 @@
 "use client"
 
-import { createNewLocalTrip } from "@/lib/firebase/admin/localTrips";
+import { createNewLocalTrip, deleteLocalTrip, getLocalTripDetails, updateLocalTrip } from "@/lib/firebase/admin/localTrips";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import toast from 'react-hot-toast';
@@ -12,7 +12,7 @@ export default function LocalTripFormContextProvider({ children }) {
     const [data, setData] = useState({});
     const [variantList, setVariantList] = useState([])
     const [otherError, setOtherError] = useState(null);
-
+    console.log(data)
     const [selectedCity, setSelectedCity] = useState({})
 
     // while fetching the data
@@ -49,15 +49,14 @@ export default function LocalTripFormContextProvider({ children }) {
         setOtherError(null)
         setIsLoading(true)
         try {
-            // const res = await getCabTypeDetails(id);
-            // if (res.exists()) {
-            //     return res.data();
-            // } else {
-            //     throw new Error(`No Cab Type found with id ${id}`);
-            // }
+            const res = await getLocalTripDetails(id);
+            if (res.exists()) {
+                return res.data();
+            } else {
+                throw new Error(`No Local Trip found with id ${id}`);
+            }
         } catch (error) {
             setOtherError(error?.message);
-            toast.error(error?.message || 'Error fetching cab type');
             return null;
         } finally {
             setIsLoading(false);
@@ -71,7 +70,7 @@ export default function LocalTripFormContextProvider({ children }) {
         try {
             await createNewLocalTrip({ data });
             toast.success('Local Trip Added Successfully!');
-            // router.push('/admin/cab-types');
+            router.push('/admin/localTrips');
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error adding cab type');
@@ -84,9 +83,8 @@ export default function LocalTripFormContextProvider({ children }) {
         setOtherError(null)
         setCreating(true)
         try {
-            // await updateCabType({ data });
-            // toast.success('Cab Type Updated Successfully!');
-            // router.push('/admin/cab-types');
+            await updateLocalTrip({ data });
+            router.push('/admin/localTrips');
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error updating cab type');
@@ -99,12 +97,11 @@ export default function LocalTripFormContextProvider({ children }) {
         setOtherError(null)
         setDeleting(true)
         try {
-            // await deleteCabType(id);
-            // toast.success('Cab Type Deleted Successfully!');
-            // router.push('/admin/cab-types');
+            await deleteLocalTrip(id);
+            router.push('/admin/localTrips');
         } catch (error) {
             setOtherError(error?.message);
-            toast.error(error?.message || 'Error deleting cab type');
+            toast.error(error?.message || 'Error deleting Local Trip');
         }
         setDeleting(false)
     }

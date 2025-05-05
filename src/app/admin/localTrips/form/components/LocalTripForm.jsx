@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { CircleCheckBig, Loader2, LucideDelete, PlusCircle } from 'lucide-react';
-// import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import {
     Dialog,
     DialogContent,
@@ -20,9 +20,8 @@ import TripDistance from './TripDistance';
 import { useLocalTripFromForm } from '../context/localTripContext';
 
 const LocalTripForm = () => {
-    // const searchParams = useSearchParams();
-    // const updateCabTypeId = searchParams.get('id');
-    const [updateCabTypeId, setUpdateCabTypeId] = useState()
+    const searchParams = useSearchParams();
+    const updateLocalTripId = searchParams.get('id');
 
     const {
         otherError,
@@ -38,19 +37,16 @@ const LocalTripForm = () => {
     } = useLocalTripFromForm();
 
 
-    // Initially Fetch Product Details if we got Id in URL
-    // useEffect(() => {
-    //     if (updateCabTypeId) {
-    //         (async () => {
-    //             const cabTypeData = await fetchData(updateCabTypeId);
-    //             if (cabTypeData) {
-    //                 setValue('name', cabTypeData.name);
-    //                 setValue('seatingCapacity', cabTypeData.seatingCapacity);
-    //                 setValue('luggageCapacity', cabTypeData.luggageCapacity);
-    //             }
-    //         })();
-    //     }
-    // }, [updateCabTypeId]);
+    // Initially Fetch local trip Details if we got Id in URL
+    useEffect(() => {
+        if (updateLocalTripId) {
+            (async () => {
+                const resp = await fetchData(updateLocalTripId);
+                setData(resp)
+                setVariantList(resp?.variantList)
+            })();
+        }
+    }, [updateLocalTripId]);
 
 
     const handleSubmit = async (e) => {
@@ -59,14 +55,11 @@ const LocalTripForm = () => {
             ...data,
             variantList: variantList
         }
-        // console.log('Cab Type Data:', finalData);
-        // console.log('Cab Type Data:', data);
-        handleCreate(finalData)
-        // if (updateCabTypeId) {
-        //     handleUpdate({ ...data, id: updateCabTypeId });
-        // } else {
-        //     handleCreate(data);
-        // }
+        if (updateLocalTripId) {
+            handleUpdate(finalData);
+        } else {
+            handleCreate(finalData);
+        }
     };
 
 
@@ -80,18 +73,18 @@ const LocalTripForm = () => {
                 <div className=''>
                     <div className='w-full grid grid-cols-1 sm:grid-cols-2 mb-4 gap-4 p-4 bg-white rounded-xl border border-gray-300'>
                         {/* City Name */}
-                        <CityName />
+                        <CityName updateLocalTripId={updateLocalTripId} />
 
                         {/* Hours */}
-                        <TripHours />
+                        <TripHours updateLocalTripId={updateLocalTripId} />
 
                         {/* Kilometers */}
-                        <TripDistance />
+                        <TripDistance updateLocalTripId={updateLocalTripId} />
                     </div>
 
                     <div className='w-full'>
                         {/* LocalTrip Variants in city */}
-                        <TripVariant />
+                        <TripVariant updateLocalTripId={updateLocalTripId} />
                     </div>
                 </div>
                 {otherError
@@ -108,7 +101,7 @@ const LocalTripForm = () => {
                         <Loader2 className="animate-spin" size={20} />
                     ) : (
                         <>
-                            {!updateCabTypeId ?
+                            {!updateLocalTripId ?
                                 <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Add </div>
                                 : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update </div>
                             }
@@ -117,29 +110,29 @@ const LocalTripForm = () => {
                 </button>
 
                 {/* Delete Button */}
-                {updateCabTypeId && (
+                {updateLocalTripId && (
                     <Dialog>
                         <DialogTrigger asChild>
-                            <button
+                            <Button
                                 type="button"
                                 className="bg-red-600 w-full flex gap-2 items-center justify-center text-white py-2 px-4 rounded-md hover:bg-red-800 cursor-pointer transition"
                             >
                                 <LucideDelete size={20} /> Delete
-                            </button>
+                            </Button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
                                 <DialogTitle>Delete Cab Type</DialogTitle>
                                 <DialogDescription>
-                                    Are you sure you want to delete this Cab Type?
+                                    Are you sure you want to delete this Local Trip?
                                 </DialogDescription>
                             </DialogHeader>
 
                             <DialogFooter>
                                 <Button
                                     type="button"
-                                    // onClick={() => handleDelete(updateCabTypeId)}
-                                    // disabled={deleting === updateCabTypeId}
+                                    onClick={() => handleDelete(data.id)}
+                                    disabled={deleting}
                                     className="bg-red-600 w-full flex gap-2 items-center justify-center text-white py-2 px-4 rounded-md hover:bg-red-800 cursor-pointer transition"
                                 >
                                     {deleting ? (
