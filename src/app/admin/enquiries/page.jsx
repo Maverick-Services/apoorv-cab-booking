@@ -63,7 +63,7 @@ function page() {
                             <div>
                                 {
 
-                                    enquiries?.length > 0 ? <EnquiriesList enquiries={enquiries} /> : <p className='text-center text-lg font-semibold'>No Enquiries Found</p>
+                                    enquiries?.length > 0 ? <EnquiriesList enquiries={enquiries} fetchAllEnquiries={fetchAllEnquiries} /> : <p className='text-center text-lg font-semibold'>No Enquiries Found</p>
                                 }
                             </div>
                         </div>

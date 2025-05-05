@@ -14,7 +14,7 @@ import { ArrowBigRightDashIcon, Trash, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { deleteEnquiry } from '@/lib/firebase/admin/enquiry';
 
-function EnquiriesList({ enquiries }) {
+function EnquiriesList({ enquiries, fetchAllEnquiries }) {
     const [loadingId, setLoadingId] = useState(null);
 
     const handleDeleteEnquiry = async (id) => {
@@ -24,7 +24,7 @@ function EnquiriesList({ enquiries }) {
         try {
             setLoadingId(id);
             await deleteEnquiry(id);
-            alert("Enquiry deleted successfully. Please refresh to see updated list.");
+            fetchAllEnquiries();
         } catch (error) {
             console.error("Error deleting enquiry:", error);
             alert("Failed to delete enquiry. Please try again.");

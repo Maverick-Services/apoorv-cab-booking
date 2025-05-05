@@ -2,27 +2,31 @@
 
 import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import React, { useEffect, useState } from 'react'
-import BookingsList from './components/BookingsList'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { BOOKINGS_LIST } from '@/lib/constants/constants'
+import { getAllBookings } from '@/lib/firebase/admin/booking'
+import BookingList from './components/BookingList'
 
 function page() {
     const [timeFilter, setTimeFilter] = useState("all");
     const [bookings, setBookings] = useState([]);
+    const [loading, setLoading] = useState(false)
+
+    async function fetchAllBookings() {
+        setLoading(true)
+        try {
+            const res = await getAllBookings()
+            setBookings(res)
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false)
+    }
 
     useEffect(() => {
-        let bookingArr = BOOKINGS_LIST;
-
-        if (timeFilter !== "all") {
-            bookingArr = bookingArr?.filter(bk =>
-                timeFilter == "past" ? new Date(bk?.pickUpDate) < Date.now()
-                    : timeFilter == "upcoming" ? new Date(bk?.pickUpDate) > Date.now() : new Date(bk?.pickUpDate) == Date.now()
-            )
-        }
-
-        setBookings(bookingArr);
-    }, [timeFilter])
+        fetchAllBookings()
+    }, [])
 
     return (
         <div>
@@ -47,8 +51,9 @@ function page() {
                             </Badge>
                         </Link>
                     </div>
+
                     <div>
-                        <BookingsList bookings={bookings} />
+                        <BookingList bookings={bookings} />
                     </div>
                 </div>
             </InnerLayout>
