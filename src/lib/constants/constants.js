@@ -359,3 +359,9 @@ export const TRIP_TYPES = {
     local: "Local",
     airport: "Airport",
 }
+
+export const TRIP_STATUS = {
+    started: "Started",
+    notStarted: "Not Started",
+    completed: "Completed"
+}
