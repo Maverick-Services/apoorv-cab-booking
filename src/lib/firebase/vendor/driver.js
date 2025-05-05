@@ -1,32 +1,36 @@
+import toast from "react-hot-toast";
 import { db } from "../firebase-client";
 import { collection, addDoc, updateDoc, query, where, getDocs, getDoc, doc, Timestamp, deleteDoc } from "firebase/firestore";
 
 // create new Driver
 export const createNewDriver = async ({ data }) => {
+    const toastId = toast.loading("Adding Driver");
     try {
         const collectionRef = collection(db, "drivers");
 
         // Check if a driver with the same name already exists (case-insensitive match)
-        const q = query(collectionRef, where("name_lower", "==", data.name.trim().toLowerCase()));
+        const q = query(collectionRef, where("vehicleNumber", "==", data?.vehicleNumber));
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-            throw new Error("Driver with this name already exists.");
+            throw new Error("Driver with this vehicle number already exists.");
         }
 
         // Proceed to add new cab type
         const docRef = await addDoc(collectionRef, {
             ...data,
-            name_lower: data.name.trim().toLowerCase(),
             timestamp: Timestamp.now(),
         });
 
         await updateDoc(docRef, { id: docRef.id });
+        toast.dismiss(toastId);
+        toast.success("Driver Added Successfully.");
 
         return { success: true, message: "Driver Added Successfully." };
     } catch (error) {
         console.error("Error adding new driver:", error);
-        throw new Error(error.message || "Something went wrong.");
+        toast.dismiss(toastId);
+        toast.error(error.message || "Something went wrong.")
     }
 };
 

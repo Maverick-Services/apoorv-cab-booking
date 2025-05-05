@@ -123,7 +123,10 @@ export const CabDetails = () => {
                                 {tripData.tripType === "Round Trip" && tripData.dropOffs?.length > 0 ? (
                                     <div className="flex flex-wrap items-center gap-2 text-blue-800 font-medium">
                                         <span className="flex items-center gap-1">
-                                            {tripData.pickupCity} <ArrowRightCircle size={18} />
+                                            {tripData.pickupCity} {
+                                                (tripData?.tripType === TRIP_TYPES.local || tripData?.tripType === TRIP_TYPES.airport) &&
+                                                <ArrowRightCircle size={18} />
+                                            }
                                         </span>
                                         {tripData.dropOffs.map((dr, idx) => (
                                             <span key={idx} className="flex items-center gap-1">
@@ -152,9 +155,12 @@ export const CabDetails = () => {
                                         <span className="font-medium">Return date:</span> {tripData.returnDate}
                                     </div>
                                 )}
-                                <div className="text-sm text-gray-600">
-                                    <span className="font-medium">Distance:</span> {tripData?.totalDistance} kms
-                                </div>
+                                {
+                                    tripData?.totalDistance &&
+                                    <div className="text-sm text-gray-600">
+                                        <span className="font-medium">Distance:</span> {tripData?.totalDistance} kms
+                                    </div>
+                                }
                             </div>
 
                             <Dialog isOpen={editTrip} onOpenChange={(isOpen) => setEditTrip(isOpen)}>
@@ -181,6 +187,7 @@ export const CabDetails = () => {
                 {
                     tripData?.tripType === TRIP_TYPES.local || tripData?.tripType === TRIP_TYPES.airport
                         ? (
+                            // Local or Airport Trips
                             <LocalTripDetails
                                 router={router}
                                 userData={userData}
@@ -191,6 +198,7 @@ export const CabDetails = () => {
                             />
                         )
                         : (
+                            // One Way or Round Trips
                             <div className="bg-white rounded-2xl shadow-md p-4 space-y-6">
                                 {currentPickupCity?.variantList?.map((cab, index) => (
                                     <div

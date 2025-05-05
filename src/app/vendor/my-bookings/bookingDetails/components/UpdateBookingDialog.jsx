@@ -13,7 +13,7 @@ import { updateBooking } from '@/lib/firebase/admin/booking';
 import { getVendorAllDrivers } from '@/lib/firebase/vendor/driver';
 import { TRIP_STATUS } from '@/lib/constants/constants';
 
-function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetails }) {
+function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetails, userData }) {
 
     const [isLoading, setIsLoading] = useState(false);
     const [assigning, setAssigning] = useState(false);
@@ -25,7 +25,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
     useEffect(() => {
         if (!open) return;
         setIsLoading(true);
-        getVendorAllDrivers().then(setDrivers).finally(() => setIsLoading(false))
+        getVendorAllDrivers(userData?.id).then(setDrivers).finally(() => setIsLoading(false))
     }, [open]);
 
     const handleUpdateBooking = async () => {
