@@ -15,7 +15,7 @@ function Header() {
                             Find Your Perfect Cab
                         </h2>
                         <div className="">
-                            <Suspense fallback={<div className="text-center py-4">Loading form...</div>}>
+                            <Suspense fallback={<div className="text-center py-4"></div>}>
                                 <BookingForm />
                             </Suspense>
                         </div>
