@@ -9,6 +9,7 @@ import useAuthStore from '@/store/useAuthStore'
 import LoginDialogOuter from '../LoginDialogOuter'
 import { PhoneCall } from 'lucide-react'
 import { BorderBeam } from "@/components/magicui/border-beam";
+import UserLogin from '@/components/auth/userLogin/UserLogin'
 
 // const navLinks = [
 //     { href: '#why-us', label: 'Why Us' },
@@ -23,6 +24,7 @@ const authLinks = [
 
 export default function Navbar() {
     const { user, userData, handleLogout } = useAuthStore()
+    console.log(userData)
     // console.log(user)
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -90,7 +92,7 @@ export default function Navbar() {
                             </div>
                         </div>
 
-                        {user ? (
+                        {userData ? (
                             <div className="flex items-center space-x-6 ml-4">
                                 {authLinks.map(({ href, label }) => (
                                     <Link
@@ -103,7 +105,7 @@ export default function Navbar() {
                                 ))}
                                 <div className="flex items-center space-x-4 border-l pl-6 ml-4 border-gray-200">
                                     <span className="text-gray-600 font-medium">
-                                        Hi, {userData?.name?.split(' ')[0] || user.email.split('@')[0]}
+                                        Hi, {userData?.phone?.split(' ')[0]}
                                     </span>
                                     <button
                                         onClick={handleLogout}
@@ -229,7 +231,8 @@ export default function Navbar() {
                 )}
             </div>
 
-            <LoginDialogOuter open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+            {/* <LoginDialogOuter open={isDialogOpen} onOpenChange={setIsDialogOpen} /> */}
+            <UserLogin open={isDialogOpen} onOpenChange={setIsDialogOpen} />
         </nav>
     )
 }
