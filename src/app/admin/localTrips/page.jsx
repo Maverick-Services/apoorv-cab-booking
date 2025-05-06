@@ -23,14 +23,13 @@ function page() {
             const res = await getAllPickupCities()
             setPickupCities(res)
             if (res.length > 0) {
-                setSelectedPickupCity(res[0].name)  // 👈 Set default to first city
+                setSelectedPickupCity(res[0].name)
             }
         } catch (error) {
             console.log(error)
         }
         setLoadingPickupCities(false)
     }
-
 
     useEffect(() => {
         fetchPickupCities()

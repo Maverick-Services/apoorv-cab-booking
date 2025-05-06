@@ -5,11 +5,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MAIN_WEBSITE } from '@/lib/assets/assets'
 import { TRIP_TYPES } from '@/lib/constants/constants'
-import { getAirpotTripsByCity } from '@/lib/firebase/admin/airportTrips'
 import { getLocalTripsByCity } from '@/lib/firebase/admin/localTrips'
 import { Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { MdAirlineSeatReclineExtra, MdOutlineLuggage } from 'react-icons/md'
+import { getAirportTripsByCity } from '@/lib/firebase/admin/airportTrips';
 
 export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity, currentCab, cabTypes }) => {
 
@@ -22,8 +22,9 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
         setLoading(true)
         try {
             const res = await (
-                tripData?.tripType === TRIP_TYPES.local ? getLocalTripsByCity(tripData?.pickupCity)
-                    : getAirpotTripsByCity(tripData?.pickupCity)
+                tripData?.tripType === TRIP_TYPES.local
+                    ? getLocalTripsByCity(tripData?.pickupCity)
+                    : getAirportTripsByCity(tripData?.pickupCity)
             );
 
             let updatedResult = [];

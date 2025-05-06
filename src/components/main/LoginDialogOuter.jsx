@@ -4,7 +4,7 @@ import LoginDialog from './LoginDialog';
 
 export default function LoginDialogOuter({ open, onOpenChange }) {
     return (
-        <Suspense fallback={<div>Loading login dialog...</div>}>
+        <Suspense fallback={<div></div>}>
             <LoginDialog open={open} onOpenChange={onOpenChange} />
         </Suspense>
     )

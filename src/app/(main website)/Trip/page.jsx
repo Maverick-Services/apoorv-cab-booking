@@ -11,9 +11,9 @@ function page() {
             <div className='sticky top-0'>
                 <Navbar />
             </div>
-            <div className='text-black pb-14 pt-7 w-11/12 mx-auto flex justify-between'>
+            <div className='text-black pb-14 pt-7 w-11/12 mx-auto justify-between'>
                 {/* <BookingForm /> */}
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div></div>}>
                     <CabDetails />
                 </Suspense>
             </div>
