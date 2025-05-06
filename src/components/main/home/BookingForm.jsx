@@ -15,8 +15,6 @@ import ReturnDate from './bookingForm/ReturnDate';
 import useAuthStore from '@/store/useAuthStore';
 import { toast } from 'react-hot-toast';
 import LocationSearch from './bookingForm/DropSuggestionForm';
-import { getLocalTripDetails } from '@/lib/firebase/admin/localTrips';
-import { getAirportTripDetails } from '@/lib/firebase/admin/airportTrips';
 
 export default function BookingForm({ editTrip, setEditTrip }) {
     const router = useRouter();
@@ -27,6 +25,10 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     const [pickupCities, setPickupCities] = useState([]);
     const [dropOffs, setDropOffs] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0];
+    const currentTime = now.toTimeString().slice(0, 5);
 
     const {
         register,
@@ -40,6 +42,8 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     } = useForm({
         defaultValues: {
             tripType: TRIP_TYPES.oneWay,
+            pickupDate: currentDate,
+            pickupTime: currentTime,
         },
     });
 
@@ -84,6 +88,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
 
 
     const onSubmit = async (data) => {
+        console.log(data)
         setLoading(true);
         try {
             if (userData && userData.role !== 'user') {
@@ -97,9 +102,10 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             }
 
             const coordList = [];
-            // console.log(data)
+            let pickupCoords = null;
+            console.log(data)
             if (tripType === TRIP_TYPES.oneWay || tripType === TRIP_TYPES.roundTrip) {
-                const pickupCoords = await getCoordinates(data.pickupCity);
+                pickupCoords = await getCoordinates(data.pickupCity);
                 coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
             }
 

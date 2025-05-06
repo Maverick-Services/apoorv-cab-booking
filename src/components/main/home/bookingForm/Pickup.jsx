@@ -72,7 +72,7 @@ function Pickup({ register, setValue, tripType, pickupCities, setPickupCities })
       </label>
 
       {loading ? (
-        <Skeleton className="w-full h-10 rounded-lg" />
+        <Skeleton className="w-full h-12 rounded-lg" />
       ) : (
         <>
           <input

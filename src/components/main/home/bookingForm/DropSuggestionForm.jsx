@@ -8,10 +8,8 @@ const LocationSearch = ({ register, unregister, setValue, dropOffs, setDropOffs,
     const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
 
-
     useEffect(() => {
         if (tripType === TRIP_TYPES.oneWay) {
-            // console.log("registering")
             register("dropCity",
                 // { required: "Drop city is required" }
             );
