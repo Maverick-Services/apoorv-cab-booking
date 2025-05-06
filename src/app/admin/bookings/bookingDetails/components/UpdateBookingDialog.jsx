@@ -41,6 +41,23 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 },
             };
             await updateBooking(updatedData);
+
+            // Send Notification to Vendor 
+            // const res = await fetch('/api/send-message', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({
+            //         name: "Vendor Delhi",
+            //         bookingId: "QBKVMUM8GEQzC8qgfBFl",
+            //         tripType: "One Way",
+            //         pickupCity: "Delhi",
+            //         bookingUrl: "https://apoorv-cab-booking.vercel.app/vendor/my-bookings/bookingDetails?id=QBKVMUM8GEQzC8qgfBFl"
+            //     }),
+            // });
+
+            // const result = await res.json();
+            // console.log("Notification Result", result);
+
             onOpenChange(false);
         } catch (err) {
             console.error(err);
