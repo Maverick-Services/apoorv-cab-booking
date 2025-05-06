@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Image from 'next/image'
 import useAuthStore from '@/store/useAuthStore'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -18,6 +18,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { useForm } from 'react-hook-form'
+import { handleUserDetails } from '@/lib/firebase/services/auth'
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -25,6 +27,32 @@ export default function CheckoutDetails() {
     const searchParams = useSearchParams();
     const bookingDataString = searchParams.get("bookingData")
     const bookingData = bookingDataString ? JSON.parse(bookingDataString) : null
+
+    const {
+        register,
+        watch,
+        setValue,
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
+
+    const name = watch('name');
+    const email = watch('email');
+    const phoneNo = watch('phoneNo');
+    const exactPickup = watch('exactPickup');
+
+    useEffect(() => {
+
+        if (userData) {
+            setValue("name", userData?.name);
+            setValue("email", userData?.email);
+            setValue("phoneNo", userData?.phoneNo);
+        }
+        if (bookingData)
+            setValue("exactPickup", bookingData?.exactPickup);
+
+    }, [userData]);
+
     if (!bookingData) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -57,6 +85,15 @@ export default function CheckoutDetails() {
     };
 
     async function initiatePayment(isFullPayment) {
+
+        // console.log(name, email, phoneNo, exactPickup)
+        // if (!name || !email || !phoneNo || !exactPickup)
+        //     return toast.error('Please fill form details');
+
+        // if (!userData) {
+        //     return await handleUserDetails(name, email, phoneNo);
+        // }
+
         const ok = await loadRazorpay()
         if (!ok || !window.Razorpay) {
             toast.error("Could not load Razorpay SDK. Please try again later.")
@@ -259,12 +296,52 @@ export default function CheckoutDetails() {
                     {/* Right Column */}
                     <div className="space-y-6">
                         {/* Passenger Info */}
-                        <div className="bg-gray-50 rounded-xl p-6 border border-blue-50">
-                            <div className="flex items-center gap-4 mb-6">
+                        <div className="bg-gray-50 rounded-xl p-4 border border-blue-50">
+                            <div className="flex items-center gap-4 mb-2">
                                 <FaUser className="text-blue-600 text-xl" />
                                 <h2 className="text-xl font-semibold text-gray-800">Passenger Information</h2>
                             </div>
-                            <div className="space-y-4">
+
+                            <form className='w-full space-y-2 bg-white p-3 rounded-xl outline'>
+                                <label className="flex gap-2 pb-2 border-gray-200">
+                                    <p className="text-gray-600">Name:</p>
+                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        // value={userData?.name}
+                                        {...register("name", { required: true })}
+                                    />
+                                </label>
+                                <label className="flex gap-2 pb-2 border-gray-200">
+                                    <p className="text-gray-600">Email:</p>
+                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        // value={userData?.email}
+                                        {...register("email", { required: true })}
+                                    />
+                                </label>
+                                <label className="flex gap-2 pb-2 border-gray-200">
+                                    <p className="text-gray-600">Phone:</p>
+                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        // value={userData?.phoneNo}
+                                        {...register("phoneNo", { required: true })}
+                                    />
+                                </label>
+                                <label className="flex flex-col gap-2 pb-2 border-gray-200">
+                                    <p className="text-gray-600">Exact Pickup Location:</p>
+                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        // value={bookingData?.exactPickup}
+                                        {...register("exactPickup", { required: true })}
+                                    />
+                                </label>
+                                {/* <button
+                                    // onClick={handleBookingSuccess}
+                                    type='submit'
+                                    onClick={() => { }}
+                                    className="w-full p-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-sm shadow-md transition-all duration-300"
+                                >
+                                    {userData ? "Confirm" : "Submit"} Details
+                                </button> */}
+                            </form>
+
+                            {/* <div className="space-y-4">
                                 <div className="flex justify-between items-center pb-2 border-b border-gray-200">
                                     <span className="text-gray-600">Name:</span>
                                     <span className="font-medium text-gray-800">{userData?.name}</span>
@@ -277,7 +354,7 @@ export default function CheckoutDetails() {
                                     <span className="text-gray-600">Phone:</span>
                                     <span className="font-medium text-gray-800">{userData?.phoneNo}</span>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* Price Details */}
