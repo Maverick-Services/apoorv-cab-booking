@@ -56,58 +56,59 @@ export const signup = async (name, email, phoneNo, password, role) => {
 
 export const handleUserDetails = async (name, email, phoneNo) => {
 
-    // try {
-    //     // Validation checks
-    //     if (!name || !email || !phoneNo) {
-    //         throw new Error("All fields are required.");
-    //     }
+    try {
+        // Validation checks
+        if (!name || !email || !phoneNo) {
+            throw new Error("All fields are required.");
+        }
 
-    //     if (!isValidEmail(email)) {
-    //         throw new Error("Invalid email format.");
-    //     }
+        if (!isValidEmail(email)) {
+            throw new Error("Invalid email format.");
+        }
 
-    //     if (!isValidPhone(phoneNo)) {
-    //         throw new Error("Invalid phone number. Must be 10 to 15 digits.");
-    //     }
+        if (!isValidPhone(phoneNo)) {
+            throw new Error("Invalid phone number. Must be 10 to 15 digits.");
+        }
 
-    //     //get user doc by phone number
-    //     // const q = ;
-    //     let user = await getDocs(
-    //         query(collection(db, 'Users'), where('phoneNo', '==', phoneNo), where('role', '==', "user"))
-    //     ).then((snaps) => snaps.docs.map((d) => d.data())[0]);
-    //     // console.log("User Check", )
-    //     // return;
-    //     //  snapshot.docs.map((doc) => doc.data());
-    //     console.log("User", user);
-    //     // return;
+        //get user doc by phone number
+        // const q = ;
+        let snaps = await getDocs(
+            query(collection(db, 'Users'), where('phoneNo', '==', phoneNo), where('role', '==', "user"))
+        );
+        let user = snaps.docs[0];
+        // console.log("User Check", )
+        // return;
+        //  snapshot.docs.map((doc) => doc.data());
+        console.log("User", user);
+        // return;
 
-    //     // Save user info to Firestore
-    //     if (user) {
-    //         console.log("User found");
-    //         user = await setDoc(doc(db, "Users", user.uid), {
-    //             name,
-    //             // email: user.email,
-    //             // phoneNo,
-    //             // role: role.toLowerCase(),
-    //         });
-    //     } else {
-    //         console.log("New User");
-    //         const collectionRef = collection(db, "Users");
-    //         const docRef = await addDoc(collectionRef, {
-    //             name,
-    //             email,
-    //             phoneNo,
-    //             role: "User",
-    //             timestamp: Timestamp.now(),
-    //         });
-    //         user = await updateDoc(docRef, { id: docRef.id });
-    //     }
+        // Save user info to Firestore
+        if (user) {
+            console.log("User found");
+            user = await setDoc(doc(db, "Users", user.uid), {
+                name,
+                // email: user.email,
+                // phoneNo,
+                // role: role.toLowerCase(),
+            });
+        } else {
+            console.log("New User");
+            const collectionRef = collection(db, "Users");
+            const docRef = await addDoc(collectionRef, {
+                name,
+                email,
+                phoneNo,
+                role: "User",
+                timestamp: Timestamp.now(),
+            });
+            user = await updateDoc(docRef, { id: docRef.id });
+        }
 
 
-    //     return user;
+        return user;
 
-    // } catch (err) {
-    //     console.error("Signup error:", err);
-    //     // throw new Error(err.message || "Signup failed. Please try again.");
-    // }
+    } catch (err) {
+        console.error("Signup error:", err);
+        // throw new Error(err.message || "Signup failed. Please try again.");
+    }
 };

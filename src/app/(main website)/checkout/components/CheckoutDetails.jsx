@@ -86,13 +86,13 @@ export default function CheckoutDetails() {
 
     async function initiatePayment(isFullPayment) {
 
-        // console.log(name, email, phoneNo, exactPickup)
-        // if (!name || !email || !phoneNo || !exactPickup)
-        //     return toast.error('Please fill form details');
+        console.log(name, email, phoneNo, exactPickup)
+        if (!name || !email || !phoneNo || !exactPickup)
+            return toast.error('Please fill form details');
 
-        // if (!userData) {
-        //     return await handleUserDetails(name, email, phoneNo);
-        // }
+        if (!userData) {
+            return await handleUserDetails(name, email, phoneNo);
+        }
 
         const ok = await loadRazorpay()
         if (!ok || !window.Razorpay) {

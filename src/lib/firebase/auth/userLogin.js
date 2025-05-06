@@ -17,7 +17,7 @@ export const addLocalUser = async (data) => {
 
     try {
         const collectionRef = collection(db, 'Users');
-        const q = query(collectionRef, where('phone', "==", data.phone.trim()));
+        const q = query(collectionRef, where('phoneNo', "==", data.phone.trim()));
         const snapshot = await getDocs(q);
 
         // If user already exists, return that user’s data
@@ -28,6 +28,8 @@ export const addLocalUser = async (data) => {
                 userDetails: { id: existingUserDoc.id, ...existingUserDoc.data() }
             };
         }
+
+        data = { ...data, phoneNo: data?.phone };
 
         // Add new user
         const docRef = await addDoc(collectionRef, {
