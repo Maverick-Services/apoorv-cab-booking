@@ -86,14 +86,14 @@ function BookingDetails() {
                             <Pencil />
                             <span className="hidden sm:block"> Update</span>
                         </Button>
-                        <Button
+                        {/* <Button
                             variant={"outline"}
                             className={
                                 "hover:text-red-600 hover:border-red-600 hover:bg-white"
                             }
                         >
                             <Trash /> <span className="hidden sm:block"> Delete</span>
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
                 <BookingFullDetails booking={booking} vendor={assignedVendor} />

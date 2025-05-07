@@ -12,7 +12,7 @@ function page() {
                 <Navbar />
             </div>
             <div className='text-black pb-10 pt-1 sm:w-11/12 mx-auto flex flex-col justify-between'>
-                <Suspense fallback={<div>Loading...</div>}>
+                <Suspense fallback={<div></div>}>
                     <BookingData />
                 </Suspense>
             </div>
