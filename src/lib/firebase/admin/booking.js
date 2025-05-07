@@ -109,3 +109,21 @@ export const getBookingsByDate = async (filter) => {
     const snaps = await getDocs(q);
     return snaps.docs.map((d) => d.data());
 };
+
+export const getBookingsByUser = async (userId) => {
+    try {
+        const bookingsRef = collection(db, "bookings");
+        const q = query(bookingsRef, where("userId", "==", userId));
+        const querySnapshot = await getDocs(q);
+
+        const bookings = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+
+        return bookings;
+    } catch (error) {
+        console.error("Error fetching bookings by user:", error);
+        throw error;
+    }
+};

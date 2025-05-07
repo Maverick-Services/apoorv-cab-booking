@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import useAuthStore from '@/store/useAuthStore'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import { useForm } from 'react-hook-form'
 import { handleUserDetails } from '@/lib/firebase/services/auth'
+import UserLogin from '@/components/auth/userLogin/UserLogin'
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -28,30 +29,19 @@ export default function CheckoutDetails() {
     const bookingDataString = searchParams.get("bookingData")
     const bookingData = bookingDataString ? JSON.parse(bookingDataString) : null
 
-    const {
-        register,
-        watch,
-        setValue,
-        handleSubmit,
-        formState: { errors }
-    } = useForm();
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        exactPickup: ''
+    });
 
-    const name = watch('name');
-    const email = watch('email');
-    const phoneNo = watch('phoneNo');
-    const exactPickup = watch('exactPickup');
-
-    useEffect(() => {
-
-        if (userData) {
-            setValue("name", userData?.name);
-            setValue("email", userData?.email);
-            setValue("phoneNo", userData?.phoneNo);
-        }
-        if (bookingData)
-            setValue("exactPickup", bookingData?.exactPickup);
-
-    }, [userData]);
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
 
     if (!bookingData) {
         return (
@@ -84,15 +74,20 @@ export default function CheckoutDetails() {
         });
     };
 
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+
     async function initiatePayment(isFullPayment) {
 
-        console.log(name, email, phoneNo, exactPickup)
-        if (!name || !email || !phoneNo || !exactPickup)
-            return toast.error('Please fill form details');
-
         if (!userData) {
-            return await handleUserDetails(name, email, phoneNo);
+            return setIsDialogOpen(true)
         }
+
+        if (!formData.name || !formData.email || !formData.exactPickup || !userData.phoneNo)
+            return toast.error('Please fill all the details');
+
+        // if (!userData) {
+        //     return await handleUserDetails(name, email, phoneNo);
+        // }
 
         const ok = await loadRazorpay()
         if (!ok || !window.Razorpay) {
@@ -134,7 +129,11 @@ export default function CheckoutDetails() {
                                     gstAmount,
                                     totalAmount,
                                     bookingAmount,
-                                    userData
+                                    userData: {
+                                        phoneNo: userData.phoneNo,
+                                        ...formData
+                                    },
+                                    userId: userData.id
                                 },
                                 isFullPayment
                             },
@@ -155,7 +154,7 @@ export default function CheckoutDetails() {
                 },
                 prefill: {
                     name: userData.name,
-                    email: userData.email,
+                    email: formData.email,
                     contact: userData.phoneNo
                 },
                 theme: {
@@ -302,44 +301,38 @@ export default function CheckoutDetails() {
                                 <h2 className="text-xl font-semibold text-gray-800">Passenger Information</h2>
                             </div>
 
-                            <form className='w-full space-y-2 bg-white p-3 rounded-xl outline'>
+                            <div className='w-full space-y-2 bg-white p-3 rounded-xl outline'>
                                 <label className="flex gap-2 pb-2 border-gray-200">
                                     <p className="text-gray-600">Name:</p>
-                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
-                                        // value={userData?.name}
-                                        {...register("name", { required: true })}
+                                    <input
+                                        className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </label>
                                 <label className="flex gap-2 pb-2 border-gray-200">
                                     <p className="text-gray-600">Email:</p>
-                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
-                                        // value={userData?.email}
-                                        {...register("email", { required: true })}
-                                    />
-                                </label>
-                                <label className="flex gap-2 pb-2 border-gray-200">
-                                    <p className="text-gray-600">Phone:</p>
-                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
-                                        // value={userData?.phoneNo}
-                                        {...register("phoneNo", { required: true })}
+                                    <input
+                                        className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </label>
                                 <label className="flex flex-col gap-2 pb-2 border-gray-200">
                                     <p className="text-gray-600">Exact Pickup Location:</p>
-                                    <input className="w-full font-medium text-gray-800 outline rounded-xs px-1"
-                                        // value={bookingData?.exactPickup}
-                                        {...register("exactPickup", { required: true })}
+                                    <input
+                                        className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        name="exactPickup"
+                                        value={formData.exactPickup}
+                                        onChange={handleChange}
+                                        required
                                     />
                                 </label>
-                                {/* <button
-                                    // onClick={handleBookingSuccess}
-                                    type='submit'
-                                    onClick={() => { }}
-                                    className="w-full p-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-sm shadow-md transition-all duration-300"
-                                >
-                                    {userData ? "Confirm" : "Submit"} Details
-                                </button> */}
-                            </form>
+                            </div>
 
                             {/* <div className="space-y-4">
                                 <div className="flex justify-between items-center pb-2 border-b border-gray-200">
@@ -410,6 +403,8 @@ export default function CheckoutDetails() {
                     </div>
                 </div>
             </div>
+            <UserLogin open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+
         </div>
     )
 }

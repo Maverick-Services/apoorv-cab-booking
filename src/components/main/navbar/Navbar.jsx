@@ -19,7 +19,7 @@ import UserLogin from '@/components/auth/userLogin/UserLogin'
 
 const authLinks = [
     { href: '/my-trips', label: 'My Trips' },
-    { href: '/profile', label: 'Profile' },
+    // { href: '/profile', label: 'Profile' },
 ]
 
 export default function Navbar() {
@@ -45,7 +45,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-2">
                         {/* {navLinks.map(({ href, label }) => (
                             <Link
                                 key={href}
@@ -71,7 +71,7 @@ export default function Navbar() {
                                 </div>
 
                                 {/* Phone Number Segment */}
-                                <div className="flex items-center pl-3">
+                                <div className="flex items-center pl-0">
                                     <a
                                         href="tel:7248772488"
                                         className="text-base font-semibold text-indigo-600 transition-colors hover:text-indigo-800"
@@ -103,7 +103,7 @@ export default function Navbar() {
                                         {label}
                                     </Link>
                                 ))}
-                                <div className="flex items-center space-x-4 border-l pl-6 ml-4 border-gray-200">
+                                <div className="flex items-center space-x-4 border-l pl-6 ml-0 border-gray-200">
                                     <span className="text-gray-600 font-medium">
                                         Hi, {userData?.phone?.split(' ')[0]}
                                     </span>

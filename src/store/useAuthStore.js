@@ -33,7 +33,16 @@ const useAuthStore = create(
                             error: null,
                         });
                     } else {
-                        set({ user: null, userData: null, isLoading: false });
+                        // ✅ Only clear userData if it's a Firebase-auth user
+                        const currentUserData = get().userData;
+                        const isFirebaseUser = currentUserData?.role === "admin" || currentUserData?.role === "vendor";
+
+                        if (isFirebaseUser) {
+                            set({ user: null, userData: null, isLoading: false });
+                        } else {
+                            // Keep lightweight user's data intact
+                            set({ user: null, isLoading: false });
+                        }
                     }
                 });
                 return unsubscribe;

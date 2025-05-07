@@ -20,7 +20,6 @@ export async function POST(request) {
         razorpay_signature,
         bookingData,
         isFullPayment,
-        userData
     } = body;
 
     const generatedSignature = crypto
@@ -49,7 +48,6 @@ export async function POST(request) {
                 vendor: 'not assigned',
                 driver: 'not assigned',
             },
-            ...userData
         }
 
         const bookingResult = await createNewBooking({ data: finalBookingData });
