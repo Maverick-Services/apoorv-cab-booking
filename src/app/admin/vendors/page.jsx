@@ -1,13 +1,58 @@
+'use client'
+
 import InnerLayout from '@/components/dashboard/layout/InnerLayout'
-import React from 'react'
-import { Separator } from "@/components/ui/separator"
+import React, { useEffect, useState } from 'react'
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
-import { VENDORS } from '@/lib/constants/constants';
+import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity';
+import { Loader2 } from 'lucide-react';
+import { getVendorsByCity } from '@/lib/firebase/admin/vendor'
+import VendorsList from '@/components/admin/VendorsList'
 
 function page() {
+
+    const [loading, setLoading] = useState(false);
+    const [vendorLoading, setVendorLoading] = useState(false);
+    const [pickupCities, setPickupCities] = useState([]);
+    const [vendors, setVendors] = useState([]);
+    const [vendorFilter, setVendorFilter] = useState(null);
+
+    useEffect(() => {
+        const fetchPickupCities = async () => {
+            setLoading(true);
+            try {
+                const res = await getAllPickupCities();
+                setPickupCities(res || []);
+            } catch (err) {
+                console.error(err);
+            }
+            setLoading(false);
+        };
+        fetchPickupCities();
+    }, []);
+
+    async function fetchVendorsByCity() {
+        setVendorLoading(true)
+        try {
+            const res = await getVendorsByCity(vendorFilter);
+            setVendors(res)
+        } catch (error) {
+            console.log(error)
+        }
+        setVendorLoading(false)
+    }
+
+    useEffect(() => {
+        if (vendorFilter)
+            fetchVendorsByCity()
+    }, [vendorFilter])
+
+    // console.log(vendors);
+
+    if (loading || !pickupCities)
+        return <Loader2 />
+
     return (
         <div>
             <InnerLayout heading={"Vendors"}>
@@ -15,8 +60,24 @@ function page() {
 
                     {/* Vendor Count and new Vendor Button */}
                     <div className='w-full flex flex-col gap-2'>
-                        <div className='w-full flex justify-between px-1'>
-                            <p className='font-semibold text-primary'>Total Vendors: {6}</p>
+                        <div className='w-full flex justify-between px-1 mb-3'>
+                            <div className='flex items-start gap-4'>
+                                <p className='flex gap-2 items-center font-semibold text-primary'>Total Vendors: {
+                                    vendorLoading ? <Loader2 size={15} /> : vendors?.length
+                                }</p>
+                                <select name="timeFilter"
+                                    className='px-2 bg-white rounded-md border border-black'
+                                    onChange={(e) => setVendorFilter(e.target.value)}
+                                    defaultValue={vendorFilter ? vendorFilter : pickupCities[0]}
+                                >
+                                    {
+                                        pickupCities && pickupCities?.length > 0 &&
+                                        pickupCities?.map(pc => (
+                                            <option key={pc?.id} value={pc?.name}>{pc?.name}</option>
+                                        ))
+                                    }
+                                </select>
+                            </div>
                             <Link href={'/admin/vendors/new'}>
                                 <Badge className="text-base font-bold cursor-pointer">
                                     Add new Vendor
@@ -25,42 +86,7 @@ function page() {
                         </div>
 
                         {/* Vendor List */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {VENDORS.map((vendor, idx) => (
-                                <Card key={idx}>
-                                    <CardContent className="p-4 py-0 space-y-2">
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-purple-700">{vendor.name}</h3>
-                                            <p className="text-sm text-muted-foreground">{vendor.address}</p>
-                                        </div>
-
-                                        <div className="text-sm">
-                                            <p><strong>Contact:</strong> {vendor.contactNo}</p>
-                                            <p><strong>Email:</strong> {vendor.email}</p>
-                                        </div>
-
-                                        <Separator />
-
-                                        <div className="space-y-2">
-                                            <p className="text-sm font-medium">Cabs:</p>
-                                            {vendor.cabs.map((cab, cabIndex) => (
-                                                <div key={cabIndex} className="border rounded-md p-2 bg-muted/30">
-                                                    <div className="flex flex-wrap justify-between items-center mb-1">
-                                                        <span className="font-semibold">{cab.vehicleName}</span>
-                                                        <Badge className="text-xs">
-                                                            {cab.vehicleType}
-                                                        </Badge>
-                                                    </div>
-                                                    <p className="text-sm">Driver: {cab.driverName}</p>
-                                                    <p className="text-sm">Contact: {cab.driverContact}</p>
-                                                    <p className="text-sm">Email: {cab.driverEmail}</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+                        <VendorsList vendorLoading={vendorLoading} vendors={vendors} />
                     </div>
                 </ScrollArea>
             </InnerLayout>

@@ -4,19 +4,19 @@ import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { BOOKINGS_LIST } from '@/lib/constants/constants'
-import { getAllBookings } from '@/lib/firebase/admin/booking'
+import { getAllBookings, getBookingsByDate } from '@/lib/firebase/admin/booking'
 import BookingList from './components/BookingList'
+import { Loader2 } from 'lucide-react'
 
 function page() {
-    const [timeFilter, setTimeFilter] = useState("all");
+    const [timeFilter, setTimeFilter] = useState("today");
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(false)
 
     async function fetchAllBookings() {
         setLoading(true)
         try {
-            const res = await getAllBookings()
+            const res = await (timeFilter === "all" ? getAllBookings() : getBookingsByDate(timeFilter));
             setBookings(res)
         } catch (error) {
             console.log(error)
@@ -25,8 +25,9 @@ function page() {
     }
 
     useEffect(() => {
-        fetchAllBookings()
-    }, [])
+        if (timeFilter)
+            fetchAllBookings()
+    }, [timeFilter])
 
     return (
         <div>
@@ -34,15 +35,21 @@ function page() {
                 <div className='pb-3'>
                     <div className='w-full flex justify-between px-1 mb-3'>
                         <div className='flex items-start gap-4'>
-                            <p className='font-semibold text-primary'>Total Bookings: {8}</p>
+                            <p className='font-semibold text-primary flex gap-2 items-center'>Total Bookings: {
+                                loading || !bookings ? <Loader2 size={15} /> : bookings?.length
+                            }</p>
                             <select name="timeFilter"
                                 className='px-2 bg-white rounded-md border border-black'
                                 onChange={(e) => setTimeFilter(e.target.value)}
+                                defaultValue={timeFilter}
                             >
-                                <option value="all">All</option>
-                                <option value="upcoming">Upcoming</option>
-                                <option value="past">Past</option>
+                                {/* <option value="all">All</option> */}
                                 <option value="today">Today</option>
+                                {/* <option value="tomorrow">Tommorow</option> */}
+                                <option value="yesterday">Yesterday</option>
+                                <option value="last7days">Last 7 days</option>
+                                <option value="lastMonth">Last Month</option>
+                                <option value="lastYear">Last Year</option>
                             </select>
                         </div>
                         <Link href={'/admin/bookings/new'}>
@@ -53,7 +60,7 @@ function page() {
                     </div>
 
                     <div>
-                        <BookingList bookings={bookings} />
+                        <BookingList loading={loading} bookings={bookings} />
                     </div>
                 </div>
             </InnerLayout>

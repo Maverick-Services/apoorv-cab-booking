@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, Timestamp, updateDoc, where } from "firebase/firestore";
 import { db } from "../firebase-client";
 
 export const createNewBooking = async ({ data }) => {
@@ -42,4 +42,70 @@ export const updateBooking = async (data) => {
         console.error('Error updating booking:', error);
         throw new Error(error.message || 'Something went wrong.');
     }
+};
+
+// Helper to get date range
+const getDateRange = (filter) => {
+    const now = new Date();
+    let startDate, endDate;
+
+    const startOfDay = (d) => new Date(d.setHours(0, 0, 0, 0));
+    const endOfDay = (d) => new Date(d.setHours(23, 59, 59, 999));
+
+    switch (filter) {
+        case "today":
+            startDate = startOfDay(new Date());
+            endDate = endOfDay(new Date());
+            break;
+        case "yesterday":
+            const yesterday = new Date();
+            yesterday.setDate(now.getDate() - 1);
+            startDate = startOfDay(new Date(yesterday));
+            endDate = endOfDay(new Date(yesterday));
+            break;
+        case "tomorrow":
+            const tomorrow = new Date();
+            tomorrow.setDate(now.getDate() + 1);
+            startDate = startOfDay(new Date(tomorrow));
+            endDate = endOfDay(new Date(tomorrow));
+            break;
+        case "last7days":
+            startDate = new Date();
+            startDate.setDate(now.getDate() - 7);
+            endDate = now;
+            break;
+        case "lastMonth":
+            startDate = new Date();
+            startDate.setMonth(now.getMonth() - 1);
+            endDate = now;
+            break;
+        case "lastYear":
+            startDate = new Date();
+            startDate.setFullYear(now.getFullYear() - 1);
+            endDate = now;
+            break;
+        default:
+            return null;
+    }
+
+    return {
+        start: Timestamp.fromDate(startDate),
+        end: Timestamp.fromDate(endDate),
+    };
+};
+
+export const getBookingsByDate = async (filter) => {
+    const range = getDateRange(filter);
+    if (!range) throw new Error("Invalid date filter");
+
+    const bookingsRef = collection(db, "bookings");
+    const q = query(
+        bookingsRef,
+        where("createdAt", ">=", range.start),
+        where("createdAt", "<=", range.end),
+        orderBy("createdAt", "desc")
+    );
+
+    const snaps = await getDocs(q);
+    return snaps.docs.map((d) => d.data());
 };
