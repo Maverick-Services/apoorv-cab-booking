@@ -1,50 +1,121 @@
-import { useState } from "react";
-import { BookingDialog } from "./BookingDialog";
 import { useRouter } from "next/navigation";
 
 export default function BookingList({ bookings }) {
-    const [selectedBooking, setSelectedBooking] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const router = useRouter();
 
-    const router = useRouter()
-    function abc(id) {
-        router.push(`/admin/bookings/bookingDetails?id=${id}`)
-    }
+    const parseFirestoreTimestamp = ({ seconds, nanoseconds }) => {
+        return new Date(seconds * 1000 + nanoseconds / 1000000);
+    };
+
+    const formatFirestoreDate = (timestamp) => {
+        if (!timestamp) return 'N/A';
+        const date = parseFirestoreTimestamp(timestamp);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    };
+
+    const StatusBadge = ({ label, value, colorClass }) => (
+        <div className="flex items-center space-x-2">
+            <span className="text-sm font-medium text-gray-500">{label}:</span>
+            <span className={`rounded-full px-3 py-1 text-sm font-medium ${colorClass}`}>
+                {value}
+            </span>
+        </div>
+    );
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-6">All Bookings</h1>
+        <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+            <div className="mx-auto max-w-7xl">
+                <h1 className="mb-6 text-2xl font-bold text-gray-900 sm:mb-8 sm:text-3xl">
+                    All Bookings
+                </h1>
 
-            <div className="space-y-4">
-                {bookings.map((booking) => (
-                    <div
-                        key={booking.id}
-                        onClick={() => {
-                            // setSelectedBooking(booking);
-                            // setIsDialogOpen(true);
-                            abc(booking?.id)
-                        }}
-                        className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
-                    >
-                        <div className="flex justify-between items-center">
-                            <div>
-                                <h3 className="font-semibold">{booking.userData.name}</h3>
-                                <p className="text-sm text-gray-600">{booking.pickupCity} to {booking.dropCity}</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="font-medium">₹{booking.totalAmount}</p>
-                                <p className="text-sm text-gray-600">{booking.tripType}</p>
+                <div className="space-y-3 w-full">
+                    {bookings.map((booking) => (
+                        <div
+                            key={booking.id}
+                            onClick={() => router.push(`/admin/bookings/bookingDetails?id=${booking.id}`)}
+                            className="w-full group cursor-pointer rounded-lg bg-white p-4 transition-all duration-200 hover:shadow-lg "
+                        >
+                            <div className="w-full grid grid-cols-1 items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                                {/* Customer Info */}
+                                <div className="space-y-1">
+                                    <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                                        {booking.userData.name}
+                                        <span className="inline-block rounded-full bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-800">
+                                            {booking.tripType}
+                                        </span>
+                                    </h3>
+                                    <p className="text-sm text-gray-500">
+                                        {formatFirestoreDate(booking?.createdAt)}
+                                    </p>
+
+                                </div>
+
+                                {/* Trip Details */}
+                                <div className="space-y-1">
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-sm font-medium text-gray-500">From:</span>
+                                        <span className="text-sm text-gray-900">{booking.pickupCity}</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-sm font-medium text-gray-500">Vendor:</span>
+                                        <span className={`text-sm ${booking?.status?.vendor ? 'text-green-600' : 'text-red-600'}`}>
+                                            {booking?.status?.vendor ? "Assigned" : "Not Assigned"}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Status Indicators */}
+                                <div className="space-y-2">
+                                    <StatusBadge
+                                        label="Booking"
+                                        value={booking?.status?.booking || 'Processing'}
+                                        colorClass={
+                                            booking?.status?.booking === 'Accepted' ? 'bg-green-100 text-green-800' :
+                                                booking?.status?.booking === 'Rejected' ? 'bg-red-100 text-red-800' :
+                                                    'bg-gray-100 text-gray-800'
+                                        }
+                                    />
+                                    <StatusBadge
+                                        label="Trip"
+                                        value={booking?.status?.trip || 'Not Started'}
+                                        colorClass={
+                                            booking?.status?.trip === 'Completed' ? 'bg-purple-100 text-purple-800' :
+                                                'bg-yellow-100 text-yellow-800'
+                                        }
+                                    />
+                                </div>
+
+                                {/* Payment Info */}
+                                <div className="space-y-2">
+                                    <StatusBadge
+                                        label="Payment"
+                                        value={booking?.status?.isFullPaymemt ? 'Paid' : 'Pending'}
+                                        colorClass={booking?.status?.isFullPaymemt ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}
+                                    />
+                                    <div className="flex items-center space-x-2">
+                                        <span className="text-sm font-medium text-gray-500">Total:</span>
+                                        <span className="text-lg font-bold text-gray-900">
+                                            ₹{booking.totalAmount}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Mobile View Indicator */}
+                                <div className="md:hidden">
+                                    <span className="text-sm text-gray-500">Tap to view details →</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-
-            {/* <BookingDialog
-                booking={selectedBooking}
-                open={isDialogOpen}
-                onOpenChange={setIsDialogOpen}
-            /> */}
         </div>
     );
 }

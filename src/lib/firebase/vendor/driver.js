@@ -1,6 +1,7 @@
 import toast from "react-hot-toast";
 import { db } from "../firebase-client";
 import { collection, addDoc, updateDoc, query, where, getDocs, getDoc, doc, Timestamp, deleteDoc } from "firebase/firestore";
+import { addDriverToVendor } from "../admin/vendor";
 
 // create new Driver
 export const createNewDriver = async ({ data }) => {
@@ -23,6 +24,8 @@ export const createNewDriver = async ({ data }) => {
         });
 
         await updateDoc(docRef, { id: docRef.id });
+        await addDriverToVendor(data?.vendor, docRef?.id);
+
         toast.dismiss(toastId);
         toast.success("Driver Added Successfully.");
 
