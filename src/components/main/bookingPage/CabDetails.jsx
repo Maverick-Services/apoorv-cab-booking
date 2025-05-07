@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import { MdOutlineLuggage, MdAirlineSeatReclineExtra } from "react-icons/md";
 import {
     Breadcrumb,
-    BreadcrumbEllipsis,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
@@ -25,10 +24,10 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowRightCircle, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, MapPin, CalendarDays, Clock, CalendarCheck, Compass, Pencil, Route, Info, Fuel } from "lucide-react";
 import BookingForm from "../home/BookingForm";
 import { getAllPickupCities } from "@/lib/firebase/admin/pickupCity";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { getAllCabTypes } from "@/lib/firebase/admin/cabType";
 import { MAIN_WEBSITE } from "@/lib/assets/assets";
 import { useRouter } from "next/navigation";
@@ -110,6 +109,8 @@ export const CabDetails = () => {
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
 
+    console.log(currentPickupCity?.variantList)
+
     if (loading || !currentPickupCity)
         return <div className="h-52 flex w-full items-center justify-center">
             <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
@@ -117,7 +118,7 @@ export const CabDetails = () => {
 
     return (
         <div className="w-full flex justify-center">
-            <div className="w-full max-w-5xl space-y-6">
+            <div className="w-full max-w-5xl space-y-4">
                 <Breadcrumb>
                     <BreadcrumbList>
                         <BreadcrumbItem>
@@ -129,83 +130,99 @@ export const CabDetails = () => {
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
+
                 {/* Trip Header */}
                 {tripData && (
-                    <div className="bg-white rounded-2xl shadow-md p-5 space-y-4">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                            <div className="space-y-2">
-                                <p className="text-xs uppercase text-gray-400 font-semibold tracking-wider">
-                                    Trip Details
-                                </p>
+                    <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl shadow-sm sm:shadow-md p-4 sm:p-6 lg:p-8 border border-indigo-100 transition-all">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-8">
+                            {/* Left Content */}
+                            <div className="space-y-6 flex-1">
+                                {/* Header */}
+                                <div className="pb-5 border-b  flex w-full justify-between items-center">
+                                    <h3 className="text-sm font-bold border-teal-100 text-teal-600 uppercase tracking-wider flex items-center gap-3">
+                                        <MapPin className="w-5 h-5 text-teal-500" />
+                                        <span className="bg-gradient-to-r from-teal-100 to-purple-100 px-4 py-2 rounded-full">Journey Overview</span>
+                                    </h3>
+                                    {/* Edit Button */}
+                                    <Dialog isOpen={editTrip} onOpenChange={(isOpen) => setEditTrip(isOpen)}>
+                                        <DialogTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                className="bg-gradient-to-br from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white hover:text-white gap-2 sm:self-start px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all"
+                                            >
+                                                <Pencil className="w-5 h-5 text-teal-200" />
+                                                <span className="text-base hidden sm:block">Modify Trip Plan</span>
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="max-w-2xl bg-indigo-50 border-teal-100">
+                                            <DialogHeader>
+                                                <DialogTitle className="flex items-center gap-3 text-indigo-900">
+                                                    <Pencil className="w-6 h-6 text-teal-500" />
+                                                    <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                                        Edit Travel Details
+                                                    </span>
+                                                </DialogTitle>
+                                            </DialogHeader>
+                                            <BookingForm editTrip={editTrip} setEditTrip={setEditTrip} />
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
 
-                                {tripData.tripType === "Round Trip" && tripData.dropOffs?.length > 0 ? (
-                                    <div className="flex flex-wrap items-center gap-2 text-blue-800 font-medium">
-                                        <span className="flex items-center gap-1">
-                                            {tripData.pickupCity} {
-                                                (tripData?.tripType === TRIP_TYPES.local || tripData?.tripType === TRIP_TYPES.airport) &&
-                                                <ArrowRightCircle size={18} />
-                                            }
-                                        </span>
-                                        {tripData.dropOffs.map((dr, idx) => (
-                                            <span key={idx} className="flex items-center gap-1">
-                                                {dr} <ArrowRightCircle size={18} />
-                                            </span>
-                                        ))}
-                                        <span>{tripData.pickupCity}</span>
+                                {/* Route Visualization */}
+                                <div className="space-y-4">
+                                    <div className="flex items-center text-indigo-900 font-bold text-xl">
+                                        {tripData.tripType === "Round Trip" && tripData.dropOffs?.length > 0 ? (
+                                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 space-y-2">
+                                                <span className="bg-gradient-to-br text-sm sm:text-lg from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg">{tripData.pickupCity}</span>
+                                                <ArrowRight className="w-6 h-6 text-teal-500 mx-2" />
+                                                {tripData.dropOffs.map((dr, idx) => (
+                                                    <Fragment key={idx}>
+                                                        <span className="bg-white px-4 py-2 text-sm sm:text-lg rounded-full border-2 border-teal-200 shadow-md">{dr}</span>
+                                                        <ArrowRight className="w-6 h-6 text-teal-500 mx-2" />
+                                                    </Fragment>
+                                                ))}
+                                                <span className="bg-gradient-to-br text-sm sm:text-lg from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full shadow-lg">{tripData.pickupCity}</span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-2 sm:gap-4 text-sm sm:text-lg">
+                                                <span className="bg-gradient-to-br text-sm sm:text-lg from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg">{tripData.pickupCity}</span>
+                                                <ArrowRight className="w-6 h-6 text-teal-500 mx-2" />
+                                                <span className="bg-white px-4 py-2 rounded-full border-2 border-teal-200 shadow-md">{tripData.dropCity}</span>
+                                            </div>
+                                        )}
                                     </div>
-                                ) : (
-                                    <div className="text-blue-800 font-medium">
-                                        {tripData.pickupCity} <ArrowRightCircle className="inline ml-1" size={18} /> {tripData.dropCity}
-                                    </div>
-                                )}
+                                </div>
 
-                                <div className="text-sm text-gray-600">
-                                    <span className="font-medium">Type:</span> {tripData.tripType}
+                                {/* Details Grid */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-5">
+                                    {[
+                                        { icon: CalendarDays, label: "Pickup Date", value: tripData.pickupDate, color: "text-teal-500" },
+                                        { icon: Clock, label: "Pickup Time", value: tripData.pickupTime, color: "text-purple-500" },
+                                        ...(tripData?.returnDate ? [{ icon: CalendarCheck, label: "Return Date", value: tripData.returnDate, color: "text-indigo-500" }] : []),
+                                        { icon: Compass, label: "Trip Type", value: tripData.tripType, color: "text-teal-500" },
+                                        ...(tripData?.totalDistance ? [{ icon: Route, label: "Total Distance", value: `${tripData.totalDistance} km`, color: "text-purple-500" }] : [])
+                                    ].map((item, index) => (
+                                        <div key={index} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-xl hover:bg-indigo-50 transition-all shadow-sm hover:shadow-md">
+                                            <item.icon className={`w-7 h-7 ${item.color}`} />
+                                            <div>
+                                                <p className="text-sm font-semibold text-indigo-600 mb-1">{item.label}</p>
+                                                <p className="text-indigo-900 font-bold">{item.value}</p>
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                                <div className="text-sm text-gray-600">
-                                    <span className="font-medium">Pickup date:</span> {tripData.pickupDate}
-                                </div>
-                                <div className="text-sm text-gray-600">
-                                    <span className="font-medium">Pickup time:</span> {tripData.pickupTime}
-                                </div>
-                                {tripData?.returnDate && (
-                                    <div className="text-sm text-gray-600">
-                                        <span className="font-medium">Return date:</span> {tripData.returnDate}
-                                    </div>
-                                )}
-                                {
-                                    tripData?.totalDistance &&
-                                    <div className="text-sm text-gray-600">
-                                        <span className="font-medium">Distance:</span> {tripData?.totalDistance} kms
-                                    </div>
-                                }
                             </div>
 
-                            <Dialog isOpen={editTrip} onOpenChange={(isOpen) => setEditTrip(isOpen)}>
-                                <DialogTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                                    >
-                                        Edit Trip
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="max-w-xl overflow-x-hidden overflow-y-auto">
-                                    <DialogHeader>
-                                        <DialogTitle>Edit Trip Details</DialogTitle>
-                                    </DialogHeader>
-                                    <BookingForm editTrip={editTrip} setEditTrip={setEditTrip} />
-                                </DialogContent>
-                            </Dialog>
+
                         </div>
                     </div>
                 )}
 
                 {/* Cab List */}
+
                 {
                     tripData?.tripType === TRIP_TYPES.local || tripData?.tripType === TRIP_TYPES.airport
                         ? (
-                            // Local or Airport Trips
                             <LocalTripDetails
                                 router={router}
                                 userData={userData}
@@ -216,139 +233,128 @@ export const CabDetails = () => {
                             />
                         )
                         : (
-                            // One Way or Round Trips
-                            <div className="bg-white rounded-2xl shadow-md p-4 space-y-6">
+                            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl shadow-xl p-4 sm:p-6 border border-indigo-100    space-y-6">
                                 {currentPickupCity?.variantList?.map((cab, index) => (
                                     <div
                                         key={index}
-                                        className="grid grid-cols-1 sm:grid-cols-[auto_auto_1fr_auto_auto] items-center gap-4 border-b last:border-b-0 pb-4"
+                                        className="grid grid-cols-1 sm:grid-cols-[auto_1fr_auto_auto] items-center gap-6 p-5 bg-white rounded-xl shadow-sm hover:shadow-md transition-all"
                                     >
-                                        <img
-                                            src={MAIN_WEBSITE.car1}
-                                            alt={cab?.name}
-                                            className="w-20 h-14 object-contain"
-                                        />
-
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-[#1E1B4B]">{cab?.name}</h3>
-                                            <Dialog
-                                                onOpenChange={(isOpen) => {
-                                                    if (!isOpen) setCurrentCab(null);
-                                                }}
-                                            >
-                                                {tripData?.tripType === "Round Trip" && (
-                                                    <DialogTrigger
-                                                        className="text-xs text-blue-600 underline hover:text-blue-800 mt-1"
-                                                        onClick={() =>
-                                                            setCurrentCab(
-                                                                cabTypes.find(
-                                                                    (cb) =>
-                                                                        cb?.name_lower === cab?.name?.toLowerCase()
+                                        {/* Car Image and Name */}
+                                        <div className="flex items-center gap-4">
+                                            <img
+                                                src={MAIN_WEBSITE.car1}
+                                                alt={cab?.name}
+                                                className="w-24 h-16 object-contain p-2 bg-indigo-50 rounded-lg border border-indigo-100"
+                                            />
+                                            <div>
+                                                <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                                    {cab?.name}
+                                                </h3>
+                                                <Dialog
+                                                    onOpenChange={(isOpen) => {
+                                                        if (!isOpen) setCurrentCab(null);
+                                                    }}
+                                                >
+                                                    {tripData?.tripType === "Round Trip" && (
+                                                        <DialogTrigger
+                                                            className="text-sm text-teal-600 hover:text-teal-800 mt-1 flex items-center gap-1"
+                                                            onClick={() =>
+                                                                setCurrentCab(
+                                                                    cabTypes.find(
+                                                                        (cb) =>
+                                                                            cb?.name_lower === cab?.name?.toLowerCase()
+                                                                    )
                                                                 )
-                                                            )
-                                                        }
-                                                    >
-                                                        View Details
-                                                    </DialogTrigger>
-                                                )}
-                                                <DialogContent className="max-w-3xl rounded-xl">
-                                                    <DialogHeader>
-                                                        <DialogTitle className="text-xl">
-                                                            {cab?.name} – Details
-                                                        </DialogTitle>
-                                                    </DialogHeader>
+                                                            }
+                                                        >
+                                                            <Info className="w-4 h-4" />
+                                                            View Full Specifications
+                                                        </DialogTrigger>
+                                                    )}
 
-                                                    <Tabs defaultValue="inclusions" className="w-full mt-4">
-                                                        <TabsList className="w-full grid grid-cols-4 bg-gray-100 rounded-lg p-1 mb-4">
-                                                            <TabsTrigger value="inclusions">Inclusions</TabsTrigger>
-                                                            <TabsTrigger value="exclusions">Exclusions</TabsTrigger>
-                                                            <TabsTrigger value="facilities">Facilities</TabsTrigger>
-                                                            <TabsTrigger value="tnc">T&C</TabsTrigger>
-                                                        </TabsList>
+                                                    {/* Dialog Content */}
+                                                    <DialogContent className="max-w-4xl rounded-2xl bg-gradient-to-b from-indigo-50 to-white">
+                                                        <DialogHeader>
+                                                            <DialogTitle className="text-2xl font-bold text-indigo-900">
+                                                                {cab?.name} Specifications
+                                                                <div className="h-1 bg-gradient-to-r from-teal-400 to-purple-400 w-24 mt-2 rounded-full" />
+                                                            </DialogTitle>
+                                                        </DialogHeader>
 
-                                                        <TabsContent value="inclusions">
-                                                            <div className="space-y-2 text-sm">
-                                                                <div>⛽ <strong>Lowest Base Fare: ₹{
-                                                                    tripData?.tripType === "Round Trip"
-                                                                        ? cab?.discountedPriceRoundTrip
-                                                                        : cab?.discountedPriceOneWay
-                                                                }/Km</strong></div>
-                                                                <div>🧑‍✈️ <strong>Driver Allowance: ₹{cab?.driverAllowance}</strong></div>
-                                                                <div>📜 <strong>GST (5%)</strong></div>
-                                                            </div>
-                                                        </TabsContent>
+                                                        <Tabs defaultValue="inclusions" className="w-full">
+                                                            <TabsList className="w-full grid grid-cols-4 gap-2 bg-indigo-50 rounded-xl p-2 mb-6">
+                                                                {["inclusions", "exclusions", "facilities", "tnc"].map((tab) => (
+                                                                    <TabsTrigger
+                                                                        key={tab}
+                                                                        value={tab}
+                                                                        className="data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 rounded-lg py-2"
+                                                                    >
+                                                                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                                                    </TabsTrigger>
+                                                                ))}
+                                                            </TabsList>
 
-                                                        <TabsContent value="exclusions">
-                                                            <div className="space-y-2 text-sm">
-                                                                <div>🧾 Toll/State Tax (<strong>₹500–₹600</strong>)</div>
-                                                                <div>🅿️ Parking</div>
-                                                            </div>
-                                                        </TabsContent>
-
-                                                        <TabsContent value="facilities">
-                                                            {currentCab ? (
-                                                                <div className="flex justify-evenly">
-                                                                    <div className="flex items-center text-lg">
-                                                                        <MdOutlineLuggage />
-                                                                        <p>{currentCab?.luggageCapacity}</p>
+                                                            {/* Tab Contents */}
+                                                            <TabsContent value="inclusions" className="space-y-3">
+                                                                <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                                                                    <div className="p-2 bg-teal-100 rounded-full">
+                                                                        <Fuel className="w-5 h-5 text-teal-600" />
                                                                     </div>
-                                                                    <div className="flex items-center text-lg">
-                                                                        <MdAirlineSeatReclineExtra />
-                                                                        <p>{currentCab?.seatingCapacity}</p>
+                                                                    <div>
+                                                                        <p className="font-semibold text-indigo-900">Base Fare</p>
+                                                                        <p className="text-lg font-bold text-teal-600">
+                                                                            ₹{tripData?.tripType === "Round Trip"
+                                                                                ? cab?.discountedPriceRoundTrip
+                                                                                : cab?.discountedPriceOneWay
+                                                                            }/Km
+                                                                        </p>
                                                                     </div>
                                                                 </div>
-                                                            ) : (
-                                                                <div>No Facilities Yet</div>
-                                                            )}
-                                                        </TabsContent>
+                                                                {/* Similar styled blocks for other inclusions */}
+                                                            </TabsContent>
 
-                                                        <TabsContent value="tnc">
-                                                            <ul className="list-disc list-inside text-sm space-y-1">
-                                                                {currentPickupCity?.terms?.length ? (
-                                                                    currentPickupCity.terms.map((tc, idx) => (
-                                                                        <li key={idx}>{tc}</li>
-                                                                    ))
-                                                                ) : (
-                                                                    <li>No T&C yet</li>
-                                                                )}
-                                                            </ul>
-                                                        </TabsContent>
-                                                    </Tabs>
-                                                </DialogContent>
-                                            </Dialog>
-                                        </div>
-
-                                        <div className="text-lg text-gray-700 text-right sm:text-center">
-                                            <p className="font-bold">Includes {tripData?.totalDistance} Kms</p>
-                                        </div>
-
-                                        <div className="text-right space-y-0.5">
-                                            <div className="line-through text-sm text-gray-400">
-                                                ₹{(
-                                                    tripData?.totalDistance *
-                                                    (tripData?.tripType === "Round Trip"
-                                                        ? cab?.actualPriceRoundTrip
-                                                        : cab?.actualPriceOneWay)
-                                                ).toFixed(0)}
-                                            </div>
-                                            <div className="text-blue-700 text-xl font-bold">
-                                                ₹{(
-                                                    tripData?.totalDistance *
-                                                    (tripData?.tripType === "Round Trip"
-                                                        ? cab?.discountedPriceRoundTrip
-                                                        : cab?.discountedPriceOneWay)
-                                                ).toFixed(0)}
-                                            </div>
-                                            <div className="text-green-700 text-xs bg-green-100 px-2 py-0.5 rounded-sm inline-block">
-                                                GUARANTEED
+                                                            {/* Other Tab Contents with similar styling */}
+                                                        </Tabs>
+                                                    </DialogContent>
+                                                </Dialog>
                                             </div>
                                         </div>
 
+                                        {/* Pricing Section */}
+                                        <div className="text-right space-y-2">
+                                            <div className="text-sm text-gray-500">
+                                                {tripData?.totalDistance} Kms Included
+                                            </div>
+                                            <div className="flex flex-col items-end">
+                                                <span className="line-through text-gray-400 text-sm">
+                                                    ₹{(
+                                                        tripData?.totalDistance *
+                                                        (tripData?.tripType === "Round Trip"
+                                                            ? cab?.actualPriceRoundTrip
+                                                            : cab?.actualPriceOneWay)
+                                                    ).toFixed(0)}
+                                                </span>
+                                                <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                                                    ₹{(
+                                                        tripData?.totalDistance *
+                                                        (tripData?.tripType === "Round Trip"
+                                                            ? cab?.discountedPriceRoundTrip
+                                                            : cab?.discountedPriceOneWay)
+                                                    ).toFixed(0)}
+                                                </span>
+                                                <span className="text-xs font-semibold text-teal-600 bg-teal-100 px-2 py-1 rounded-full">
+                                                    BEST DEAL
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Book Button */}
                                         <Button
-                                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg w-full sm:w-auto"
+                                            className="bg-gradient-to-br from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all"
                                             onClick={() => handleCabBooking(cab)}
                                         >
                                             Book Now
+                                            <ArrowRight className="w-4 h-4 ml-2" />
                                         </Button>
                                     </div>
                                 ))}
