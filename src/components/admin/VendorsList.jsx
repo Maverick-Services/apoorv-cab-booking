@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Loader2, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -22,6 +22,19 @@ import {
 
 function VendorsList({ vendorLoading, vendors }) {
     const [vendorDrivers, setVendorDrivers] = useState(null)
+    const [cabTypeColors, setCabTypeColors] = useState({})
+
+    // Available color classes
+    const colorClasses = [
+        'bg-blue-100 text-blue-800',
+        'bg-green-100 text-green-800',
+        'bg-red-100 text-red-800',
+        'bg-purple-100 text-purple-800',
+        'bg-teal-100 text-teal-800',
+        'bg-orange-100 text-orange-800',
+        'bg-pink-100 text-pink-800',
+        'bg-yellow-100 text-yellow-800'
+    ]
 
     const handleViewDrivers = async (vendorId) => {
         try {
@@ -42,6 +55,32 @@ function VendorsList({ vendorLoading, vendors }) {
             year: 'numeric'
         })
     }
+
+    // Shuffle function for colors
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+                ;[array[i], array[j]] = [array[j], array[i]]
+        }
+        return array
+    }
+
+    useEffect(() => {
+        if (vendorDrivers?.length) {
+            // Get unique cab types
+            const uniqueCabTypes = [...new Set(vendorDrivers.map(d => d.cabType))].filter(Boolean)
+
+            // Create color mapping
+            const shuffledColors = shuffleArray([...colorClasses])
+            const colorMapping = {}
+
+            uniqueCabTypes.forEach((type, index) => {
+                colorMapping[type] = shuffledColors[index % shuffledColors.length]
+            })
+
+            setCabTypeColors(colorMapping)
+        }
+    }, [vendorDrivers])
 
     if (vendorLoading)
         return (
@@ -110,6 +149,23 @@ function VendorsList({ vendorLoading, vendors }) {
                 <DialogContent className="sm:max-w-2xl">
                     <DialogHeader>
                         <DialogTitle className="text-xl">Driver Details</DialogTitle>
+
+                        {/* Available Cabs section */}
+                        <div className="mt-2">
+                            <h4 className="text-sm font-medium text-muted-foreground">
+                                Available Cab Types
+                            </h4>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                {Object.keys(cabTypeColors).map((cabType) => (
+                                    <Badge
+                                        key={cabType}
+                                        className={`${cabTypeColors[cabType]} rounded-md px-3 py-1 text-sm`}
+                                    >
+                                        {cabType}
+                                    </Badge>
+                                ))}
+                            </div>
+                        </div>
                     </DialogHeader>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[70vh] overflow-y-auto p-2">
                         {vendorDrivers?.map((driver, index) => (
