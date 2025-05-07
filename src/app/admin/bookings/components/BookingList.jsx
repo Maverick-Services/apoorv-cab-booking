@@ -50,7 +50,7 @@ export default function BookingList({ bookings, loading }) {
         )
 
     return (
-        <div className="min-h-screen p-4 sm:p-6">
+        <div className="min-h-screen">
             <div className="mx-auto max-w-7xl">
                 <div className="space-y-3 w-full">
                     {bookings.map((booking) => (
