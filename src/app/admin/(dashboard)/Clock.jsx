@@ -12,7 +12,6 @@ export default function Clock() {
         <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 group">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="text-gray-500 text-sm font-medium">Current Time</p>
                     {!timeLoading ? (
                         <div className="mt-2 space-y-1">
                             <h3 className="text-2xl font-bold text-gray-800">{realTime}</h3>

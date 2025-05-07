@@ -43,13 +43,12 @@ function page() {
                                 onChange={(e) => setTimeFilter(e.target.value)}
                                 defaultValue={timeFilter}
                             >
-                                {/* <option value="all">All</option> */}
                                 <option value="today">Today</option>
-                                {/* <option value="tomorrow">Tommorow</option> */}
                                 <option value="yesterday">Yesterday</option>
-                                <option value="last7days">Last 7 days</option>
-                                <option value="lastMonth">Last Month</option>
-                                <option value="lastYear">Last Year</option>
+                                <option value="last7days">Past 7 days</option>
+                                <option value="lastMonth">Past 1 Month</option>
+                                <option value="lastYear">Past 1 Year</option>
+                                <option value="all">All</option>
                             </select>
                         </div>
                         <Link href={'/admin/bookings/new'}>

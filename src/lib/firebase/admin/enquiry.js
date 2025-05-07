@@ -9,7 +9,9 @@ import {
     orderBy,
     deleteDoc,
     doc,
+    where,
 } from "firebase/firestore";
+import { getDateRange } from "./booking";
 
 // Add Enquiry
 export const createNewEnquiry = async ({ data }) => {
@@ -42,6 +44,22 @@ export const getAllEnquiries = async () => {
         console.error("Error fetching enquiries:", error);
         throw new Error("Failed to fetch enquiries.");
     }
+};
+
+export const getEnquiriesByDate = async (filter) => {
+    const range = getDateRange(filter);
+    if (!range) throw new Error("Invalid date filter");
+
+    const enquiryRef = collection(db, "enquiries");
+    const q = query(
+        enquiryRef,
+        where("timestamp", ">=", range.start),
+        where("timestamp", "<=", range.end),
+        orderBy("timestamp", "desc")
+    );
+
+    const snaps = await getDocs(q);
+    return snaps.docs.map((d) => d.data());
 };
 
 // Delete enquiry by ID

@@ -1,22 +1,46 @@
 'use client';
 
-import React from 'react';
-import { CarFront } from 'lucide-react';
-import { VENDORS } from '@/lib/constants/constants';
+import React, { useEffect, useState } from 'react';
+import { CarFront, Loader2 } from 'lucide-react';
+import { getAllDrivers } from '@/lib/firebase/vendor/driver';
+import Link from 'next/link';
 
 const TotalCabs = () => {
-    const totalCabs = VENDORS.reduce((total, vendor) => total + vendor.cabs.length, 0);
+
+    const [drivers, setDrviers] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    async function fetchAllDrivers() {
+        setLoading(true)
+        try {
+            const res = await getAllDrivers();
+            setDrviers(res)
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        fetchAllDrivers()
+    }, [])
 
     return (
-        <div className="bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 flex items-center justify-between border border-gray-200 dark:border-gray-800">
-            <div>
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Cabs</h3>
-                <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-2">{totalCabs}</p>
+        <Link href={'/admin/vendors'} >
+            <div className="bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 flex items-center justify-between border border-gray-200 dark:border-gray-800">
+                <div>
+                    <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Cabs</h3>
+                    <p className="text-3xl font-bold text-red-500 dark:text-red-200 mt-2">
+                        {
+                            loading ? <Loader2 className='animate-spin h-6 w-6' /> : drivers?.length
+                        }
+                    </p>
+                </div>
+                <div className="bg-red-200 dark:bg-red-500 p-3 rounded-full">
+                    <CarFront className="text-red-500 dark:text-red-200 h-6 w-6" />
+                </div>
             </div>
-            <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-                <CarFront className="text-green-600 dark:text-green-300 h-6 w-6" />
-            </div>
-        </div>
+        </Link>
     );
 };
 

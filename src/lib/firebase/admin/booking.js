@@ -45,7 +45,7 @@ export const updateBooking = async (data) => {
 };
 
 // Helper to get date range
-const getDateRange = (filter) => {
+export const getDateRange = (filter) => {
     const now = new Date();
     let startDate, endDate;
 

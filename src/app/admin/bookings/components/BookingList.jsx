@@ -33,9 +33,9 @@ export default function BookingList({ bookings, loading }) {
         return (
             <div className='w-full min-h-[30vh] flex justify-center items-center'>
                 <div className="w-fit flex flex-col justify-center items-center gap-2">
-                    <ReceiptIndianRupee size={30} className="text-primary" />
+                    <Loader2 size={30} className="animate-spin text-primary" />
                     <p className="flex gap-2 items-center">
-                        <Loader2 className="animate-spin h-6 w-6 text-primary" />
+                        <ReceiptIndianRupee className="h-6 w-6 text-primary" />
                         Fetching bookings
                     </p>
                 </div>

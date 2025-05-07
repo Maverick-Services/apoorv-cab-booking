@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import { getAllBookings, getDateRange } from '@/lib/firebase/admin/booking';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     BarChart,
     Bar,
@@ -147,33 +148,108 @@ const BOOKINGS_LIST = [
 ];
 
 const ConfirmationStatusChart = () => {
-    const pendingCount = BOOKINGS_LIST.filter(item => item.confirmationStatus === 'Pending').length;
-    const confirmedCount = BOOKINGS_LIST.filter(item => item.confirmationStatus === 'Confirmed').length;
-    const rejectedCount = BOOKINGS_LIST.filter(item => item.confirmationStatus === 'Rejected').length;
+
+    const [loading, setLoading] = useState(false);
+    const [chartData, setChartData] = useState({
+        today: 0,
+        yesterday: 0,
+        lastSevenDays: 0,
+        lastMonth: 0,
+    });
+    const [chartColors, setChartColors] = useState([]);
+
+    async function fetchAllBookings() {
+        setLoading(true)
+        try {
+            const res = await getAllBookings();
+            // console.log(res);
+            if (res) {
+                setChartData({
+                    ...chartData,
+                    today: res?.filter(item => {
+                        const range = getDateRange("today");
+                        return item?.createdAt >= range.start && item?.createdAt <= range.end
+                    })?.length,
+
+                    yesterday: res?.filter(item => {
+                        const range = getDateRange("yesterday");
+                        return item?.createdAt >= range.start && item?.createdAt <= range.end
+                    })?.length,
+
+                    lastSevenDays: res?.filter(item => {
+                        const range = getDateRange("last7days");
+                        return item?.createdAt >= range.start && item?.createdAt <= range.end
+                    })?.length,
+
+                    lastMonth: res?.filter(item => {
+                        const range = getDateRange("lastMonth");
+                        return item?.createdAt >= range.start && item?.createdAt <= range.end
+                    })?.length
+                })
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        fetchAllBookings()
+    }, [])
 
     const data = [
-        { status: 'Pending', count: pendingCount },
-        { status: 'Confirmed', count: confirmedCount },
-        { status: 'Rejected', count: rejectedCount },
+        { range: 'Today', value: chartData?.today },
+        { range: 'Yesterday', value: chartData?.yesterday },
+        { range: 'Past 7 Days', value: chartData?.lastSevenDays },
+        { range: 'Past 1 Month', value: chartData?.lastMonth },
     ];
 
-    const COLORS_MAP = {
-        Pending: '#f97316',   // orange
-        Confirmed: '#22c55e', // green
-        Rejected: '#ef4444',  // red
+
+    // Define base colors (add one more color for 4 categories)
+    const BASE_COLORS = useMemo(() => [
+        "oklch(0.627 0.194 149.214)",
+        "oklch(0.45 0.085 224.283)",
+        "#d61828",
+        "#00C49F"  // Added a new color
+    ], []);
+
+    // Shuffle function
+    const shuffleColors = (colors) => {
+        const shuffled = [...colors];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
     };
 
+    useEffect(() => {
+        // Shuffle colors whenever chart data updates
+        setChartColors(shuffleColors(BASE_COLORS));
+    }, [chartData, BASE_COLORS]);
+
     return (
-        <div className="w-full h-[400px] bg-white rounded-xl p-4 px-5 pb-12">
-            <h2 className="text-xl font-semibold mb-4">Booking Confirmation Status</h2>
+        <div className="w-full h-[400px] bg-white rounded-xl p-4 pb-12">
+            <h2 className="text-xl font-semibold mb-4">Bookings Received</h2>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data}>
-                    <XAxis dataKey="status" />
+                    <XAxis dataKey="range" />
                     <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="count">
-                        {data.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={COLORS_MAP[entry.status]} />
+                    <Tooltip
+                        contentStyle={{
+                            borderRadius: '8px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                        }}
+                        formatter={(value) => [value, 'Bookings']}
+                        labelFormatter={(label) => `Period: ${label}`}
+                    />
+                    <Bar dataKey="value">
+                        {data?.map((entry, index) => (
+                            <Cell
+                                key={`cell-${index}`}
+                                fill={chartColors[index % chartColors.length]}  // Change here
+                            />
                         ))}
                     </Bar>
                 </BarChart>
