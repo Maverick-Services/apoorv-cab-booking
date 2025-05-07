@@ -48,7 +48,7 @@ function page() {
             fetchVendorsByCity()
     }, [vendorFilter])
 
-    console.log(vendors);
+    // console.log(vendors);
 
     if (loading || !pickupCities)
         return <Loader2 />

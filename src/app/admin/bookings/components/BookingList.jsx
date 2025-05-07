@@ -1,6 +1,7 @@
+import { Loader2, ReceiptIndianRupee } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function BookingList({ bookings }) {
+export default function BookingList({ bookings, loading }) {
     const router = useRouter();
 
     const parseFirestoreTimestamp = ({ seconds, nanoseconds }) => {
@@ -28,13 +29,29 @@ export default function BookingList({ bookings }) {
         </div>
     );
 
-    return (
-        <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
-            <div className="mx-auto max-w-7xl">
-                <h1 className="mb-6 text-2xl font-bold text-gray-900 sm:mb-8 sm:text-3xl">
-                    All Bookings
-                </h1>
+    if (loading)
+        return (
+            <div className='w-full min-h-[30vh] flex justify-center items-center'>
+                <div className="w-fit flex flex-col justify-center items-center gap-2">
+                    <ReceiptIndianRupee size={30} className="text-primary" />
+                    <p className="flex gap-2 items-center">
+                        <Loader2 className="animate-spin h-6 w-6 text-primary" />
+                        Fetching bookings
+                    </p>
+                </div>
+            </div>
+        )
 
+    if (bookings?.length <= 0)
+        return (
+            <div className='w-full min-h-[30vh] flex justify-center items-center'>
+                <p className="text-muted-foreground">No bookings yet</p>
+            </div>
+        )
+
+    return (
+        <div className="min-h-screen p-4 sm:p-6">
+            <div className="mx-auto max-w-7xl">
                 <div className="space-y-3 w-full">
                     {bookings.map((booking) => (
                         <div

@@ -4,7 +4,6 @@ import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { BOOKINGS_LIST } from '@/lib/constants/constants'
 import { getAllBookings, getBookingsByDate } from '@/lib/firebase/admin/booking'
 import BookingList from './components/BookingList'
 import { Loader2 } from 'lucide-react'
@@ -30,16 +29,15 @@ function page() {
             fetchAllBookings()
     }, [timeFilter])
 
-    if (loading)
-        return <Loader2 />
-
     return (
         <div>
             <InnerLayout heading={"Bookings"}>
                 <div className='pb-3'>
                     <div className='w-full flex justify-between px-1 mb-3'>
                         <div className='flex items-start gap-4'>
-                            <p className='font-semibold text-primary'>Total Bookings: {bookings?.length}</p>
+                            <p className='font-semibold text-primary flex gap-2 items-center'>Total Bookings: {
+                                loading || !bookings ? <Loader2 size={15} /> : bookings?.length
+                            }</p>
                             <select name="timeFilter"
                                 className='px-2 bg-white rounded-md border border-black'
                                 onChange={(e) => setTimeFilter(e.target.value)}
@@ -62,7 +60,7 @@ function page() {
                     </div>
 
                     <div>
-                        <BookingList bookings={bookings} />
+                        <BookingList loading={loading} bookings={bookings} />
                     </div>
                 </div>
             </InnerLayout>
