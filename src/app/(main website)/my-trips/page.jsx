@@ -1,25 +1,27 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Footer from '@/components/main/Footer';
 import Navbar from '@/components/main/navbar/Navbar';
 import { getBookingsByUser } from '@/lib/firebase/admin/booking';
 import useAuthStore from '@/store/useAuthStore';
+import BookingHistory from '@/components/main/MyBookings';
 
 function page() {
     const { userData } = useAuthStore()
-    console.log(userData)
+    const [bookings, setBookings] = useState([]);
 
     async function fetchBookingsOfUser() {
         const res = await getBookingsByUser(userData?.id)
-        console.log(res)
+        setBookings(res);
     }
 
     useEffect(() => {
-        fetchBookingsOfUser()
+        if (userData)
+            fetchBookingsOfUser()
     }, [userData])
 
 
-    if (!userData) {
+    if (!bookings) {
         return <div>No Bookings Yet</div>
     }
 
@@ -30,8 +32,7 @@ function page() {
                     <Navbar />
                 </div>
                 <div className='text-black min-h-[50vh] pb-10 pt-5 w-11/12 flex flex-col justify-between max-w-6xl mx-auto'>
-                    <h1>My Bookings</h1>
-
+                    <BookingHistory bookings={bookings} />
                 </div>
                 <Footer />
             </div>
