@@ -9,23 +9,21 @@ export default function Clock() {
     const { finalDate, realTime, timeLoading } = useTime({ date });
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 group">
-            <div className="flex items-center justify-between">
-                <div>
-                    {!timeLoading ? (
-                        <div className="mt-2 space-y-1">
-                            <h3 className="text-2xl font-bold text-gray-800">{realTime}</h3>
-                            <h3 className="text-sm text-gray-500">{finalDate}</h3>
-                        </div>
-                    ) : (
-                        <div className="mt-2">
-                            <ClipLoader size={20} color="#4F46E5" />
-                        </div>
-                    )}
-                </div>
-                <div className="bg-orange-100 p-4 rounded-xl group-hover:bg-orange-200 transition-colors">
-                    <ClockIcon className="w-8 h-8 text-orange-600" />
-                </div>
+        <div className="bg-white flex-1 p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 group flex items-center justify-between">
+            <div>
+                {!timeLoading ? (
+                    <div className="mt-2 space-y-1">
+                        <h3 className="text-2xl font-bold text-gray-800">{realTime}</h3>
+                        <h3 className="text-sm text-gray-500">{finalDate}</h3>
+                    </div>
+                ) : (
+                    <div className="mt-2">
+                        <ClipLoader size={20} color="#4F46E5" />
+                    </div>
+                )}
+            </div>
+            <div className="bg-orange-100 dark:bg-orange-400 p-3 rounded-full">
+                <ClockIcon className="text-orange-400 dark:text-orange-200 h-6 w-6" />
             </div>
         </div>
     );

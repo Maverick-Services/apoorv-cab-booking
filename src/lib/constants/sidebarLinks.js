@@ -83,11 +83,6 @@ export const vendorSidebarLinks = [
         icon: <Home />,
     },
     {
-        href: "/vendor/profile",
-        label: "My Profile",
-        icon: <User />,
-    },
-    {
         href: "/vendor/my-bookings",
         label: "My Bookings",
         icon: <ReceiptIndianRupee />,
