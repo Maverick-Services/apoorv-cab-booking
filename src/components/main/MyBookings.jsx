@@ -59,7 +59,7 @@ const BookingHistory = ({ bookings }) => {
         doc.setFontSize(18);
         doc.setTextColor(40);
         doc.setFont('helvetica', 'bold');
-        doc.text("TAX INVOICE", pageWidth / 2, yPosition, { align: 'center' });
+        doc.text("BOOKING INVOICE", pageWidth / 2, yPosition, { align: 'center' });
         yPosition += 15;
 
         // Company Details
@@ -200,7 +200,7 @@ const BookingHistory = ({ bookings }) => {
     //     // Implement proper number to words conversion logic
     //     return "Indian Rupee ... Only";
     // };
-    console.log(selectedBooking);
+    // console.log(selectedBooking);
 
     return (
         <div className="w-full mx-auto">
