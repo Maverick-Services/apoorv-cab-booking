@@ -1,5 +1,9 @@
 'use client'
+
+import { toWords } from 'number-to-words';
 import { useState } from 'react'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable';
 import {
     CalendarDays,
     Clock,
@@ -17,6 +21,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
+import { TRIP_TYPES } from '@/lib/constants/constants';
 
 const BookingHistory = ({ bookings }) => {
     const [selectedBooking, setSelectedBooking] = useState(null)
@@ -45,6 +50,157 @@ const BookingHistory = ({ bookings }) => {
             default: return 'bg-gray-100 text-gray-800'
         }
     }
+    const generateReceipt = () => {
+        const doc = new jsPDF();
+        const pageWidth = doc.internal.pageSize.getWidth();
+        let yPosition = 15;
+
+        // Company Header
+        doc.setFontSize(18);
+        doc.setTextColor(40);
+        doc.setFont('helvetica', 'bold');
+        doc.text("TAX INVOICE", pageWidth / 2, yPosition, { align: 'center' });
+        yPosition += 15;
+
+        // Company Details
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text("Taps Cabs", 15, yPosition);
+        doc.text("C 23 Malviya Nagar, Moradabad Uttar Pradesh 244001", 15, yPosition + 5);
+        doc.text("24*7 7248772488 | INFO@TAPSCABS.COM | GSTIN 09BEWPG1107F12K", 15, yPosition + 10);
+        yPosition += 20;
+
+        // Invoice Details
+        const invoiceDate = formatDate(selectedBooking.pickupDate);
+        doc.text(`Invoice No: TC/${new Date().getFullYear()}-${(new Date().getFullYear() + 1).toString().slice(-2)}/${selectedBooking.payment.paymentId.slice(-6)}`, 15, yPosition);
+        doc.text(`Invoice Date: ${invoiceDate}`, pageWidth - 15, yPosition, { align: 'right' });
+        yPosition += 10;
+
+        // Customer Details
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${selectedBooking?.userData?.name}`, 15, yPosition);
+        doc.text(`${selectedBooking?.userData?.email}`, 15, yPosition + 5);
+        doc.text(`${selectedBooking?.userData?.phoneNo}`, 15, yPosition + 10);
+        doc.text(`Pickup City: ${selectedBooking.pickupCity}`, pageWidth - 15, yPosition, { align: 'right' });
+        yPosition += 20;
+
+        if (selectedBooking?.tripType === TRIP_TYPES.oneWay) {
+            doc.text(`Drop: ${selectedBooking.dropCity}`, 15, yPosition);
+            // yPosition += 5;
+        } else if (selectedBooking?.tripType === TRIP_TYPES.roundTrip) {
+            doc.text(`Drops:`, 15, yPosition);
+            for (let i = 0; i < selectedBooking?.dropOffs?.length; i++) {
+                doc.text(`\n\t${i + 1}. ${selectedBooking?.dropOffs[i]}`, 15, yPosition + 5 * i);
+            }
+            yPosition += 10;
+        }
+
+        // Calculate line items
+        const items = [];
+        const tripType = selectedBooking.tripType.toLowerCase();
+
+        // Main Service
+        items.push([
+            1,
+            `${selectedBooking.pickupCity} ${tripType} Service`,
+            "1.00",
+            selectedBooking.basePrice.toFixed(2),
+            `${(selectedBooking.basePrice * 0.05).toFixed(2)} 5%`,
+            selectedBooking.basePrice.toFixed(2)
+        ]);
+
+        // Extra KMs
+        // if (selectedBooking.totalDistance > minKm) {
+        //     const extraKm = selectedBooking.totalDistance - minKm;
+        //     const rate = tripType === 'round trip'
+        //         ? parseFloat(selectedBooking.cab.actualPriceRoundTrip)
+        //         : parseFloat(selectedBooking.cab.actualPriceOneWay);
+
+        //     items.push([
+        //         items.length + 1,
+        //         `Extra Kilometers (${extraKm} KM)`,
+        //         extraKm.toFixed(2),
+        //         rate.toFixed(2),
+        //         `${(extraKm * rate * 0.05).toFixed(2)} 5%`,
+        //         (extraKm * rate).toFixed(2)
+        //     ]);
+        // }
+
+        // Driver Allowance (Only for multi-day round trips)
+        if (tripType === TRIP_TYPES.roundTrip && selectedBooking.dropOffs.length > 1) {
+            // items.push([
+            //     items.length + 1,
+            //     "Driver Allowance",
+            //     "1.00",
+            //     selectedBooking.cab.driverAllowance,
+            //     `${(parseFloat(selectedBooking.cab.driverAllowance) * 0.05).toFixed(2)} 5%`,
+            //     selectedBooking.cab.driverAllowance
+            // ]);
+        }
+
+        // Items Table
+        autoTable(doc, {
+            startY: yPosition + 10,
+            head: [['#', 'Description', 'Qty', 'Rate', 'IGST', 'Amount']],
+            body: items,
+            theme: 'grid',
+            styles: { fontSize: 10 },
+            headStyles: { fillColor: [241, 243, 245] },
+            columnStyles: {
+                0: { cellWidth: 10 },
+                1: { cellWidth: 80 },
+                2: { cellWidth: 20 },
+                3: { cellWidth: 25 },
+                4: { cellWidth: 35 },
+                5: { cellWidth: 25 }
+            }
+        });
+
+        // Calculations
+        const subtotal = items.reduce((sum, item) => sum + parseFloat(item[5]), 0);
+        const gst = subtotal * 0.05;
+        const total = subtotal + gst;
+
+        // Summary Table
+        autoTable(doc, {
+            startY: doc.lastAutoTable.finalY + 10,
+            body: [
+                ["Sub Total", subtotal.toFixed(2)],
+                ["IGST5 (5%)", gst.toFixed(2)],
+                ["Total", total.toFixed(2)],
+                ["Balance Paid", selectedBooking?.bookingAmount.toFixed(2)],
+                ["Balance Due", (total.toFixed(2) - selectedBooking?.bookingAmount.toFixed(2)).toFixed(2)]
+            ],
+            theme: 'plain',
+            styles: { fontSize: 12, fontStyle: 'bold' },
+            columnStyles: {
+                0: { halign: 'right', cellWidth: 100 },
+                1: { cellWidth: 50, halign: 'right' }
+            }
+        });
+
+        // Total in Words
+        doc.setFont('helvetica', 'bold');
+        doc.text(`Total in Words: Indian Rupee ${toWords(total.toFixed(2)).replace(/ point/g, ' and')} Only`, 15, doc.lastAutoTable.finalY + 15);
+
+        // Footer
+        const footerY = doc.internal.pageSize.getHeight() - 30;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.text("This is an electronically generated invoice and does not require signature.", 15, footerY);
+        doc.text("All disputes are subject to jurisdiction of courts in Moradabad.", 15, footerY + 5);
+        doc.text("Please refer our website www.tapscabs.com for Terms and Conditions.", 15, footerY + 10);
+
+        // Save PDF
+        doc.save(`invoice-${selectedBooking.payment.paymentId.slice(-6)}.pdf`);
+    };
+
+    // Helper function to convert numbers to words (need to implement properly)
+    // const numberToWords = (num) => {
+    //     // Implement proper number to words conversion logic
+    //     return "Indian Rupee ... Only";
+    // };
+    console.log(selectedBooking);
 
     return (
         <div className="w-full mx-auto">
@@ -181,7 +337,9 @@ const BookingHistory = ({ bookings }) => {
                             >
                                 Close
                             </Button>
-                            <Button>View Receipt</Button>
+                            <Button onClick={generateReceipt}>
+                                View Receipt
+                            </Button>
                         </div>
                     </DialogContent>
                 )}
