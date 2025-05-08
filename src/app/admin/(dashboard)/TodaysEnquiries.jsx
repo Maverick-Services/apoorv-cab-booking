@@ -27,8 +27,8 @@ const TodaysEnquiries = () => {
 
 
     return (
-        <Link href={'/admin/vendors'} >
-            <div className="bg-white dark:bg-gray-900 shadow-md rounded-2xl p-6 flex items-center justify-between border border-gray-200 dark:border-gray-800">
+        <Link href={'/admin/enquiries'} >
+            <div className="bg-white flex-1 dark:bg-gray-900 shadow-md rounded-2xl h-full p-6 flex items-center justify-between border border-gray-200 dark:border-gray-800">
                 <div>
                     <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Enquiries</h3>
                     <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400 mt-2">{

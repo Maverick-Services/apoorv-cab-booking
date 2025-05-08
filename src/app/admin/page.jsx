@@ -29,7 +29,6 @@ function page() {
                             <Clock />
                             <TodaysEnquiries />
                         </div>
-                        {/* <VehiclesByType /> */}
                     </div>
 
                     <div className='flex flex-col md:flex-row gap-4 w-full'>
