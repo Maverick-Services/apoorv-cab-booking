@@ -22,6 +22,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog'
 import { TRIP_TYPES } from '@/lib/constants/constants';
+import { MAIN_WEBSITE } from '@/lib/assets/assets';
 
 const BookingHistory = ({ bookings }) => {
     const [selectedBooking, setSelectedBooking] = useState(null)
@@ -62,10 +63,13 @@ const BookingHistory = ({ bookings }) => {
         doc.text("BOOKING INVOICE", pageWidth / 2, yPosition, { align: 'center' });
         yPosition += 15;
 
+        // Add logo image (parameters: imageData, x, y, width, height)
+        doc.addImage(MAIN_WEBSITE.logo, 'PNG', 15, 15, 30, 15)
+        yPosition = 30;
+
         // Company Details
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
-        doc.text("Taps Cabs", 15, yPosition);
         doc.text("C 23 Malviya Nagar, Moradabad Uttar Pradesh 244001", 15, yPosition + 5);
         doc.text("24*7 7248772488 | INFO@TAPSCABS.COM | GSTIN 09BEWPG1107F12K", 15, yPosition + 10);
         yPosition += 20;
@@ -145,7 +149,10 @@ const BookingHistory = ({ bookings }) => {
             body: items,
             theme: 'grid',
             styles: { fontSize: 10 },
-            headStyles: { fillColor: [241, 243, 245] },
+            headStyles: {
+                fillColor: [0, 0, 0],  // Black color
+                textColor: [255, 255, 255]
+            },
             columnStyles: {
                 0: { cellWidth: 10 },
                 1: { cellWidth: 80 },
