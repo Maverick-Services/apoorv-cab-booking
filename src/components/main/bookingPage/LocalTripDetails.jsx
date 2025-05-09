@@ -79,7 +79,7 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
             pickupTime: tripData?.pickupTime,
             totalDistance: cab?.totalDistance,
             totalHours: cab?.tripHours,
-            price: cab?.price,
+            price: cab?.discountedPrice,
 
         }
         // console.log(bookingData, tripData?.pickupDate);

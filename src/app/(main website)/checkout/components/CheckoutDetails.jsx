@@ -11,15 +11,12 @@ import axios from 'axios'
 import { TRIP_TYPES } from '@/lib/constants/constants'
 import {
     Breadcrumb,
-    BreadcrumbEllipsis,
     BreadcrumbItem,
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { useForm } from 'react-hook-form'
-import { handleUserDetails } from '@/lib/firebase/services/auth'
 import UserLogin from '@/components/auth/userLogin/UserLogin'
 
 export default function CheckoutDetails() {
@@ -66,14 +63,16 @@ export default function CheckoutDetails() {
     // console.log(userData)
     // Price calculations
     const basePrice = parseFloat(bookingData.price)
-    const driverAllowance = parseFloat(bookingData?.cab?.driverAllowance)
+    const driverAllowance = bookingData?.tripType === TRIP_TYPES.roundTrip
+        ? parseFloat(bookingData?.cab?.driverAllowance) : 0;
+
     const priceWithAllowance = useMemo(() => parseFloat((basePrice + driverAllowance).toFixed(2)), [basePrice, driverAllowance]);
     const gstAmount = useMemo(() => parseFloat((priceWithAllowance * 0.05).toFixed(2)), [priceWithAllowance])
     const totalAmount = useMemo(() => parseFloat((priceWithAllowance + gstAmount).toFixed(2)), [priceWithAllowance, gstAmount])
     const bookingAmount = useMemo(() => parseFloat((totalAmount * 0.2).toFixed(2)), [totalAmount])
     const isRoundTrip = bookingData.tripType === 'Round Trip' && bookingData.dropOffs?.length > 0
 
-    // console.log(isRoundTrip, bookingData?.returnDate)
+    // console.log(driverAllowance, gstAmount, totalAmount)
 
     // function handleBookingSuccess() {
     //     router.push(`/booking-success?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
