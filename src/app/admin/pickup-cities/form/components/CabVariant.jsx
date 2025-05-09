@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import VariantCard from './VariantCard'
 import VariantName from './variant/VariantName'
@@ -12,7 +12,9 @@ import { usePickupCityForm } from '../context/PickupCityContext'
 
 function CabVariant() {
 
-    const { variant, setVariant, variantList, setVariantList } = usePickupCityForm();
+    const {
+        variant, setVariant, editVariant, setEditVariant, variantList, setVariantList, handleEditVariantList
+    } = usePickupCityForm();
 
     function handleAddVariant() {
         const requiredFields = [
@@ -30,6 +32,21 @@ function CabVariant() {
             return
         }
 
+        if (editVariant) {
+            handleEditVariantList();
+            setVariant({
+                name: '',
+                minKilometers: '',
+                actualPriceRoundTrip: '',
+                discountedPriceRoundTrip: '',
+                actualPriceOneWay: '',
+                discountedPriceOneWay: '',
+                driverAllowance: '',
+            })
+            setEditVariant(null);
+            return;
+        }
+
         setVariantList(prev => [...prev, variant])
         setVariant({
             name: '',
@@ -42,9 +59,14 @@ function CabVariant() {
         })
     }
 
+    const onEdit = (vr) => {
+        setEditVariant(vr);
+        setVariant(vr);
+    }
+
     return (
         <div className="w-full bg-white border border-gray-200 rounded-lg p-6">
-            <h2 className='text-2xl text-primary font-bold mb-3'>Add Cab Types</h2>
+            <h2 className='text-2xl text-primary font-bold mb-3'>{editVariant ? "Edit" : "Add"} Cab Types</h2>
 
             <div className="space-y-4">
                 {/* Variant Details Section */}
@@ -69,7 +91,7 @@ function CabVariant() {
                     className="w-full bg-primary text-white hover:opacity-90 transition-all p-6 text-lg -mt-4"
                     onClick={handleAddVariant}
                 >
-                    Add Cab Type
+                    {editVariant ? "Update" : "Add"} Cab Type
                 </Button>
             </div>
 
@@ -78,7 +100,7 @@ function CabVariant() {
                 <div className="mt-8 space-y-4">
                     <h3 className="text-xl font-semibold">Added Cab Variants</h3>
                     {variantList.map((v, idx) => (
-                        <VariantCard key={idx} variant={v} />
+                        <VariantCard key={idx} variant={{ ...v, id: idx }} onEdit={onEdit} />
                     ))}
                 </div>
             )}

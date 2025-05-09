@@ -1,6 +1,6 @@
 "use client"
 
-import { createNewPickupCity } from "@/lib/firebase/admin/pickupCity";
+import { createNewPickupCity, deletePickupCity, getPickupCityDetails, updatePickupCity } from "@/lib/firebase/admin/pickupCity";
 // import { createNewCabType, deleteCabType, getCabTypeDetails, updateCabType } from "@/lib/firebase/admin/cabType";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
@@ -32,12 +32,26 @@ export default function PickupCityFormContexttProvider({ children }) {
         discountedPriceOneWay: '',
         driverAllowance: '',
     })
+    const [editVariant, setEditVariant] = useState(null);
 
     function handleVariant(key, value) {
         setVariant(prev => ({
             ...prev,
             [key]: value
         }))
+    }
+
+    function handleEditVariantList() {
+        // const alreadyPresent = variantList?.filter((vr, idx) => vr?.name === variant?.name && vr?.id !== idx);
+        // if (alreadyPresent && alreadyPresent?.length > 0) {
+        //     toast.error('Variant Already Present');
+        //     return;
+        // }
+
+        const updatedVariantList = variantList?.map(vr => (
+            vr?.name === editVariant?.name ? variant : vr
+        ));
+        setVariantList(updatedVariantList);
     }
 
     // terms
@@ -56,15 +70,16 @@ export default function PickupCityFormContexttProvider({ children }) {
         setOtherError(null)
         setIsLoading(true)
         try {
-            // const res = await getCabTypeDetails(id);
-            // if (res.exists()) {
-            //     return res.data();
-            // } else {
-            //     throw new Error(`No Cab Type found with id ${id}`);
-            // }
+            // console.log(id)
+            const res = await getPickupCityDetails(id);
+            if (res.exists()) {
+                return res.data();
+            } else {
+                throw new Error(`No Pickup City found with id ${id}`);
+            }
         } catch (error) {
             setOtherError(error?.message);
-            toast.error(error?.message || 'Error fetching cab type');
+            toast.error(error?.message || 'Error fetching pickup city');
             return null;
         } finally {
             setIsLoading(false);
@@ -78,7 +93,7 @@ export default function PickupCityFormContexttProvider({ children }) {
         try {
             await createNewPickupCity({ data });
             toast.success('Pickup City Added Successfully!');
-            // router.push('/admin/cab-types');
+            router.push('/admin/pickup-cities');
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error adding cab type');
@@ -91,12 +106,13 @@ export default function PickupCityFormContexttProvider({ children }) {
         setOtherError(null)
         setCreating(true)
         try {
-            // await updateCabType({ data });
-            // toast.success('Cab Type Updated Successfully!');
-            // router.push('/admin/cab-types');
+            // console.log(data);
+            await updatePickupCity({ data });
+            toast.success('Pickup City Updated Successfully!');
+            router.push('/admin/pickup-cities');
         } catch (error) {
             setOtherError(error?.message);
-            toast.error(error?.message || 'Error updating cab type');
+            toast.error(error?.message || 'Error updating pickup city');
         }
         setCreating(false)
     }
@@ -106,12 +122,12 @@ export default function PickupCityFormContexttProvider({ children }) {
         setOtherError(null)
         setDeleting(true)
         try {
-            // await deleteCabType(id);
-            // toast.success('Cab Type Deleted Successfully!');
-            // router.push('/admin/cab-types');
+            await deletePickupCity(id);
+            toast.success('Pickup City Deleted Successfully!');
+            router.push('/admin/pickup-cities');
         } catch (error) {
             setOtherError(error?.message);
-            toast.error(error?.message || 'Error deleting cab type');
+            toast.error(error?.message || 'Error deleting pickup city');
         }
         setDeleting(false)
     }
@@ -127,7 +143,7 @@ export default function PickupCityFormContexttProvider({ children }) {
             handleUpdate,
             handleDelete,
             data, setData, handleData,
-            handleVariant, variant, setVariant, variantList, setVariantList,
+            handleVariant, handleEditVariantList, editVariant, setEditVariant, variant, setVariant, variantList, setVariantList,
             tempTerm, setTempTerm, termsArray, setTermsArray,
         }}
     >{children}</PickupCityFormContext.Provider>

@@ -39,7 +39,8 @@ function VariantCard({ variant, onEdit, onDelete }) {
 
                 <div className="flex flex-col space-y-2 ml-4">
                     <button
-                        onClick={onEdit}
+                        type='button'
+                        onClick={() => onEdit(variant)}
                         className="p-2 hover:bg-gray-100 rounded-md text-gray-500 hover:text-blue-600 transition-colors"
                         aria-label="Edit variant"
                     >

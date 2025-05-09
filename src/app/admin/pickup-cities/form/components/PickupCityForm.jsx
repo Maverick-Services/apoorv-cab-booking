@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { CircleCheckBig, Loader2, LucideDelete, PlusCircle } from 'lucide-react';
-// import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import {
     Dialog,
     DialogContent,
@@ -18,10 +18,9 @@ import CityName from './CityName';
 import Terms from './Terms';
 import { usePickupCityForm } from '../context/PickupCityContext';
 
-const PickupCityForm = () => {
-    // const searchParams = useSearchParams();
-    // const updateCabTypeId = searchParams.get('id');
-    const [updateCabTypeId, setUpdateCabTypeId] = useState()
+const PickupCityForm = ({ setEditPickup }) => {
+    const searchParams = useSearchParams();
+    const updatePickupCityId = searchParams.get('id');
 
     const {
         otherError,
@@ -38,38 +37,39 @@ const PickupCityForm = () => {
     } = usePickupCityForm();
 
 
-    // Initially Fetch Product Details if we got Id in URL
-    // useEffect(() => {
-    //     if (updateCabTypeId) {
-    //         (async () => {
-    //             const cabTypeData = await fetchData(updateCabTypeId);
-    //             if (cabTypeData) {
-    //                 setValue('name', cabTypeData.name);
-    //                 setValue('seatingCapacity', cabTypeData.seatingCapacity);
-    //                 setValue('luggageCapacity', cabTypeData.luggageCapacity);
-    //             }
-    //         })();
-    //     }
-    // }, [updateCabTypeId]);
+    // Initially Fetch Pickup City Details if we got Id in URL
+    useEffect(() => {
+        if (updatePickupCityId) {
+            (async () => {
+                const pickupCityData = await fetchData(updatePickupCityId);
+                if (pickupCityData) {
+                    handleData('name', pickupCityData?.name);
+                    setTermsArray(pickupCityData?.terms);
+                    setVariantList(pickupCityData?.variantList)
+                    setEditPickup(true);
+                }
+            })();
+        }
+    }, [updatePickupCityId]);
 
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        const finalData = {
+        let finalData = {
             ...data,
             terms: [...termsArray],
             variantList: variantList
         }
-        console.log('Cab Type Data:', finalData);
+        if (updatePickupCityId) {
+            finalData = {
+                ...finalData,
+                id: updatePickupCityId
+            }
+            handleUpdate(finalData);
+            return;
+        }
         handleCreate(finalData)
-        // if (updateCabTypeId) {
-        //     handleUpdate({ ...data, id: updateCabTypeId });
-        // } else {
-        //     handleCreate(data);
-        // }
     };
-
-
 
     return (
         <div className='w-full'>
@@ -105,7 +105,7 @@ const PickupCityForm = () => {
                         <Loader2 className="animate-spin" size={20} />
                     ) : (
                         <>
-                            {!updateCabTypeId ?
+                            {!updatePickupCityId ?
                                 <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Add </div>
                                 : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update </div>
                             }
@@ -114,7 +114,7 @@ const PickupCityForm = () => {
                 </button>
 
                 {/* Delete Button */}
-                {updateCabTypeId && (
+                {updatePickupCityId && (
                     <Dialog>
                         <DialogTrigger asChild>
                             <button
@@ -126,17 +126,17 @@ const PickupCityForm = () => {
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
                             <DialogHeader>
-                                <DialogTitle>Delete Cab Type</DialogTitle>
+                                <DialogTitle>Delete Pickup City</DialogTitle>
                                 <DialogDescription>
-                                    Are you sure you want to delete this Cab Type?
+                                    Are you sure you want to delete this Pickup City?
                                 </DialogDescription>
                             </DialogHeader>
 
                             <DialogFooter>
                                 <Button
                                     type="button"
-                                    // onClick={() => handleDelete(updateCabTypeId)}
-                                    // disabled={deleting === updateCabTypeId}
+                                    onClick={() => handleDelete(updatePickupCityId)}
+                                    disabled={deleting === updatePickupCityId}
                                     className="bg-red-600 w-full flex gap-2 items-center justify-center text-white py-2 px-4 rounded-md hover:bg-red-800 cursor-pointer transition"
                                 >
                                     {deleting ? (

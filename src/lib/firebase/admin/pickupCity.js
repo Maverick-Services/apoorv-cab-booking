@@ -31,6 +31,40 @@ export const createNewPickupCity = async ({ data }) => {
     }
 };
 
+// Update pickup city
+export const updatePickupCity = async ({ data }) => {
+    if (!data?.name) throw new Error("City Name is undefined!");
+
+    try {
+
+        const allCollectionRef = collection(db, "pickupCities");
+
+        // Check if a cabType with the same name already exists (case-insensitive match)
+        const q = query(allCollectionRef, where("name_lower", "==", data.name.trim().toLowerCase()));
+        const snapshot = await getDocs(q);
+
+
+        if (snapshot?.docs[0]?.data()?.id !== data?.id) {
+            throw new Error("Pickup City with this name already exists.");
+        }
+
+        const collectionRef = doc(db, `pickupCities/${data?.id}`);
+        await updateDoc(collectionRef, data);
+        return { success: true, message: "Pickup City Updated Successfully." };
+
+    } catch (error) {
+        console.error("Error updating Pickup City:", error);
+        throw new Error(error.message || "Something went wrong.");
+    }
+};
+
+// delete pickup city
+export const deletePickupCity = async (id) => {
+    if (!id) {
+        throw new Error("Id is required");
+    }
+    await deleteDoc(doc(db, `pickupCities/${id}`));
+}
 
 // fetch details of all pickup cities
 export const getAllPickupCities = async () => {

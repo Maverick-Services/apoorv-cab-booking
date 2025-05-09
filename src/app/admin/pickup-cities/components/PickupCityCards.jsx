@@ -1,6 +1,7 @@
-import { MapPin } from "lucide-react"
+import { Edit2Icon, MapPin } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import Link from "next/link"
 
 function PickupCityCards({ pickupCities }) {
     return (
@@ -11,9 +12,14 @@ function PickupCityCards({ pickupCities }) {
                     className="bg-white shadow-sm border rounded-xl p-4 flex flex-col gap-4"
                 >
                     {/* City Name */}
-                    <div className="flex items-center gap-2">
-                        <MapPin className="text-primary" size={20} />
-                        <h2 className="text-xl font-semibold text-primary">{city.name}</h2>
+                    <div className="flex items-center gap-2 justify-between">
+                        <div className="flex items-center gap-2">
+                            <MapPin className="text-primary" size={20} />
+                            <h2 className="text-xl font-semibold text-primary">{city.name}</h2>
+                        </div>
+                        <Link href={`/admin/pickup-cities/form?id=${city?.id}`}>
+                            <Edit2Icon size={20} className="text-primary" />
+                        </Link>
                     </div>
 
                     {/* Terms & Conditions */}

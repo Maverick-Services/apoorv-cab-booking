@@ -9,7 +9,7 @@ function VariantName() {
     const [cabTypes, setCabTypes] = useState([])
     const [loading, setLoading] = useState(true)
 
-    const { handleVariant, variant } = usePickupCityForm()
+    const { handleVariant, variant, editVariant, variantList } = usePickupCityForm()
 
     useEffect(() => {
         async function fetchCabTypes() {
@@ -26,6 +26,11 @@ function VariantName() {
         fetchCabTypes()
     }, [])
 
+    const isVariantThere = (cabName) => {
+        const isFound = variantList?.filter(vr => vr?.name === cabName)[0];
+        return isFound ? true : false;
+    }
+
     return (
         <div className="flex flex-col">
             <label className="text-sm font-medium text-gray-700 mb-1">Variant Name</label>
@@ -40,7 +45,7 @@ function VariantName() {
                 >
                     <option value="" disabled>Select a variant</option>
                     {cabTypes.map((cab) => (
-                        <option key={cab.id} value={cab.name}>
+                        (editVariant ? true : !isVariantThere(cab?.name)) && <option key={cab.id} value={cab.name}>
                             {cab.name}
                         </option>
                     ))}
