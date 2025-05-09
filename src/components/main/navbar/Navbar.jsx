@@ -66,7 +66,7 @@ export default function Navbar() {
 
                                 {/* Availability Segment */}
                                 <div className="flex items-center pr-3 border-r">
-                                    <PhoneCall className="w-5 h-5 text-indigo-600" />
+                                    <PhoneCall className="md:w-4 md:h-4 lg:w-5 lg:h-5 text-indigo-600" />
                                     <span className="ml-2 text-sm font-medium text-gray-700">24 X 7 Support</span>
                                 </div>
 
@@ -74,7 +74,7 @@ export default function Navbar() {
                                 <div className="flex items-center pl-0">
                                     <a
                                         href="tel:7248772488"
-                                        className="text-base font-semibold text-indigo-600 transition-colors hover:text-indigo-800"
+                                        className="md:text-sm lg:text-base font-semibold text-indigo-600 transition-colors hover:text-indigo-800"
                                     >
                                         +91 72487 72488
                                     </a>
@@ -150,18 +150,18 @@ export default function Navbar() {
                             {/* <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-20 rounded-2xl blur-lg" /> */}
 
                             {/* Main Card Container */}
-                            <div className="relative flex items-center divide-gray-300 bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm px-4 py-3 rounded-2xl border border-gray-200 shadow-sm transition-transform hover:shadow-md ">
+                            <div className="relative flex items-center divide-gray-300 bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm px-1 py-2 rounded-xl border border-gray-200 shadow-sm transition-transform hover:shadow-md ">
 
                                 {/* Availability Segment */}
                                 <div className="flex items-center pr-2">
-                                    <PhoneCall className="w-5 h-5 text-indigo-600" />
+                                    <PhoneCall className="w-4 h-4 text-indigo-600" />
                                 </div>
 
                                 {/* Phone Number Segment */}
-                                <div className="flex items-center pl-2">
+                                <div className="flex items-center ">
                                     <a
                                         href="tel:7248772488"
-                                        className="text-base font-semibold text-indigo-600 transition-colors hover:text-indigo-800"
+                                        className="text-sm font-semibold text-indigo-600 transition-colors hover:text-indigo-800"
                                     >
                                         72487 72488
                                     </a>
