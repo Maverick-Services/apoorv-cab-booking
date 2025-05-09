@@ -30,7 +30,11 @@ const LocationSearch = ({ register, unregister, setValue, dropOffs, setDropOffs,
             setLoading(true);
             try {
                 const res = await fetch(
-                    `https://nominatim.openstreetmap.org/search?format=json&q=${query}`
+                    `https://nominatim.openstreetmap.org/search` +
+                    `?format=json` +
+                    `&q=${encodeURIComponent(query)}` +
+                    `&countrycodes=IN` +
+                    `&addressdetails=1`
                 );
                 const data = await res.json();
                 setSuggestions(data);
