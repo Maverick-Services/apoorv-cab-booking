@@ -36,7 +36,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
         setValue,
         watch,
         formState: { errors },
-        getValues,
+        control,
         reset,
         unregister
     } = useForm({
@@ -103,7 +103,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
 
             const coordList = [];
             let pickupCoords = null;
-            console.log(data)
+            // console.log(data)
             if (tripType === TRIP_TYPES.oneWay || tripType === TRIP_TYPES.roundTrip) {
                 pickupCoords = await getCoordinates(data.pickupCity);
                 coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
@@ -203,7 +203,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                         )}
 
                     {/* Pickup Date and Time */}
-                    <PickupDate register={register} />
+                    <PickupDate register={register} control={control} />
 
                     {/* Return Date */}
                     {tripType === TRIP_TYPES.roundTrip && (

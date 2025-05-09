@@ -22,6 +22,7 @@ export default function Page() {
         handleSubmit,
         setValue,
         formState: { errors },
+        control,
         watch,
     } = useForm();
 
@@ -123,7 +124,7 @@ export default function Page() {
                         )}
 
                     {/* Pickup Date & Time */}
-                    <PickupDate register={register} />
+                    <PickupDate register={register} control={control} />
 
                     {/* Return Date - Only for Round Trip */}
                     {tripType === 'Round Trip' && (

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+/* in your globals.css or similar */
+@import 'react-time-picker/dist/TimePicker.css';
 
 @custom-variant dark (&:is(.dark *));
 

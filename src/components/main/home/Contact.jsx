@@ -10,12 +10,9 @@ export default function Contact() {
         <section id="contact" className="flex px-10 flex-col lg:flex-row gap-7 rounded-3xl overflow-hidden max-w-7xl mx-auto my-16">
             {/* Left Section: Form */}
             <div className="w-full lg:w-1/2">
-                <h2 className="text-4xl font-bold mb-2">
+                <h2 className="text-4xl font-bold mb-6">
                     Get in <span className="text-blue-600">Touch</span>
                 </h2>
-                <p className="text-gray-600 mb-8">
-                    Enim tempor eget pharetra facilisis sed maecenas adipiscing. Eu leo molestie vel, ornare non id blandit netus.
-                </p>
 
                 <form className="space-y-4">
                     <Input placeholder="Name *" required />
