@@ -35,6 +35,7 @@ import useAuthStore from "@/store/useAuthStore";
 import LoginDialogOuter from "../LoginDialogOuter";
 import { TRIP_TYPES } from "@/lib/constants/constants";
 import { LocalTripDetails } from "./LocalTripDetails";
+import { differenceInCalendarDays } from "date-fns";
 
 export const CabDetails = () => {
     const searchParams = useSearchParams();
@@ -83,13 +84,23 @@ export const CabDetails = () => {
 
     const handleCabBooking = (cab) => {
 
-        if (!userData) {
-            setIsDialogOpen(true)
-            return
+        // if (!userData) {
+        //     setIsDialogOpen(true)
+        //     return
+        // }
+
+        let dayDifference = 0;
+        if (tripData?.returnDate) {
+            const d1 = new Date(tripData?.pickupDate);
+            const d2 = new Date(tripData?.returnDate);
+            dayDifference = differenceInCalendarDays(d2, d1);
         }
 
-        const finalBookingPrice = (
-            tripData?.totalDistance * (tripData?.tripType === "Round Trip"
+        let finalBookingPrice = (
+            (
+                tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
+                    ? tripData?.totalDistance : cab?.minKilometers
+            ) * (tripData?.tripType === "Round Trip"
                 ? cab?.discountedPriceRoundTrip
                 : cab?.discountedPriceOneWay)).toFixed(0)
 
@@ -98,18 +109,25 @@ export const CabDetails = () => {
             pickupCity: tripData?.pickupCity,
             dropCity: tripData?.dropCity,
             dropOffs: tripData?.dropOffs,
-            cab: cab,
+            cab: {
+                ...cab,
+                driverAllowance: dayDifference * cab?.driverAllowance
+            },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,
-            totalDistance: tripData?.totalDistance,
-            price: finalBookingPrice
+            returnDate: tripData?.returnDate,
+            price: finalBookingPrice,
+            totalDistance: (
+                tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
+                    ? tripData?.totalDistance : cab?.minKilometers
+            )
         }
         // console.log(bookingData, tripData?.pickupDate);
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
 
-    console.log(currentPickupCity?.variantList)
+    // console.log(currentPickupCity)
 
     if (loading || !currentPickupCity)
         return <div className="h-52 flex w-full items-center justify-center">
@@ -324,11 +342,15 @@ export const CabDetails = () => {
                                         <div className="text-right space-y-2">
                                             <div className="text-sm text-gray-500">
                                                 {tripData?.totalDistance} Kms Included
+                                                {/* {cab?.minKilometers} Kms Included */}
                                             </div>
                                             <div className="flex flex-col items-end">
                                                 <span className="line-through text-gray-400 text-sm">
                                                     ₹{(
-                                                        tripData?.totalDistance *
+                                                        (
+                                                            tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
+                                                                ? tripData?.totalDistance : cab?.minKilometers
+                                                        ) *
                                                         (tripData?.tripType === "Round Trip"
                                                             ? cab?.actualPriceRoundTrip
                                                             : cab?.actualPriceOneWay)
@@ -336,7 +358,10 @@ export const CabDetails = () => {
                                                 </span>
                                                 <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                                                     ₹{(
-                                                        tripData?.totalDistance *
+                                                        (
+                                                            tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
+                                                                ? tripData?.totalDistance : cab?.minKilometers
+                                                        ) *
                                                         (tripData?.tripType === "Round Trip"
                                                             ? cab?.discountedPriceRoundTrip
                                                             : cab?.discountedPriceOneWay)

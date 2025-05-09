@@ -149,7 +149,7 @@ export default function BookingData() {
                                     <h3 className="text-lg font-semibold text-gray-800 mb-1">Vehicle Details</h3>
                                     <div className="space-y-2">
                                         <div className="flex justify-between">
-                                            <span className="text-gray-600">Cab Type:</span>
+                                            <span className="text-gray-600">Cab Type: </span>
                                             <span className="font-medium">{bookingData.cab?.name}</span>
                                         </div>
                                         <div className="flex justify-between">
@@ -173,6 +173,10 @@ export default function BookingData() {
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">Base Fare</span>
                                     <span className="font-medium">₹{bookingData.basePrice?.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-gray-600">Driver Allowance</span>
+                                    <span className="font-medium">₹{bookingData.driverAllowance?.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-600">GST (5%)</span>

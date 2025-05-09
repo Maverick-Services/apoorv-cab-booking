@@ -63,10 +63,10 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
     const handleCabBooking = (cab) => {
 
         // console.log(cab)
-        if (!userData) {
-            setIsDialogOpen(true)
-            return;
-        }
+        // if (!userData) {
+        //     setIsDialogOpen(true)
+        //     return;
+        // }
 
         let bookingData = {
             tripType: tripData?.tripType,

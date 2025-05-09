@@ -35,6 +35,17 @@ export default function CheckoutDetails() {
         exactPickup: ''
     });
 
+    useEffect(() => {
+        if (userData) {
+            setFormData({
+                ...formData,
+                name: userData?.name ? userData?.name : "",
+                email: userData?.email ? userData?.email : "",
+            })
+        }
+
+    }, [userData])
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -52,13 +63,17 @@ export default function CheckoutDetails() {
             </div>
         )
     }
-    console.log(userData)
+    // console.log(userData)
     // Price calculations
     const basePrice = parseFloat(bookingData.price)
-    const gstAmount = useMemo(() => parseFloat((basePrice * 0.05).toFixed(2)), [basePrice])
-    const totalAmount = useMemo(() => parseFloat((basePrice + gstAmount).toFixed(2)), [basePrice, gstAmount])
+    const driverAllowance = parseFloat(bookingData?.cab?.driverAllowance)
+    const priceWithAllowance = useMemo(() => parseFloat((basePrice + driverAllowance).toFixed(2)), [basePrice, driverAllowance]);
+    const gstAmount = useMemo(() => parseFloat((priceWithAllowance * 0.05).toFixed(2)), [priceWithAllowance])
+    const totalAmount = useMemo(() => parseFloat((priceWithAllowance + gstAmount).toFixed(2)), [priceWithAllowance, gstAmount])
     const bookingAmount = useMemo(() => parseFloat((totalAmount * 0.2).toFixed(2)), [totalAmount])
     const isRoundTrip = bookingData.tripType === 'Round Trip' && bookingData.dropOffs?.length > 0
+
+    // console.log(isRoundTrip, bookingData?.returnDate)
 
     // function handleBookingSuccess() {
     //     router.push(`/booking-success?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
@@ -118,6 +133,7 @@ export default function CheckoutDetails() {
                 description: "Cab Booking Payment",
                 order_id: orderData.id,
                 handler: async (response) => {
+                    // console.log(response, bookingData);
                     try {
                         const { data: verificationData } = await axios.post(
                             '/api/verify-payment',
@@ -128,6 +144,8 @@ export default function CheckoutDetails() {
                                     basePrice,
                                     gstAmount,
                                     totalAmount,
+                                    driverAllowance,
+                                    priceWithAllowance,
                                     bookingAmount,
                                     userData: {
                                         phoneNo: userData.phoneNo,
@@ -360,6 +378,10 @@ export default function CheckoutDetails() {
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-600">Base Fare:</span>
                                     <span className="font-medium text-gray-800">₹{basePrice.toFixed(2)}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">Driver Allowance:</span>
+                                    <span className="font-medium text-gray-800">₹{driverAllowance.toFixed(2)}</span>
                                 </div>
                                 <div className="flex justify-between items-center">
                                     <span className="text-gray-600">GST (5%):</span>

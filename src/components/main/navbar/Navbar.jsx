@@ -105,7 +105,7 @@ export default function Navbar() {
                                 ))}
                                 <div className="flex items-center space-x-4 border-l pl-6 ml-0 border-gray-200">
                                     <span className="text-gray-600 font-medium">
-                                        Hi, {userData?.phone?.split(' ')[0]}
+                                        Hi, {userData?.phoneNo?.split(' ')[0]}
                                     </span>
                                     <button
                                         onClick={handleLogout}
@@ -194,7 +194,7 @@ export default function Navbar() {
                             </Link>
                         ))} */}
 
-                        {user ? (
+                        {userData ? (
                             <>
                                 {authLinks.map(({ href, label }) => (
                                     <Link
@@ -208,7 +208,7 @@ export default function Navbar() {
                                 <div className="px-4 pt-4 mt-4 border-t border-gray-100">
                                     <div className="flex items-center justify-between mb-4">
                                         <span className="text-gray-600 font-medium">
-                                            {userData?.name || user.email}
+                                            {userData?.phoneNo?.split(' ')[0]}
                                         </span>
                                     </div>
                                     <button

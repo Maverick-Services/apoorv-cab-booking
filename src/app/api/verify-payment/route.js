@@ -38,7 +38,7 @@ export async function POST(request) {
             payment: {
                 paymentId: razorpay_payment_id,
                 amount: isFullPayment ? bookingData.totalAmount : bookingData.bookingAmount,
-                status: 'completed',
+                status: isFullPayment ? 'completed' : "pending",
                 isFullPayment,
                 timestamp: new Date().toISOString(),
             },
