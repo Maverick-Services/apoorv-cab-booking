@@ -29,7 +29,10 @@ export const getBookingDetails = async (id) => {
 
 // get all bookings
 export const getAllBookings = async () => {
-    return await getDocs(collection(db, 'bookings')).then((snaps) => snaps.docs.map((d) => d.data()))
+    return await getDocs(query(
+        collection(db, 'bookings'),
+        orderBy("createdAt", "desc")
+    )).then((snaps) => snaps.docs.map((d) => d.data()))
 }
 
 // update booking
