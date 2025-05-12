@@ -73,7 +73,8 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
             pickupCity: tripData?.pickupCity,
             cab: {
                 ...cab,
-                actualPriceOneWay: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.actualPriceOneWay
+                actualPriceOneWay: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.actualPriceOneWay,
+                driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,

@@ -63,8 +63,7 @@ export default function CheckoutDetails() {
     // console.log(userData)
     // Price calculations
     const basePrice = parseFloat(bookingData.price)
-    const driverAllowance = bookingData?.tripType === TRIP_TYPES.roundTrip
-        ? parseFloat(bookingData?.cab?.driverAllowance) : 0;
+    const driverAllowance = parseFloat(bookingData?.cab?.driverAllowance);
 
     const priceWithAllowance = useMemo(() => parseFloat((basePrice + driverAllowance).toFixed(2)), [basePrice, driverAllowance]);
     const gstAmount = useMemo(() => parseFloat((priceWithAllowance * 0.05).toFixed(2)), [priceWithAllowance])

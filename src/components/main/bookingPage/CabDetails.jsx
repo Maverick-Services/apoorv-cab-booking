@@ -94,6 +94,8 @@ export const CabDetails = () => {
             const d1 = new Date(tripData?.pickupDate);
             const d2 = new Date(tripData?.returnDate);
             dayDifference = differenceInCalendarDays(d2, d1);
+        } else {
+            dayDifference = 1;
         }
 
         let finalBookingPrice = (
