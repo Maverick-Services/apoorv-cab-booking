@@ -46,6 +46,7 @@ export const CabDetails = () => {
     const tripData = tripDataString ? JSON.parse(tripDataString) : null;
 
     const [currentPickupCity, setCurrentPickupCity] = useState([]);
+    const [noOfDays, setNoOfDays] = useState(null);
     const [cabTypes, setCabTypes] = useState([]);
     const [currentCab, setCurrentCab] = useState(null);
     const [editTrip, setEditTrip] = useState(false);
@@ -76,9 +77,24 @@ export const CabDetails = () => {
         setLoading(false);
     }
 
+    const setDays = () => {
+        let dayDifference = 1;
+
+        if (tripData?.returnDate) {
+            const d1 = new Date(tripData.pickupDate);
+            const d2 = new Date(tripData.returnDate);
+            dayDifference = differenceInCalendarDays(d2, d1) + 1;
+        }
+
+        setNoOfDays(dayDifference);
+    }
+
     useEffect(() => {
         fetchPickupCities();
         fetchAllCabTypes();
+        if (tripData) {
+            setDays();
+        }
     }, []);
 
 
@@ -89,22 +105,26 @@ export const CabDetails = () => {
         //     return
         // }
 
-        let dayDifference = 0;
-        if (tripData?.returnDate) {
-            const d1 = new Date(tripData?.pickupDate);
-            const d2 = new Date(tripData?.returnDate);
-            dayDifference = differenceInCalendarDays(d2, d1);
-        } else {
-            dayDifference = 1;
-        }
+        // let dayDifference = 0;
+        // if (tripData?.returnDate) {
+        //     const d1 = new Date(tripData?.pickupDate);
+        //     const d2 = new Date(tripData?.returnDate);
+        //     dayDifference = differenceInCalendarDays(d2, d1);
+        // } else {
+        //     dayDifference = 1;
+        // }
 
         let finalBookingPrice = (
             (
-                tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
-                    ? tripData?.totalDistance : cab?.minKilometers
-            ) * (tripData?.tripType === "Round Trip"
-                ? cab?.discountedPriceRoundTrip
-                : cab?.discountedPriceOneWay)).toFixed(0)
+                tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                    ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
+            ) *
+            (
+                tripData?.tripType === "Round Trip"
+                    ? cab?.discountedPriceRoundTrip
+                    : cab?.discountedPriceOneWay
+            )
+        ).toFixed(0)
 
         let bookingData = {
             tripType: tripData?.tripType,
@@ -113,15 +133,15 @@ export const CabDetails = () => {
             dropOffs: tripData?.dropOffs,
             cab: {
                 ...cab,
-                driverAllowance: dayDifference * cab?.driverAllowance
+                driverAllowance: noOfDays * cab?.driverAllowance
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,
             returnDate: tripData?.returnDate,
             price: finalBookingPrice,
             totalDistance: (
-                tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
-                    ? tripData?.totalDistance : cab?.minKilometers
+                tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                    ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
             )
         }
         // console.log(bookingData, tripData?.pickupDate);
@@ -130,8 +150,9 @@ export const CabDetails = () => {
     }
 
     // console.log(currentPickupCity)
+    // console.log("No of days trip", noOfDays);
 
-    if (loading || !currentPickupCity)
+    if (loading || !currentPickupCity || !noOfDays)
         return <div className="h-52 flex w-full items-center justify-center">
             <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
         </div>
@@ -250,6 +271,7 @@ export const CabDetails = () => {
                                 currentPickupCity={currentPickupCity}
                                 currentCab={currentCab}
                                 cabTypes={cabTypes}
+                                noOfDays={noOfDays}
                             />
                         )
                         : (
@@ -343,30 +365,39 @@ export const CabDetails = () => {
                                         {/* Pricing Section */}
                                         <div className="text-right space-y-2">
                                             <div className="text-sm text-gray-500">
-                                                {tripData?.totalDistance} Kms Included
-                                                {/* {cab?.minKilometers} Kms Included */}
+                                                {/* {tripData?.totalDistance} Kms Included */}
+                                                {
+                                                    (
+                                                        tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                                                            ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
+                                                    )
+                                                } Kms Included
                                             </div>
                                             <div className="flex flex-col items-end">
                                                 <span className="line-through text-gray-400 text-sm">
                                                     ₹{(
                                                         (
-                                                            tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
-                                                                ? tripData?.totalDistance : cab?.minKilometers
+                                                            tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                                                                ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
                                                         ) *
-                                                        (tripData?.tripType === "Round Trip"
-                                                            ? cab?.actualPriceRoundTrip
-                                                            : cab?.actualPriceOneWay)
+                                                        (
+                                                            tripData?.tripType === "Round Trip"
+                                                                ? cab?.actualPriceRoundTrip
+                                                                : cab?.actualPriceOneWay
+                                                        ) + +(cab?.driverAllowance * noOfDays)
                                                     ).toFixed(0)}
                                                 </span>
                                                 <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                                                     ₹{(
                                                         (
-                                                            tripData?.totalDistance && +tripData?.totalDistance > +cab?.minKilometers
-                                                                ? tripData?.totalDistance : cab?.minKilometers
+                                                            tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                                                                ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
                                                         ) *
-                                                        (tripData?.tripType === "Round Trip"
-                                                            ? cab?.discountedPriceRoundTrip
-                                                            : cab?.discountedPriceOneWay)
+                                                        (
+                                                            tripData?.tripType === "Round Trip"
+                                                                ? cab?.discountedPriceRoundTrip
+                                                                : cab?.discountedPriceOneWay
+                                                        ) + +(cab?.driverAllowance * noOfDays)
                                                     ).toFixed(0)}
                                                 </span>
                                                 <span className="text-xs font-semibold text-teal-600 bg-teal-100 px-2 py-1 rounded-full">

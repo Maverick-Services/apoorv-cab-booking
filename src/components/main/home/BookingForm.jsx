@@ -21,6 +21,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     const searchParams = useSearchParams();
     const { userData } = useAuthStore();
 
+    const [query, setQuery] = useState(""); // for drop city input  
     const [tripData, setTripData] = useState(null);
     const [pickupCities, setPickupCities] = useState([]);
     const [dropOffs, setDropOffs] = useState([]);
@@ -86,9 +87,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
         throw new Error("Location not found");
     };
 
-
     const onSubmit = async (data) => {
-        console.log(data)
         setLoading(true);
         try {
             if (userData && userData.role !== 'user') {
@@ -96,34 +95,32 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                 return;
             }
 
-            if (tripType === TRIP_TYPES.roundTrip && dropOffs.length === 0) {
-                toast.error("Please add at least one drop-off location.");
-                return;
+            let allDropOffs = [...dropOffs];
+            if (tripType === TRIP_TYPES.roundTrip && query && !allDropOffs.includes(query)) {
+                allDropOffs.push(query);
             }
 
             const coordList = [];
             let pickupCoords = null;
-            // console.log(data)
+
             if (tripType === TRIP_TYPES.oneWay || tripType === TRIP_TYPES.roundTrip) {
                 pickupCoords = await getCoordinates(data.pickupCity);
                 coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
             }
 
             if (tripType === TRIP_TYPES.roundTrip) {
-                // Handle Round Trip drop-offs
-                if (dropOffs.length) {
-                    for (let city of dropOffs) {
+                if (allDropOffs.length) {
+                    for (let city of allDropOffs) {
                         const coords = await getCoordinates(city);
                         coordList.push(point([coords.lng, coords.lat]));
                     }
-                } else if (data.dropCity) {
-                    const dropCoords = await getCoordinates(data.dropCity);
-                    coordList.push(point([dropCoords.lng, dropCoords.lat]));
+                } else {
+                    toast.error("Please add at least one drop-off location.");
+                    return;
                 }
-                // Return to pickup point for round trip
+                // Return to pickup location
                 coordList.push(point([pickupCoords.lng, pickupCoords.lat]));
             } else if (tripType === TRIP_TYPES.oneWay) {
-                // Handle One Way drop city
                 if (data.dropCity) {
                     const dropCoords = await getCoordinates(data.dropCity);
                     coordList.push(point([dropCoords.lng, dropCoords.lat]));
@@ -135,26 +132,23 @@ export default function BookingForm({ editTrip, setEditTrip }) {
 
             // Calculate total distance
             let totalDistance = 0;
-            if (tripType === TRIP_TYPES.oneWay || tripType === TRIP_TYPES.roundTrip) {
-                for (let i = 0; i < coordList.length - 1; i++) {
-                    totalDistance += distance(coordList[i], coordList[i + 1], {
-                        units: 'kilometers',
-                    });
-                }
+            for (let i = 0; i < coordList.length - 1; i++) {
+                totalDistance += distance(coordList[i], coordList[i + 1], {
+                    units: 'kilometers',
+                });
             }
 
             const bookingData = {
                 ...data,
                 coordinates: coordList,
-                dropOffs,
+                dropOffs: allDropOffs,
                 totalDistance: (totalDistance + ((totalDistance * 25) / 100)).toFixed(0),
             };
 
             if (editTrip) setEditTrip(false);
 
             for (let obj in bookingData) {
-                if (bookingData[obj] === undefined)
-                    bookingData[obj] = ""
+                if (bookingData[obj] === undefined) bookingData[obj] = "";
             }
 
             if (!editTrip) await createNewEnquiry({ data: bookingData });
@@ -166,6 +160,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             setLoading(false);
         }
     };
+
 
     // console.log(errors);
 
@@ -191,6 +186,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                     {/* Drop suggestions */}
                     {tripType !== TRIP_TYPES.airport &&
                         tripType !== TRIP_TYPES.local && (
+                            // Add `query` and `setQuery` to props passed to LocationSearch
                             <LocationSearch
                                 register={register}
                                 unregister={unregister}
@@ -199,6 +195,8 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                                 setDropOffs={setDropOffs}
                                 tripType={tripType}
                                 pickupCity={pickupCity}
+                                query={query}
+                                setQuery={setQuery}
                             />
                         )}
 

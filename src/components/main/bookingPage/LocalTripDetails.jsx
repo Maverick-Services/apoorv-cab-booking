@@ -11,7 +11,7 @@ import React, { useEffect, useState } from 'react'
 import { MdAirlineSeatReclineExtra, MdOutlineLuggage } from 'react-icons/md'
 import { getAirportTripsByCity } from '@/lib/firebase/admin/airportTrips';
 
-export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity, currentCab, cabTypes }) => {
+export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity, currentCab, cabTypes, noOfDays }) => {
 
     // console.log(tripData)
     const [loading, setLoading] = useState(false);

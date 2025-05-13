@@ -3,9 +3,17 @@ import { Loader2, MapPin, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { IoAddCircle } from "react-icons/io5";
 
-const LocationSearch = ({ register, unregister, setValue, dropOffs, setDropOffs, tripType }) => {
+const LocationSearch = ({ register,
+    unregister,
+    setValue,
+    dropOffs,
+    setDropOffs,
+    tripType,
+    query,
+    setQuery
+}) => {
     const [loading, setLoading] = useState(false);
-    const [query, setQuery] = useState("");
+    // const [query, setQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
 
     useEffect(() => {
