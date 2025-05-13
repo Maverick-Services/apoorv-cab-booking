@@ -92,11 +92,13 @@ export const CabDetails = () => {
     useEffect(() => {
         fetchPickupCities();
         fetchAllCabTypes();
+    }, []);
+
+    useEffect(() => {
         if (tripData) {
             setDays();
         }
-    }, []);
-
+    }, [tripData])
 
     const handleCabBooking = (cab) => {
 
