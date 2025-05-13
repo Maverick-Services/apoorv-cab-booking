@@ -47,7 +47,7 @@ const ManualDrop = ({ register, unregister, setValue, dropOffs, setDropOffs, tri
             </label>
             <div className="flex gap-2 items-stretch">
                 <div className="relative w-full">
-                    <div className="flex gap-2 px-4 py-2 rounded-lg border border-gray-300">
+                    <div className="flex gap-2 px-4 py-1 rounded-lg border border-gray-300">
                         <input
                             type="text"
                             placeholder="Enter Drop City"

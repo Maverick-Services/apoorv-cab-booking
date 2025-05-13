@@ -11,7 +11,7 @@ function ReturnDate({ register }) {
             <input
                 type="date"
                 {...register('returnDate', { required: true })}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                className="w-full px-4 py-1 rounded-lg border border-gray-300"
             />
         </div>
     )

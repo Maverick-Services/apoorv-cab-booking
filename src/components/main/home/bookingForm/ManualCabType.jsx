@@ -39,7 +39,7 @@ function ManualCabType({ register }) {
                 </label>
                 <select
                     {...register('cabType', { required: true })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
+                    className="w-full px-4 py-1 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
                 >
                     <option value="">Select Cab Type</option>
                     {cabTypes?.map((cb, idx) => (

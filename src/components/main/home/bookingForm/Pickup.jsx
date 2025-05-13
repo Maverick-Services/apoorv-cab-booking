@@ -72,7 +72,7 @@ function Pickup({ register, setValue, tripType, pickupCities, setPickupCities })
       </label>
 
       {loading ? (
-        <Skeleton className="w-full h-12 rounded-lg" />
+        <Skeleton className="w-full h-8 rounded-lg" />
       ) : (
         <>
           <input
@@ -85,7 +85,7 @@ function Pickup({ register, setValue, tripType, pickupCities, setPickupCities })
               <button
                 type="button"
                 className={cn(
-                  "w-full flex justify-between items-center rounded-lg border border-gray-300 bg-white px-4 py-3  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-100",
+                  "w-full flex justify-between items-center rounded-lg border border-gray-300 bg-white px-4 py-1  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-100",
                   !selectedCity && "text-gray-400"
                 )}
               >

@@ -79,7 +79,7 @@ export default function Page() {
                         <label className="text-sm font-medium mb-1">Trip Type <span className="text-red-500">*</span></label>
                         <select
                             {...register('tripType', { required: 'Trip type is required' })}
-                            className="border p-2 rounded-md"
+                            className="border p-2 py-1 rounded-md"
                         >
                             <option value={TRIP_TYPES.oneWay}>{TRIP_TYPES.oneWay}</option>
                             <option value={TRIP_TYPES.roundTrip}>{TRIP_TYPES.roundTrip}</option>
@@ -101,7 +101,7 @@ export default function Page() {
                                 required: 'Pickup City is required',
                             })}
                             placeholder="Eg. Delhi, UP, Bihar"
-                            className="border p-2 rounded-md"
+                            className="border p-2 py-1 rounded-md"
                         />
                         {errors.pickupCity && (
                             <span className="text-red-500 text-xs">{errors.pickupCity.message}</span>
@@ -138,7 +138,7 @@ export default function Page() {
                                 {...register('returnDate', {
                                     required: 'Return Date is required',
                                 })}
-                                className="border p-2 rounded-md"
+                                className="border p-2 py-1 rounded-md"
                             />
                             {errors.returnDate && (
                                 <span className="text-red-500 text-xs">{errors.returnDate.message}</span>
@@ -163,7 +163,7 @@ export default function Page() {
                                 required: 'Name is required',
                             })}
                             placeholder="Eg., Rahul, Mukesh"
-                            className="border p-2 rounded-md"
+                            className="border p-2 py-1 rounded-md"
                         />
                         {errors.name && (
                             <span className="text-red-500 text-xs">{errors.name.message}</span>
@@ -182,7 +182,7 @@ export default function Page() {
                                 required: 'Email is required',
                             })}
                             placeholder="rahul@gmailcom"
-                            className="border p-2 rounded-md"
+                            className="border p-2 py-1 rounded-md"
                         />
                         {errors.email && (
                             <span className="text-red-500 text-xs">{errors.email.message}</span>
@@ -205,7 +205,7 @@ export default function Page() {
                                 },
                             })}
                             placeholder="Enter 10-digit mobile number"
-                            className="border p-2 rounded-md"
+                            className="border p-2 py-1 rounded-md"
                         />
                         {errors.phoneNo && (
                             <span className="text-red-500 text-xs">{errors.phoneNo.message}</span>

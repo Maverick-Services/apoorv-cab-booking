@@ -80,7 +80,7 @@ const LocationSearch = ({ register,
             </label>
             <div className="flex gap-2 items-stretch">
                 <div className="relative w-full">
-                    <div className="flex gap-2 px-4 py-2 rounded-lg border border-gray-300">
+                    <div className="flex gap-2 px-4 py-1 rounded-lg border border-gray-300">
                         <input
                             type="text"
                             placeholder="Select Drop City"
@@ -99,7 +99,7 @@ const LocationSearch = ({ register,
                             {suggestions.map((place) => (
                                 <li
                                     key={place.place_id}
-                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                    className="px-4 py-1 hover:bg-gray-100 cursor-pointer"
                                     onClick={() => {
                                         setQuery(place?.display_name);
                                         if (tripType === "One Way") {

@@ -21,7 +21,7 @@ export default function PickupDate({ register, control }) {
                     <input
                         type="date"
                         {...register('pickupDate', { required: true })}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                        className="w-full px-4 py-1 rounded-lg border border-gray-300"
                     />
                 </div>
 
@@ -65,7 +65,7 @@ export default function PickupDate({ register, control }) {
                                     <select
                                         value={hour}
                                         onChange={(e) => updateTime(e.target.value, minute, period)}
-                                        className="flex-1 px-3 py-2 border rounded-lg border-gray-300"
+                                        className="flex-1 px-3 py-1 border rounded-lg border-gray-300"
                                     >
                                         <option value="">Hour</option>
                                         {hours.map((h) => (
@@ -76,7 +76,7 @@ export default function PickupDate({ register, control }) {
                                     <select
                                         value={minute}
                                         onChange={(e) => updateTime(hour, e.target.value, period)}
-                                        className="flex-1 px-3 py-2 border rounded-lg border-gray-300"
+                                        className="flex-1 px-3 py-1 border rounded-lg border-gray-300"
                                     >
                                         <option value="">Min</option>
                                         {minutes.map((m) => (
@@ -87,7 +87,7 @@ export default function PickupDate({ register, control }) {
                                     <select
                                         value={period}
                                         onChange={(e) => updateTime(hour, minute, e.target.value)}
-                                        className="flex-1 px-3 py-2 border rounded-lg border-gray-300"
+                                        className="flex-1 px-3 py-1 border rounded-lg border-gray-300"
                                     >
                                         <option value="">AM/PM</option>
                                         {periods.map((p) => (

@@ -26,7 +26,7 @@ function TripPrice({ register, watch, setValue }) {
                     type="number"
                     defaultValue={0}
                     {...register('basePrice', { required: true })}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                    className="w-full px-4 py-1 rounded-lg border border-gray-300"
                 />
             </div>
 
@@ -40,7 +40,7 @@ function TripPrice({ register, watch, setValue }) {
                     readOnly={true}
                     value={5}
                     {...register('gstAmount', { required: true })}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                    className="w-full px-4 py-1 rounded-lg border border-gray-300"
                 />
             </div>
 
@@ -53,7 +53,7 @@ function TripPrice({ register, watch, setValue }) {
                     type="number"
                     readOnly
                     value={totalAmount}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                    className="w-full px-4 py-1 rounded-lg border border-gray-300"
                 />
             </div>
         </div>

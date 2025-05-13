@@ -15,7 +15,7 @@ function MobileNo({ register }) {
                     required: true,
                     pattern: /^[0-9]{10}$/,
                 })}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300"
+                className="w-full px-4 py-1 rounded-lg border border-gray-300"
             />
         </div>
     )

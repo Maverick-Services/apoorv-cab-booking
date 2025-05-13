@@ -9,9 +9,9 @@ function Header() {
         <div className="pt-8 pb-12 px-6 lg:px-20 xl:px-28 bg-white">
             <div className="flex flex-col lg:flex-row items-center justify-center gap-10 xl:gap-7 max-w-[1500px] mx-auto">
                 {/* LEFT - FORM */}
-                <div className="w-full max-w-lg">
+                <div className="w-full max-w-lg lg:self-start">
                     <div className="rounded-lg shadow-lg border border-gray-200 overflow-hidden">
-                        <h2 className="bg-primary text-white text-center text-xl font-semibold py-3">
+                        <h2 className="bg-primary text-white text-center text-xl font-semibold py-2">
                             Find Your Perfect Cab
                         </h2>
                         <div className="">
