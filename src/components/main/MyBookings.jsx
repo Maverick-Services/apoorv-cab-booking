@@ -23,11 +23,19 @@ import {
 } from '@/components/ui/dialog'
 import { TRIP_TYPES } from '@/lib/constants/constants';
 import { MAIN_WEBSITE } from '@/lib/assets/assets';
+import isTimestampLike, { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
+import { Timestamp } from 'firebase/firestore';
 
 const BookingHistory = ({ bookings }) => {
     const [selectedBooking, setSelectedBooking] = useState(null)
 
     const formatDate = (dateString) => {
+
+        // console.log(dateString, dateString instanceof Timestamp)
+        if (isTimestampLike(dateString)) {
+            return formatFirestoreDate(dateString);
+        }
+
         const options = { day: 'numeric', month: 'long', year: 'numeric' }
         return new Date(dateString).toLocaleDateString('en-IN', options)
     }
@@ -75,7 +83,8 @@ const BookingHistory = ({ bookings }) => {
         yPosition += 20;
 
         // Invoice Details
-        const invoiceDate = formatDate(selectedBooking.pickupDate);
+        const invoiceDate = formatDate(selectedBooking.pickupDate) ? formatDate(selectedBooking.pickupDate)
+            : formatFirestoreDate(selectedBooking.pickupDate);
         doc.text(`Invoice No: TC/${new Date().getFullYear()}-${(new Date().getFullYear() + 1).toString().slice(-2)}/${selectedBooking.payment.paymentId.slice(-6)}`, 15, yPosition);
         doc.text(`Invoice Date: ${invoiceDate}`, pageWidth - 15, yPosition, { align: 'right' });
         yPosition += 10;
@@ -215,7 +224,8 @@ const BookingHistory = ({ bookings }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {bookings?.map((booking) => {
-                    const status = getBookingStatus(booking.pickupDate)
+                    const status = getBookingStatus(formatDate(booking?.pickupDate) ? formatDate(booking?.pickupDate)
+                        : formatFirestoreDate(booking?.pickupDate))
                     return (
                         <div
                             key={booking.id}
@@ -244,7 +254,10 @@ const BookingHistory = ({ bookings }) => {
 
                                 <div className="flex items-center gap-2 text-sm">
                                     <CalendarDays className="h-5 w-5 text-primary" />
-                                    {formatDate(booking.pickupDate)}
+                                    {
+                                        formatDate(booking?.pickupDate) ? formatDate(booking?.pickupDate)
+                                            : formatFirestoreDate(booking?.pickupDate)
+                                    }
                                     <Clock className="h-5 w-5 ml-2 text-primary" />
                                     {booking.pickupTime}
                                 </div>
@@ -274,7 +287,11 @@ const BookingHistory = ({ bookings }) => {
                                     <p><strong>Type:</strong> {selectedBooking.tripType}</p>
                                     <p><strong>Distance:</strong> {selectedBooking.totalDistance} km</p>
                                     <p><strong>Duration:</strong> {selectedBooking.totalHours} hours</p>
-                                    <p><strong>Pickup:</strong> {formatDate(selectedBooking.pickupDate)} at {selectedBooking.pickupTime}</p>
+                                    <p><strong>Pickup:</strong> {
+                                        formatDate(selectedBooking.pickupDate) ? formatDate(selectedBooking.pickupDate)
+                                            : formatFirestoreDate(selectedBooking.pickupDate)
+                                    } at
+                                        {selectedBooking.pickupTime}</p>
                                 </div>
                             </div>
 

@@ -6,6 +6,7 @@ import useAuthStore from '@/store/useAuthStore'
 import { CheckCircle, MapPin, Car, User, CreditCard, Home } from 'lucide-react'
 import { getBookingDetails } from '@/lib/firebase/admin/booking'
 import { TRIP_TYPES } from '@/lib/constants/constants'
+import { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
 
 export default function BookingData() {
     const searchParams = useSearchParams()
@@ -124,7 +125,9 @@ export default function BookingData() {
                                         }
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Pickup Date:</span>
-                                            <span className="font-medium">{bookingData.pickupDate}</span>
+                                            <span className="font-medium">{
+                                                formatFirestoreDate(bookingData?.pickupDate)
+                                            }</span>
                                         </div>
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Pickup Time:</span>

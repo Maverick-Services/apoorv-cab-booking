@@ -18,6 +18,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import UserLogin from '@/components/auth/userLogin/UserLogin'
+import { Timestamp } from 'firebase/firestore'
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -139,6 +140,7 @@ export default function CheckoutDetails() {
                                 ...response,
                                 bookingData: {
                                     ...bookingData,
+                                    pickupDate: Timestamp.fromDate(new Date(bookingData?.pickupDate)),
                                     basePrice,
                                     gstAmount,
                                     totalAmount,

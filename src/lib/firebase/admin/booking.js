@@ -66,6 +66,12 @@ export const getDateRange = (filter) => {
             startDate = startOfDay(new Date(yesterday));
             endDate = endOfDay(new Date(yesterday));
             break;
+        case "upcoming":
+            const upcoming = new Date();
+            upcoming.setDate(now.getDate() + 1);
+            startDate = startOfDay(new Date(upcoming));
+            endDate = endOfDay(new Date(upcoming));
+            break;
         case "tomorrow":
             const tomorrow = new Date();
             tomorrow.setDate(now.getDate() + 1);
@@ -102,12 +108,18 @@ export const getBookingsByDate = async (filter) => {
     if (!range) throw new Error("Invalid date filter");
 
     const bookingsRef = collection(db, "bookings");
-    const q = query(
-        bookingsRef,
-        where("createdAt", ">=", range.start),
-        where("createdAt", "<=", range.end),
-        orderBy("createdAt", "desc")
-    );
+    const q = filter === "upcoming"
+        ? query(
+            bookingsRef,
+            where("pickupDate", ">=", range.start),
+            orderBy("pickupDate", "desc")
+        )
+        : query(
+            bookingsRef,
+            where("pickupDate", ">=", range.start),
+            where("pickupDate", "<=", range.end),
+            orderBy("pickupDate", "desc")
+        );
 
     const snaps = await getDocs(q);
     return snaps.docs.map((d) => d.data());

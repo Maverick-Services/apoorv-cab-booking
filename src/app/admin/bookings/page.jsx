@@ -31,6 +31,7 @@ function Page() {
         setLoading(true)
         try {
             const res = await (timeFilter === "all" ? getAllBookings() : getBookingsByDate(timeFilter));
+            console.log(res)
             setBookings(res)
         } catch (error) {
             console.log(error)
@@ -75,6 +76,7 @@ function Page() {
                                 defaultValue={timeFilter}
                             >
                                 <option value="today">Today</option>
+                                <option value="upcoming">Upcoming</option>
                                 <option value="yesterday">Yesterday</option>
                                 <option value="last7days">Past 7 days</option>
                                 <option value="lastMonth">Past 1 Month</option>

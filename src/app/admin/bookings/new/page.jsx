@@ -10,6 +10,7 @@ import TripPrice from '@/components/main/home/bookingForm/TripPrice';
 import ManualCabType from '@/components/main/home/bookingForm/ManualCabType';
 import { createNewBooking } from '@/lib/firebase/admin/booking';
 import { useRouter } from 'next/navigation';
+import { Timestamp } from 'firebase/firestore';
 
 export default function Page() {
 
@@ -40,10 +41,19 @@ export default function Page() {
             },
             tripType: data?.tripType,
             pickupCity: data?.pickupCity,
-            dropCity: data?.dropCity ? data?.dropCity : "",
+            pickupDate: Timestamp.fromDate(new Date(data?.pickupDate)),
+            pickupTime: data?.pickupTime,
+            returnDate: data?.returnDate ? data?.returnDate : "-",
+            dropCity: data?.dropCity ? data?.dropCity : "-",
             cab: {
-                name: data?.cabType
+                name: data?.cabType,
+                totalDistance: data?.totalDistance ? data?.totalDistance : "-",
+                tripHours: data?.tripHours ? data?.tripHours : "-",
+                price: "-",
+                discountedPrice: "-"
             },
+            totalDistance: data?.totalDistance ? data?.totalDistance : "-",
+            tripHours: data?.tripHours ? data?.tripHours : "-",
             basePrice: data?.basePrice,
             totalAmount: data?.totalAmount,
             bookingAmount: 0,
@@ -83,6 +93,8 @@ export default function Page() {
                         >
                             <option value={TRIP_TYPES.oneWay}>{TRIP_TYPES.oneWay}</option>
                             <option value={TRIP_TYPES.roundTrip}>{TRIP_TYPES.roundTrip}</option>
+                            <option value={TRIP_TYPES.local}>{TRIP_TYPES.local}</option>
+                            <option value={TRIP_TYPES.airport}>{TRIP_TYPES.airport}</option>
                         </select>
                         {errors.tripType && (
                             <span className="text-red-500 text-xs">{errors.tripType.message}</span>
@@ -127,7 +139,7 @@ export default function Page() {
                     <PickupDate register={register} control={control} />
 
                     {/* Return Date - Only for Round Trip */}
-                    {tripType === 'Round Trip' && (
+                    {tripType === TRIP_TYPES.roundTrip && (
                         <div className="flex flex-col">
                             <label htmlFor="returnDate" className="text-sm font-medium mb-1">
                                 Return Date
@@ -142,6 +154,46 @@ export default function Page() {
                             />
                             {errors.returnDate && (
                                 <span className="text-red-500 text-xs">{errors.returnDate.message}</span>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Local/Airport Trip Distance */}
+                    {(tripType === TRIP_TYPES.local || tripType === TRIP_TYPES.airport) && (
+                        <div className="flex flex-col">
+                            <label htmlFor="totalDistance" className="text-sm font-medium mb-1">
+                                Distance Covered
+                            </label>
+                            <input
+                                type="text"
+                                id="totalDistance"
+                                {...register('totalDistance', {
+                                    required: 'Required',
+                                })}
+                                className="border p-2 py-1 rounded-md"
+                            />
+                            {errors.totalDistance && (
+                                <span className="text-red-500 text-xs">{errors.totalDistance.message}</span>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Local/Airport Trip Hours */}
+                    {(tripType === TRIP_TYPES.local || tripType === TRIP_TYPES.airport) && (
+                        <div className="flex flex-col">
+                            <label htmlFor="tripHours" className="text-sm font-medium mb-1">
+                                Trip Hours
+                            </label>
+                            <input
+                                type="text"
+                                id="tripHours"
+                                {...register('tripHours', {
+                                    required: 'Required',
+                                })}
+                                className="border p-2 py-1 rounded-md"
+                            />
+                            {errors.tripHours && (
+                                <span className="text-red-500 text-xs">{errors.tripHours.message}</span>
                             )}
                         </div>
                     )}

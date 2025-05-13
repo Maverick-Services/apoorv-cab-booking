@@ -3,6 +3,7 @@ import React from 'react'
 import { Badge } from '@/components/ui/badge';
 import { BadgeCheck, Car, ClipboardList, Coins, CreditCard, MapPin, MoveLeft, Pencil, Trash, UserRound } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
+import { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
 
 function BookingFullDetails({ booking, vendor }) {
 
@@ -50,7 +51,7 @@ function BookingFullDetails({ booking, vendor }) {
                     <div>
                         <p className="text-gray-500 text-xs mb-1">Pickup Date</p>
                         <p className="font-medium text-gray-900">
-                            {booking?.pickupDate ? format(parseISO(booking.pickupDate), 'dd MMM yyyy') : 'N/A'}
+                            {booking?.pickupDate ? formatFirestoreDate(booking?.pickupDate) : 'N/A'}
                         </p>
                     </div>
 
