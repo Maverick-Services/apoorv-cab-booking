@@ -33,7 +33,7 @@ function page() {
     return (
         <div>
             <div className='bg-gray-100'>
-                <div className='sticky top-0'>
+                <div className='sticky top-0 z-[100]'>
                     <Navbar />
                 </div>
                 <div className='text-black min-h-[50vh] pb-10 pt-5 w-11/12 flex flex-col justify-between max-w-6xl mx-auto'>

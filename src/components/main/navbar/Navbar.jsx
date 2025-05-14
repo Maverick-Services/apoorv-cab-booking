@@ -30,7 +30,7 @@ export default function Navbar() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     return (
-        <nav className=" bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm z-50 py-3">
+        <div className=" bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm z-50 py-3 w-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
@@ -233,6 +233,6 @@ export default function Navbar() {
 
             {/* <LoginDialogOuter open={isDialogOpen} onOpenChange={setIsDialogOpen} /> */}
             <UserLogin open={isDialogOpen} onOpenChange={setIsDialogOpen} />
-        </nav>
+        </div>
     )
 }
