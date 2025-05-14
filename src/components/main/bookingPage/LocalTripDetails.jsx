@@ -85,16 +85,17 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
         return <Loader2 />
 
     return (
-        <div className="bg-white rounded-2xl shadow-md p-4 space-y-6">
+        <div className="lg:w-11/12 mx-auto bg-white rounded-2xl shadow-md p-4 space-y-6">
+            <h1 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>Regular Trips</h1>
             <Tabs defaultValue={tripFilter && tripFilter[0]} >
-                <TabsList className="w-full justify-start mb-4">
+                <TabsList className="w-full justify-start mb-4 ">
                     {
                         tripFilter?.map((tr, idx) =>
-                            <TabsTrigger key={idx} value={tr}>{tr?.totalDistance}Kms {tr?.tripHours}Hrs</TabsTrigger>
+                            <TabsTrigger
+                                key={idx} value={tr}>{tr?.totalDistance}Kms {tr?.tripHours}Hrs</TabsTrigger>
                         )
                     }
                 </TabsList>
-
                 {
                     tripFilter?.map(tr => (
                         {
@@ -117,16 +118,13 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
                                                 alt={cab?.name}
                                                 className="w-20 h-14 object-contain"
                                             />
-
-                                            <div className="text-lg text-gray-700">
+                                            <div className="text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                                                 <p className="font-bold">{cab?.name}</p>
                                             </div>
-
-                                            <div className="text-lg text-gray-700 self-center flex justify-start items-center gap-2">
+                                            <div className="text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent self-center flex justify-start items-center gap-2">
                                                 <p className="font-bold">{cab?.totalDistance} Kms</p>
                                                 <p className="font-bold">For {cab?.tripHours} Hours</p>
                                             </div>
-
                                             <div className="text-right space-y-0.5">
                                                 <div className="line-through text-sm text-gray-400">
                                                     ₹{
@@ -135,7 +133,7 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
                                                         )
                                                     }
                                                 </div>
-                                                <div className="text-blue-700 text-xl font-bold">
+                                                <div className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-xl font-bold">
                                                     ₹{
                                                         +cab?.discountedPrice + +(
                                                             currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance
@@ -146,9 +144,8 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
                                                     GUARANTEED
                                                 </div>
                                             </div>
-
                                             <Button
-                                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg w-full sm:w-auto"
+                                                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold px-6 py-2 rounded-lg w-full sm:w-auto"
                                                 onClick={() => handleCabBooking(cab)}
                                             >
                                                 Book Now

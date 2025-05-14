@@ -28,12 +28,12 @@ export const createTripPackage = async ({ data }) => {
 //     return await getDocs(collection(db, 'localTrips')).then((snaps) => snaps.docs.map((d) => d.data()))
 // }
 
-// // fetch details of all pickup cities
-// export const getLocalTripsByCity = async (cityName) => {
-//     return await getDocs(
-//         query(collection(db, 'localTrips'), where('cityName', '==', cityName))
-//     ).then((snaps) => snaps.docs.map((d) => d.data()))
-// }
+// fetch local trips by trip type
+export const getPackageTripsByTripType = async (tripType) => {
+    return await getDocs(
+        query(collection(db, 'package'), where('tripType', '==', tripType))
+    ).then((snaps) => snaps.docs.map((d) => d.data()))
+}
 
 // // fetch the pickup city
 // export const getLocalTripDetails = async (id) => {

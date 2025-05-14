@@ -36,6 +36,7 @@ import LoginDialogOuter from "../LoginDialogOuter";
 import { TRIP_TYPES } from "@/lib/constants/constants";
 import { LocalTripDetails } from "./LocalTripDetails";
 import { differenceInCalendarDays } from "date-fns";
+import { PackageTripDetails } from "./PackageTripDetails";
 
 export const CabDetails = () => {
     const searchParams = useSearchParams();
@@ -136,7 +137,7 @@ export const CabDetails = () => {
                     ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
             )
         }
-        console.log(bookingData, tripData);
+        // console.log(bookingData, tripData);
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
@@ -252,6 +253,15 @@ export const CabDetails = () => {
                 )}
 
                 {/* Cab List */}
+                <PackageTripDetails
+                    router={router}
+                    userData={userData}
+                    tripData={tripData}
+                    currentPickupCity={currentPickupCity}
+                    currentCab={currentCab}
+                    cabTypes={cabTypes}
+                    noOfDays={noOfDays}
+                />
 
                 {
                     tripData?.tripType === TRIP_TYPES.local || tripData?.tripType === TRIP_TYPES.airport
@@ -267,7 +277,8 @@ export const CabDetails = () => {
                             />
                         )
                         : (
-                            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl shadow-xl p-4 sm:p-6 border border-indigo-100    space-y-6">
+                            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl shadow-xl p-4 sm:p-6 border border-indigo-100 space-y-6">
+                                <h1 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>Regular Trips</h1>
                                 {currentPickupCity?.variantList?.map((cab, index) => (
                                     <div
                                         key={index}
