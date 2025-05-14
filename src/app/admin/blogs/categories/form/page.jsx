@@ -106,7 +106,7 @@ export default function Page() {
                             onChange={(e) => {
                                 handleData('slug', e.target.value)
                             }}
-                            disabled={data?.slug}
+                            disabled={updateCategoryId}
                             value={data?.slug ?? ''}
                             required
                         />
