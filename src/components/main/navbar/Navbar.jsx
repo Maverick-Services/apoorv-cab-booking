@@ -10,6 +10,7 @@ import LoginDialogOuter from '../LoginDialogOuter'
 import { PhoneCall } from 'lucide-react'
 import { BorderBeam } from "@/components/magicui/border-beam";
 import UserLogin from '@/components/auth/userLogin/UserLogin'
+import { ROLE } from '@/lib/constants/constants'
 
 // const navLinks = [
 //     { href: '#why-us', label: 'Why Us' },
@@ -19,7 +20,6 @@ import UserLogin from '@/components/auth/userLogin/UserLogin'
 
 const authLinks = [
     { href: '/my-trips', label: 'My Trips' },
-    // { href: '/profile', label: 'Profile' },
 ]
 
 export default function Navbar() {
@@ -94,7 +94,7 @@ export default function Navbar() {
 
                         {userData ? (
                             <div className="flex items-center space-x-6 ml-4">
-                                {authLinks.map(({ href, label }) => (
+                                {userData?.role === ROLE.CUSTOMER && authLinks.map(({ href, label }) => (
                                     <Link
                                         key={href}
                                         href={href}
@@ -196,7 +196,7 @@ export default function Navbar() {
 
                         {userData ? (
                             <>
-                                {authLinks.map(({ href, label }) => (
+                                {userData?.role === ROLE.CUSTOMER && authLinks.map(({ href, label }) => (
                                     <Link
                                         key={href}
                                         href={href}

@@ -5,6 +5,8 @@ import Navbar from '@/components/main/navbar/Navbar';
 import { getBookingsByUser } from '@/lib/firebase/admin/booking';
 import useAuthStore from '@/store/useAuthStore';
 import BookingHistory from '@/components/main/MyBookings';
+import { ROLE } from '@/lib/constants/constants';
+import Navigate from '@/components/auth/Navigate';
 
 function page() {
     const { userData } = useAuthStore()
@@ -20,6 +22,9 @@ function page() {
             fetchBookingsOfUser()
     }, [userData])
 
+    if (userData && userData?.role !== ROLE.CUSTOMER) {
+        return <Navigate to='/' />;
+    }
 
     if (!bookings) {
         return <div>No Bookings Yet</div>
