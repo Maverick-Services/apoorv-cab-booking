@@ -9,6 +9,7 @@ import {
     Car,
     Pin,
     HelpCircleIcon,
+    File,
 } from "lucide-react";
 import { FaHelicopter } from "react-icons/fa";
 
@@ -58,6 +59,11 @@ export const adminSidebarLinks = [
         href: "/admin/packages",
         label: "Packages",
         icon: <Package />,
+    },
+    {
+        href: "/admin/blogs",
+        label: "Blogs",
+        icon: <File />,
     },
 ];
 
