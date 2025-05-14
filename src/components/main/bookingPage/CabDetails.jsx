@@ -118,7 +118,9 @@ export const CabDetails = () => {
 
         let finalBookingPrice = (
             (
-                tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (
+                    tripData?.tripType === TRIP_TYPES.roundTrip ? 2 : 1
+                ))
                     ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
             ) *
             (
@@ -142,7 +144,9 @@ export const CabDetails = () => {
             returnDate: tripData?.returnDate,
             price: finalBookingPrice,
             totalDistance: (
-                tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (
+                    tripData?.tripType === TRIP_TYPES.roundTrip ? 2 : 1
+                ))
                     ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
             )
         }
@@ -370,7 +374,7 @@ export const CabDetails = () => {
                                                 {/* {tripData?.totalDistance} Kms Included */}
                                                 {
                                                     (
-                                                        tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                                                        tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (tripData?.tripType === TRIP_TYPES.roundTrip ? 2 : 1))
                                                             ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
                                                     )
                                                 } Kms Included
@@ -379,7 +383,9 @@ export const CabDetails = () => {
                                                 <span className="line-through text-gray-400 text-sm">
                                                     ₹{(
                                                         (
-                                                            tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                                                            tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (
+                                                                tripData?.tripType === TRIP_TYPES.roundTrip ? 2 : 1
+                                                            ))
                                                                 ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
                                                         ) *
                                                         (
@@ -392,7 +398,9 @@ export const CabDetails = () => {
                                                 <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                                                     ₹{(
                                                         (
-                                                            tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (TRIP_TYPES.roundTrip ? 2 : 1))
+                                                            tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (
+                                                                tripData?.tripType === TRIP_TYPES.roundTrip ? 2 : 1
+                                                            ))
                                                                 ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
                                                         ) *
                                                         (
