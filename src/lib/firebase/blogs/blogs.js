@@ -34,7 +34,7 @@ export const createNewBlog = async ({ data, image }) => {
 };
 
 export const updateBlog = async ({ data, image }) => {
-    if (!data?.name) {
+    if (!data?.title) {
         throw new Error("Name is undefined");
     }
     if (!data?.slug) {
@@ -56,7 +56,7 @@ export const updateBlog = async ({ data, image }) => {
     await updateDoc(firestoreRef, updatePayload);
 }
 
-export const deleteCategory = async (id) => {
+export const deleteBlog = async (id) => {
     if (!id) {
         throw new Error("Id is required");
     }

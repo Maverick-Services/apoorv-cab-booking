@@ -115,7 +115,6 @@ export default function Page() {
                         onChange={(e) => {
                             handleData('description', e.target.value)
                         }}
-                        disabled={updateId}
                         value={data?.description ?? ''}
                         required
                     />
@@ -226,24 +225,25 @@ export default function Page() {
                 {/* Buttons */}
                 {error && <p className="text-red-500 text-sm">{error}</p>}
 
-                <button
-                    type="submit"
-                    disabled={isLoading || isDone}
-                    className="bg-blue-500 rounded-full px-4 py-2 text-white">
-                    {creating ? "Loading..." : updateId ? "Update" : "Create"}
-                </button>
+                <div className="flex gap-3 items-center justify-end">
+                    <button
+                        type="submit"
+                        disabled={isLoading || isDone}
+                        className="bg-blue-800 rounded-sm px-4 py-2 text-white">
+                        {creating ? "Loading..." : updateId ? "Update" : "Create"}
+                    </button>
 
-                {updateId && <button
-                    onClick={(e) => {
-                        e.preventDefault();
-                        window.confirm("Do you want to delete this category?")
-                        handleDelete(updateId);
-                    }}
-                    disabled={isLoading}
-                    className="bg-red-500 rounded-full px-4 py-2 text-white">
-                    {deleting ? "Loading..." : "Delete"}
-                </button>}
-
+                    {updateId && <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            window.confirm("Do you want to delete this Blog?")
+                            handleDelete(updateId);
+                        }}
+                        disabled={isLoading}
+                        className="bg-red-600 rounded-sm px-4 py-2 text-white">
+                        {deleting ? "Loading..." : "Delete"}
+                    </button>}
+                </div>
                 {isDone && <h3 className="text-green-500 font-bold text-center">
                     Successfully {updateId ? "Updated" : "Created"} !
                 </h3>}

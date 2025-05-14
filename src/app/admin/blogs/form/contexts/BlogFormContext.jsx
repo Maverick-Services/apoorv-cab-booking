@@ -1,6 +1,6 @@
 "use client"
 
-import { createNewBlog } from "@/lib/firebase/blogs/blogs";
+import { createNewBlog, deleteBlog, getBlog, updateBlog } from "@/lib/firebase/blogs/blogs";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 
@@ -39,8 +39,8 @@ export default function BlogFormContextProvider({ children }) {
         setError(null)
         setCreating(true)
         try {
-            // await updateCategory({ data: data, image: image ? image : null })
-            // router.push("/admin/blogs/categories")
+            await updateBlog({ data: data, image: image ? image : null })
+            router.push("/admin/blogs")
         } catch (error) {
             setError(error?.message)
         }
@@ -51,8 +51,8 @@ export default function BlogFormContextProvider({ children }) {
         setError(null)
         setDeleting(true)
         try {
-            // await deleteCategory(id);
-            // router.push("/admin/blogs/categories");
+            await deleteBlog(id);
+            router.push("/admin/blogs");
         } catch (error) {
             setError(error?.message)
         }
@@ -63,13 +63,12 @@ export default function BlogFormContextProvider({ children }) {
         setError(null)
         setIsLoading(true)
         try {
-            // const res = await getCategory(id);
-            // if (res) {
-            //     setData(res);
-            // } else {
-            //     throw new Error(`No Category found from id ${id}`)
-            // }
-
+            const res = await getBlog(id);
+            if (res) {
+                setData(res);
+            } else {
+                throw new Error(`No Blog found from id ${id}`)
+            }
         } catch (error) {
             setError(error?.message)
         }
