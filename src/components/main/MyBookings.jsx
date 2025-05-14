@@ -83,9 +83,25 @@ const BookingHistory = ({ bookings }) => {
         yPosition += 20;
 
         // Invoice Details
-        const invoiceDate = formatDate(selectedBooking.pickupDate) ? formatDate(selectedBooking.pickupDate)
-            : formatFirestoreDate(selectedBooking.pickupDate);
-        doc.text(`Invoice No: TC/${new Date().getFullYear()}-${(new Date().getFullYear() + 1).toString().slice(-2)}/${selectedBooking.payment.paymentId.slice(-6)}`, 15, yPosition);
+        const invoiceDate = formatDate(selectedBooking?.createdAt) ? formatDate(selectedBooking?.createdAt)
+            : formatFirestoreDate(selectedBooking?.createdAt);
+
+        const createdAt = selectedBooking?.createdAt;
+        const mobile = selectedBooking?.userData?.phoneNumber || selectedBooking?.userData?.phoneNo || "NA";
+
+        let invoiceId = "INV-UNKNOWN";
+        if (createdAt) {
+            const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1e6);
+            const pad = (n) => n.toString().padStart(2, "0");
+            const hours = pad(date.getHours() % 12 || 12);
+            const minutes = pad(date.getMinutes());
+            const ampm = date.getHours() >= 12 ? "PM" : "AM";
+
+            invoiceId = `INV-${mobile}-${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+        }
+
+
+        doc.text(`Invoice No: TC/${invoiceId}`, 15, yPosition);
         doc.text(`Invoice Date: ${invoiceDate}`, pageWidth - 15, yPosition, { align: 'right' });
         yPosition += 10;
 
@@ -94,11 +110,11 @@ const BookingHistory = ({ bookings }) => {
         doc.text(`${selectedBooking?.userData?.name}`, 15, yPosition);
         doc.text(`${selectedBooking?.userData?.email}`, 15, yPosition + 5);
         doc.text(`${selectedBooking?.userData?.phoneNo}`, 15, yPosition + 10);
-        doc.text(`Pickup City: ${selectedBooking.pickupCity}`, pageWidth - 15, yPosition, { align: 'right' });
+        doc.text(`Pickup City: ${selectedBooking?.pickupCity}`, pageWidth - 15, yPosition, { align: 'right' });
         yPosition += 20;
 
         if (selectedBooking?.tripType === TRIP_TYPES.oneWay) {
-            doc.text(`Drop: ${selectedBooking.dropCity}`, 15, yPosition);
+            doc.text(`Drop: ${selectedBooking?.dropCity}`, 15, yPosition);
             // yPosition += 5;
         } else if (selectedBooking?.tripType === TRIP_TYPES.roundTrip) {
             doc.text(`Drops:`, 15, yPosition);
@@ -110,46 +126,20 @@ const BookingHistory = ({ bookings }) => {
 
         // Calculate line items
         const items = [];
-        const tripType = selectedBooking.tripType.toLowerCase();
+        const tripType = selectedBooking?.tripType?.toLowerCase();
+
+        const basePrice = +selectedBooking?.priceWithAllowance
 
         // Main Service
         items.push([
             1,
-            `${selectedBooking.pickupCity} ${tripType} Service`,
+            `${selectedBooking?.pickupCity} ${tripType} Service`,
             "1.00",
-            selectedBooking.basePrice.toFixed(2),
-            `${(selectedBooking.basePrice * 0.05).toFixed(2)} 5%`,
-            selectedBooking.basePrice.toFixed(2)
+            basePrice?.toFixed(2),
+            `${(basePrice * 0.05).toFixed(2)} 5%`,
+            (+selectedBooking?.totalAmount)?.toFixed(2)
         ]);
 
-        // Extra KMs
-        // if (selectedBooking.totalDistance > minKm) {
-        //     const extraKm = selectedBooking.totalDistance - minKm;
-        //     const rate = tripType === 'round trip'
-        //         ? parseFloat(selectedBooking.cab.actualPriceRoundTrip)
-        //         : parseFloat(selectedBooking.cab.actualPriceOneWay);
-
-        //     items.push([
-        //         items.length + 1,
-        //         `Extra Kilometers (${extraKm} KM)`,
-        //         extraKm.toFixed(2),
-        //         rate.toFixed(2),
-        //         `${(extraKm * rate * 0.05).toFixed(2)} 5%`,
-        //         (extraKm * rate).toFixed(2)
-        //     ]);
-        // }
-
-        // Driver Allowance (Only for multi-day round trips)
-        if (tripType === TRIP_TYPES.roundTrip && selectedBooking.dropOffs.length > 1) {
-            // items.push([
-            //     items.length + 1,
-            //     "Driver Allowance",
-            //     "1.00",
-            //     selectedBooking.cab.driverAllowance,
-            //     `${(parseFloat(selectedBooking.cab.driverAllowance) * 0.05).toFixed(2)} 5%`,
-            //     selectedBooking.cab.driverAllowance
-            // ]);
-        }
 
         // Items Table
         autoTable(doc, {
@@ -173,7 +163,8 @@ const BookingHistory = ({ bookings }) => {
         });
 
         // Calculations
-        const subtotal = items.reduce((sum, item) => sum + parseFloat(item[5]), 0);
+        // const subtotal = items.reduce((sum, item) => sum + parseFloat(item[5]), 0);
+        const subtotal = basePrice;
         const gst = subtotal * 0.05;
         const total = subtotal + gst;
 
@@ -184,8 +175,8 @@ const BookingHistory = ({ bookings }) => {
                 ["Sub Total", subtotal.toFixed(2)],
                 ["IGST5 (5%)", gst.toFixed(2)],
                 ["Total", total.toFixed(2)],
-                ["Balance Paid", selectedBooking?.bookingAmount.toFixed(2)],
-                ["Balance Due", (total.toFixed(2) - selectedBooking?.bookingAmount.toFixed(2)).toFixed(2)]
+                ["Balance Paid", selectedBooking?.bookingAmount?.toFixed(2)],
+                ["Balance Due", (total.toFixed(2) - selectedBooking?.bookingAmount?.toFixed(2)).toFixed(2)]
             ],
             theme: 'plain',
             styles: { fontSize: 12, fontStyle: 'bold' },
@@ -208,15 +199,8 @@ const BookingHistory = ({ bookings }) => {
         doc.text("Please refer our website www.tapscabs.com for Terms and Conditions.", 15, footerY + 10);
 
         // Save PDF
-        doc.save(`invoice-${selectedBooking.payment.paymentId.slice(-6)}.pdf`);
+        doc.save(`invoice-${invoiceId}.pdf`);
     };
-
-    // Helper function to convert numbers to words (need to implement properly)
-    // const numberToWords = (num) => {
-    //     // Implement proper number to words conversion logic
-    //     return "Indian Rupee ... Only";
-    // };
-    // console.log(selectedBooking);
 
     return (
         <div className="w-full mx-auto">
