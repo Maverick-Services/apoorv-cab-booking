@@ -95,7 +95,7 @@ function TripVariant({ updateLocalTripId }) {
                     </button>
                 </div>
 
-                {variantList.length > 0 && (
+                {variantList?.length > 0 && (
                     <div className="space-y-4 bg-gray-50 border p-3 rounded-xl">
                         <h3 className="text-lg font-bold text-blue-900">Added Cab Types</h3>
                         <div className="grid gap-3">

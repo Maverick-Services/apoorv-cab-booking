@@ -1,7 +1,7 @@
 "use client"
 
 import { createNewLocalTrip, deleteLocalTrip, getLocalTripDetails, updateLocalTrip } from "@/lib/firebase/admin/localTrips";
-import { createTripPackage } from "@/lib/firebase/admin/tripPackage";
+import { createTripPackage, deletePackage, getPackageDetails, updatePackage } from "@/lib/firebase/admin/tripPackage";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import toast from 'react-hot-toast';
@@ -50,11 +50,11 @@ export default function LocalTripFormContextProvider({ children }) {
         setOtherError(null)
         setIsLoading(true)
         try {
-            const res = await getLocalTripDetails(id);
+            const res = await getPackageDetails(id);
             if (res.exists()) {
                 return res.data();
             } else {
-                throw new Error(`No Local Trip found with id ${id}`);
+                throw new Error(`No Package found with id ${id}`);
             }
         } catch (error) {
             setOtherError(error?.message);
@@ -84,11 +84,11 @@ export default function LocalTripFormContextProvider({ children }) {
         setOtherError(null)
         setCreating(true)
         try {
-            await updateLocalTrip({ data });
-            router.push('/admin/localTrips');
+            await updatePackage({ data });
+            router.push('/admin/packages');
         } catch (error) {
             setOtherError(error?.message);
-            toast.error(error?.message || 'Error updating cab type');
+            toast.error(error?.message || 'Error updating packages');
         }
         setCreating(false)
     }
@@ -98,8 +98,8 @@ export default function LocalTripFormContextProvider({ children }) {
         setOtherError(null)
         setDeleting(true)
         try {
-            await deleteLocalTrip(id);
-            router.push('/admin/localTrips');
+            await deletePackage(id);
+            router.push('/admin/packages');
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error deleting Local Trip');

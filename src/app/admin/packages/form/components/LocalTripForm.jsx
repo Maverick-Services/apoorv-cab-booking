@@ -63,12 +63,16 @@ const LocalTripForm = () => {
             (async () => {
                 const resp = await fetchData(updatePackageId);
                 setData(resp)
+                setValue('tripType', resp?.tripType)
+                setValue('dropCity', resp?.dropCity)
+                setQuery(resp?.dropCity)
                 setDropOffs(resp?.dropOffs)
                 setVariantList(resp?.variantList)
             })();
         }
     }, [updatePackageId]);
 
+    console.log(data)
 
     useEffect(() => {
         handleData("dropOffs", dropOffs);
@@ -131,6 +135,7 @@ const LocalTripForm = () => {
                             <select
                                 {...register('tripType', { required: 'Trip type is required' })}
                                 className="border p-2 py-1 rounded-md"
+                                value={data?.tripType}
                             >
                                 <option value={TRIP_TYPES.oneWay}>{TRIP_TYPES.oneWay}</option>
                                 <option value={TRIP_TYPES.roundTrip}>{TRIP_TYPES.roundTrip}</option>

@@ -29,13 +29,13 @@ function PickupCityName({ updateLocalTripId }) {
 
     // Set default city if updateLocalTripId is present
     useEffect(() => {
-        if (!loading && updateLocalTripId && data?.cityName && citiesList.length > 0) {
-            const matchedCity = citiesList.find(city => city.name === data.cityName)
+        if (!loading && updateLocalTripId && data?.pickupCity && citiesList.length > 0) {
+            const matchedCity = citiesList.find(city => city.name === data.pickupCity)
             if (matchedCity) {
                 setSelectedCity(matchedCity)
             }
         }
-    }, [loading, updateLocalTripId, data?.cityName, citiesList])
+    }, [loading, updateLocalTripId, data?.pickupCity, citiesList])
 
     return (
         <div className="flex flex-col">
@@ -44,7 +44,7 @@ function PickupCityName({ updateLocalTripId }) {
                 <Skeleton className="h-6 w-full rounded-lg" />
             ) : (
                 <select
-                    value={selectedCity?.name || ''}
+                    value={data?.pickupCity || selectedCity?.name || ''}
                     onChange={(e) => {
                         handleData('pickupCity', e.target.value)
                         setSelectedCity(citiesList?.find(i => i.name === e.target.value))

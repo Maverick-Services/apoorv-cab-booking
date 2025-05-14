@@ -1,223 +1,228 @@
 'use client'
 import InnerLayout from '@/components/dashboard/layout/InnerLayout';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { Pencil } from 'lucide-react';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 
-const packageData = [
-    {
-        pickUp: "Delhi",
-        dropOff: "Nainital",
-        Tax: true,
-        cabs: [
-            {
-                vehicleType: "Hatchback",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-            {
-                vehicleType: "Sedan",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-            {
-                vehicleType: "SUV (Economy)",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-            {
-                vehicleType: "SUV (Premium)",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-        ]
-    },
+// const packageData = [
+//     {
+//         pickUp: "Delhi",
+//         dropOff: "Nainital",
+//         Tax: true,
+//         cabs: [
+//             {
+//                 vehicleType: "Hatchback",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//             {
+//                 vehicleType: "Sedan",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//             {
+//                 vehicleType: "SUV (Economy)",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//             {
+//                 vehicleType: "SUV (Premium)",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//         ]
+//     },
 
-    {
-        pickUp: "Delhi",
-        dropOff: "Nainital",
-        Tax: true,
-        cabs: [
-            {
-                vehicleType: "Hatchback",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-            {
-                vehicleType: "Sedan",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-            {
-                vehicleType: "SUV (Economy)",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-            {
-                vehicleType: "SUV (Premium)",
-                minKm: 100,
-                trips: [
-                    {
-                        tripType: "One Way Trip",
-                        price: 2500
-                    },
-                    {
-                        tripType: "Round Trip",
-                        price: 4500
-                    },
-                    {
-                        tripType: "Local Trip",
-                        price: 1000
-                    }
-                ]
-            },
-        ]
-    }
-]
+//     {
+//         pickUp: "Delhi",
+//         dropOff: "Nainital",
+//         Tax: true,
+//         cabs: [
+//             {
+//                 vehicleType: "Hatchback",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//             {
+//                 vehicleType: "Sedan",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//             {
+//                 vehicleType: "SUV (Economy)",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//             {
+//                 vehicleType: "SUV (Premium)",
+//                 minKm: 100,
+//                 trips: [
+//                     {
+//                         tripType: "One Way Trip",
+//                         price: 2500
+//                     },
+//                     {
+//                         tripType: "Round Trip",
+//                         price: 4500
+//                     },
+//                     {
+//                         tripType: "Local Trip",
+//                         price: 1000
+//                     }
+//                 ]
+//             },
+//         ]
+//     }
+// ]
 
-export const PackageList = () => {
-
-    const [packages, setPackages] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const fetchPackageData = () => {
-        setLoading(true);
-        setPackages(packageData);
-        setLoading(false);
-    }
-
-    useEffect(() => {
-        fetchPackageData();
-    }, []);
+export const PackageList = ({ packages }) => {
 
     return (
         <div>
             <ScrollArea className={'h-full'}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {packages.map((pkg, idx) => (
+
+                    {packages?.map((pkg, idx) => (
                         <Card key={idx}>
                             <CardContent className="p-4 py-0 space-y-2">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-purple-700">Package {idx + 1}</h3>
-                                    {/* <p className="text-sm text-muted-foreground">{pkg.address}</p> */}
+                                <div className='flex justify-between items-center gap-2'>
+                                    <div>
+                                        <Badge className={'mb-2 rounded-sm'}>{pkg?.tripType}</Badge>
+                                        <h3 className="text-lg font-semibold text-purple-700">Package {idx + 1}</h3>
+                                    </div>
+                                    <Link href={`/admin/packages/form?id=${pkg.id}`}>
+                                        <Button size="icon" variant="outline" className='cursor-pointer'>
+                                            <Pencil size={16} />
+                                        </Button>
+                                    </Link>
                                 </div>
 
                                 <div className="text-sm">
-                                    <p><strong>Pick Up:</strong> {pkg.pickUp}</p>
-                                    <p><strong>Drop Off:</strong> {pkg.dropOff}</p>
+                                    <p><strong>Pick Up:</strong> {pkg?.pickupCity}</p>
+                                    {pkg?.dropCity &&
+                                        <p><strong>Drop City:</strong> {pkg?.dropCity}</p>
+                                    }
+                                    {pkg?.dropOffs && pkg?.dropOffs?.length > 0 &&
+                                        <div className='flex gap-3'>
+                                            <strong>Drop Offs:</strong>
+                                            <div className='flex flex-col gap-0'>
+                                                {pkg?.dropOffs?.map((city, i) => (
+                                                    <div key={i}>{i + 1}. {city}</div>
+                                                ))}</div>
+                                        </div>
+                                    }
                                 </div>
 
                                 <Separator />
 
                                 <div className="space-y-2">
                                     <p className="text-sm font-medium">Cabs:</p>
-                                    {pkg.cabs.map((cab, cabIndex) => (
+                                    {pkg.variantList.map((cab, cabIndex) => (
                                         <div key={cabIndex} className="border rounded-md p-2 bg-muted/30">
                                             <div className="flex flex-wrap justify-between items-center mb-1">
                                                 <span className="font-semibold">Cab {cabIndex + 1}</span>
-                                                <Badge className="text-xs">
-                                                    {cab.vehicleType}
+                                                <Badge className="text-xs" variant={'outline'}>
+                                                    {cab.cabType}
                                                 </Badge>
                                             </div>
-                                            <p className="text-sm">Minimum Travel: {cab.minKm}Kms</p>
-                                            {
-                                                cab?.trips && cab?.trips?.map((tr, idx) => (
-                                                    <p className="text-sm" key={idx}>{tr?.tripType}: {tr.price}</p>
-                                                ))
-                                            }
+                                            <p className="text-sm">Actual Price: {cab?.variantAcutalPrice}Kms</p>
+                                            <p className="text-sm">Discounted Price: {cab?.variantDiscountedPrice}Kms</p>
                                         </div>
                                     ))}
                                 </div>

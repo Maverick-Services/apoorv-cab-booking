@@ -23,10 +23,10 @@ export const createTripPackage = async ({ data }) => {
 };
 
 
-// // fetch details of all pickup cities
-// export const getAllLocalTrips = async () => {
-//     return await getDocs(collection(db, 'localTrips')).then((snaps) => snaps.docs.map((d) => d.data()))
-// }
+// fetch details of all pickup cities
+export const getAllTripPackages = async () => {
+    return await getDocs(collection(db, 'package')).then((snaps) => snaps.docs.map((d) => d.data()))
+}
 
 // // fetch details of all pickup cities
 // export const getLocalTripsByCity = async (cityName) => {
@@ -35,28 +35,28 @@ export const createTripPackage = async ({ data }) => {
 //     ).then((snaps) => snaps.docs.map((d) => d.data()))
 // }
 
-// // fetch the pickup city
-// export const getLocalTripDetails = async (id) => {
-//     return await getDoc(doc(db, `localTrips/${id}`));
-// }
+// fetch the pickup city
+export const getPackageDetails = async (id) => {
+    return await getDoc(doc(db, `package/${id}`));
+}
 
-// // Update local trip
-// export const updateLocalTrip = async ({ data }) => {
-//     try {
-//         const collectionRef = doc(db, `localTrips/${data?.id}`);
-//         await updateDoc(collectionRef, data);
-//         return { success: true, message: "Local Trip Updated Successfully." };
+// Update local trip
+export const updatePackage = async ({ data }) => {
+    try {
+        const collectionRef = doc(db, `package/${data?.id}`);
+        await updateDoc(collectionRef, data);
+        return { success: true, message: "package Updated Successfully." };
 
-//     } catch (error) {
-//         console.error("Error updating Local Trip:", error);
-//         throw new Error(error.message || "Something went wrong.");
-//     }
-// };
+    } catch (error) {
+        console.error("Error updating package:", error);
+        throw new Error(error.message || "Something went wrong.");
+    }
+};
 
-// // delete local trip
-// export const deleteLocalTrip = async (id) => {
-//     if (!id) {
-//         throw new Error("Id is required");
-//     }
-//     await deleteDoc(doc(db, `localTrips/${id}`));
-// }
+// delete local trip
+export const deletePackage = async (id) => {
+    if (!id) {
+        throw new Error("Id is required");
+    }
+    await deleteDoc(doc(db, `package/${id}`));
+}
