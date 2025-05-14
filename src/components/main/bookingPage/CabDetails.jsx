@@ -102,20 +102,6 @@ export const CabDetails = () => {
 
     const handleCabBooking = (cab) => {
 
-        // if (!userData) {
-        //     setIsDialogOpen(true)
-        //     return
-        // }
-
-        // let dayDifference = 0;
-        // if (tripData?.returnDate) {
-        //     const d1 = new Date(tripData?.pickupDate);
-        //     const d2 = new Date(tripData?.returnDate);
-        //     dayDifference = differenceInCalendarDays(d2, d1);
-        // } else {
-        //     dayDifference = 1;
-        // }
-
         let finalBookingPrice = (
             (
                 tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (
@@ -150,7 +136,7 @@ export const CabDetails = () => {
                     ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
             )
         }
-        // console.log(bookingData, tripData?.pickupDate);
+        console.log(bookingData, tripData);
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
