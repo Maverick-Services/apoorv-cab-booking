@@ -4,7 +4,7 @@ import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { getAllBookings, getBookingsByDate } from '@/lib/firebase/admin/booking'
+import { getAllBookings, getBookingsByDate, getBookingsByCustomRange } from '@/lib/firebase/admin/booking'
 import BookingList from './components/BookingList'
 import { Loader2 } from 'lucide-react'
 import { CSVLink } from 'react-csv'
@@ -26,23 +26,31 @@ function Page() {
     const [timeFilter, setTimeFilter] = useState("today");
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(false)
+    const [customRange, setCustomRange] = useState({ start: '', end: '' });
 
     async function fetchAllBookings() {
-        setLoading(true)
+        setLoading(true);
         try {
-            const res = await (timeFilter === "all" ? getAllBookings() : getBookingsByDate(timeFilter));
-            console.log(res)
-            setBookings(res)
+            let res;
+            if (timeFilter === "all") {
+                res = await getAllBookings();
+            } else if (timeFilter === "custom" && customRange.start && customRange.end) {
+                res = await getBookingsByCustomRange(customRange.start, customRange.end);
+            } else {
+                res = await getBookingsByDate(timeFilter);
+            }
+            setBookings(res);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-        setLoading(false)
+        setLoading(false);
     }
 
     useEffect(() => {
-        if (timeFilter)
-            fetchAllBookings()
-    }, [timeFilter])
+        if (timeFilter !== "custom" || (customRange.start && customRange.end)) {
+            fetchAllBookings();
+        }
+    }, [timeFilter, customRange]);
 
     const flattenedBookings = bookings.map(flattenObject);
 
@@ -70,19 +78,40 @@ function Page() {
                                 )}
                             </div>
 
-                            <select name="timeFilter"
-                                className='px-2 py-1 bg-white rounded-md border border-black w-fit'
-                                onChange={(e) => setTimeFilter(e.target.value)}
-                                defaultValue={timeFilter}
-                            >
-                                <option value="today">Today</option>
-                                <option value="upcoming">Upcoming</option>
-                                <option value="yesterday">Yesterday</option>
-                                <option value="last7days">Past 7 days</option>
-                                <option value="lastMonth">Past 1 Month</option>
-                                <option value="lastYear">Past 1 Year</option>
-                                <option value="all">All</option>
-                            </select>
+                            <div className='flex items-center gap-4'>
+                                <select
+                                    name="timeFilter"
+                                    className='px-2 py-1 bg-white rounded-md border border-black w-fit'
+                                    onChange={(e) => setTimeFilter(e.target.value)}
+                                    defaultValue={timeFilter}
+                                >
+                                    <option value="today">Scheduled Today</option>
+                                    <option value="upcoming">Scheduled Upcoming</option>
+                                    <option value="yesterday">Scheduled Yesterday</option>
+                                    <option value="last7days">Scheduled Past 7 days</option>
+                                    <option value="lastMonth">Scheduled Past 1 Month</option>
+                                    <option value="lastYear">Scheduled Past 1 Year</option>
+                                    <option value="custom">Custom Date Range</option>
+                                    <option value="all">All</option>
+                                </select>
+                                {timeFilter === 'custom' && (
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="date"
+                                            value={customRange.start}
+                                            onChange={(e) => setCustomRange({ ...customRange, start: e.target.value })}
+                                            className='border px-2 py-1 rounded bg-white'
+                                        />
+                                        <span className='font-semibold'>to</span>
+                                        <input
+                                            type="date"
+                                            value={customRange.end}
+                                            onChange={(e) => setCustomRange({ ...customRange, end: e.target.value })}
+                                            className='border px-2 py-1 rounded bg-white'
+                                        />
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <Link href={'/admin/bookings/new'}>

@@ -108,6 +108,7 @@ export const getBookingsByDate = async (filter) => {
     if (!range) throw new Error("Invalid date filter");
 
     const bookingsRef = collection(db, "bookings");
+
     const q = filter === "upcoming"
         ? query(
             bookingsRef,
@@ -122,8 +123,36 @@ export const getBookingsByDate = async (filter) => {
         );
 
     const snaps = await getDocs(q);
-    return snaps.docs.map((d) => d.data());
+    return snaps.docs.map((d) => ({ id: d.id, ...d.data() }));
 };
+
+
+export async function getBookingsByCustomRange(startDate, endDate) {
+    try {
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+
+        const startTimestamp = Timestamp.fromDate(start);
+        const endTimestamp = Timestamp.fromDate(end);
+
+        const bookingsRef = collection(db, 'bookings');
+        const q = query(
+            bookingsRef,
+            where('pickupDate', '>=', startTimestamp),
+            where('pickupDate', '<=', endTimestamp),
+            orderBy("pickupDate", "desc")
+        );
+
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    } catch (error) {
+        console.error('Error fetching bookings by custom range:', error);
+        return [];
+    }
+}
 
 export const getBookingsByUser = async (userId) => {
     try {

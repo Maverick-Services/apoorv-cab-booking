@@ -22,9 +22,9 @@ function page() {
             fetchBookingsOfUser()
     }, [userData])
 
-    if (userData && userData?.role !== ROLE.CUSTOMER) {
-        return <Navigate to='/' />;
-    }
+    // if (userData && userData?.role !== ROLE.CUSTOMER) {
+    //     return <Navigate to='/' />;
+    // }
 
     if (!bookings) {
         return <div>No Bookings Yet</div>

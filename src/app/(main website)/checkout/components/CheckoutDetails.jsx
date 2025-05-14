@@ -72,6 +72,9 @@ export default function CheckoutDetails() {
     const bookingAmount = useMemo(() => parseFloat((totalAmount * 0.2).toFixed(2)), [totalAmount])
     const isRoundTrip = bookingData.tripType === 'Round Trip' && bookingData.dropOffs?.length > 0
 
+    console.log(totalAmount,
+        driverAllowance,
+        priceWithAllowance)
     // console.log(driverAllowance, gstAmount, totalAmount)
 
     // function handleBookingSuccess() {

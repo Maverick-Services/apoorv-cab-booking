@@ -8,7 +8,6 @@ import { TRIP_TYPES } from '@/lib/constants/constants'
 import { getLocalTripsByCity } from '@/lib/firebase/admin/localTrips'
 import { Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
-import { MdAirlineSeatReclineExtra, MdOutlineLuggage } from 'react-icons/md'
 import { getAirportTripsByCity } from '@/lib/firebase/admin/airportTrips';
 
 export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity, currentCab, cabTypes, noOfDays }) => {
@@ -62,12 +61,6 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
 
     const handleCabBooking = (cab) => {
 
-        // console.log(cab)
-        // if (!userData) {
-        //     setIsDialogOpen(true)
-        //     return;
-        // }
-
         let bookingData = {
             tripType: tripData?.tripType,
             pickupCity: tripData?.pickupCity,
@@ -88,7 +81,7 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
 
-    if (loading || !trips || !tripFilter)
+    if (loading || !trips || !tripFilter || !currentPickupCity)
         return <Loader2 />
 
     return (
@@ -136,10 +129,18 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
 
                                             <div className="text-right space-y-0.5">
                                                 <div className="line-through text-sm text-gray-400">
-                                                    ₹{cab?.price}
+                                                    ₹{
+                                                        +cab?.price + +(
+                                                            currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance
+                                                        )
+                                                    }
                                                 </div>
                                                 <div className="text-blue-700 text-xl font-bold">
-                                                    ₹{cab?.discountedPrice}
+                                                    ₹{
+                                                        +cab?.discountedPrice + +(
+                                                            currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance
+                                                        )
+                                                    }
                                                 </div>
                                                 <div className="text-green-700 text-xs bg-green-100 px-2 py-0.5 rounded-sm inline-block">
                                                     GUARANTEED
