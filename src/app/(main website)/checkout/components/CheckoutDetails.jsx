@@ -5,7 +5,6 @@ import Image from 'next/image'
 import useAuthStore from '@/store/useAuthStore'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FaCar, FaUser, FaWallet, FaReceipt, FaMapMarkerAlt } from 'react-icons/fa'
-import Script from 'next/script';
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { TRIP_TYPES } from '@/lib/constants/constants'
@@ -71,15 +70,6 @@ export default function CheckoutDetails() {
     const totalAmount = useMemo(() => parseFloat((priceWithAllowance + gstAmount).toFixed(2)), [priceWithAllowance, gstAmount])
     const bookingAmount = useMemo(() => parseFloat((totalAmount * 0.2).toFixed(2)), [totalAmount])
     const isRoundTrip = bookingData.tripType === 'Round Trip' && bookingData.dropOffs?.length > 0
-
-    console.log(totalAmount,
-        driverAllowance,
-        priceWithAllowance)
-    // console.log(driverAllowance, gstAmount, totalAmount)
-
-    // function handleBookingSuccess() {
-    //     router.push(`/booking-success?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
-    // }
 
     const loadRazorpay = () => {
         return new Promise((resolve) => {
