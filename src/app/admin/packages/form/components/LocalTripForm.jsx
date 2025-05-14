@@ -13,18 +13,23 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
-import CityName from './CityName';
 import TripVariant from './TripVariant';
 import TripHours from './TripHours';
 import TripDistance from './TripDistance';
 import { useLocalTripFromForm } from '../context/localTripContext';
-import TripType from '@/components/main/home/bookingForm/TripType';
 import { useForm } from 'react-hook-form';
 import Pickup from '@/components/main/home/bookingForm/Pickup';
+import { TRIP_TYPES } from '@/lib/constants/constants';
+import PickupCityName from './PickupCityName';
+import LocationSearch from '@/components/main/home/bookingForm/DropSuggestionForm';
+import toast from 'react-hot-toast';
 
 const LocalTripForm = () => {
     const searchParams = useSearchParams();
-    const updateLocalTripId = searchParams.get('id');
+    const updatePackageId = searchParams.get('id');
+
+    const [dropOffs, setDropOffs] = useState([]);
+    const [query, setQuery] = useState("");
 
     const {
         otherError,
@@ -43,61 +48,117 @@ const LocalTripForm = () => {
         setValue,
         getValues,
         register,
+        unregister,
         handleSubmit,
+        watch,
         formState: { errors }
     } = useForm();
 
+    const tripType = watch('tripType');
+    const dropCity = watch('dropCity');
+
     // Initially Fetch local trip Details if we got Id in URL
     useEffect(() => {
-        if (updateLocalTripId) {
+        if (updatePackageId) {
             (async () => {
-                const resp = await fetchData(updateLocalTripId);
+                const resp = await fetchData(updatePackageId);
                 setData(resp)
+                setDropOffs(resp?.dropOffs)
                 setVariantList(resp?.variantList)
             })();
         }
-    }, [updateLocalTripId]);
+    }, [updatePackageId]);
 
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault()
-    //     const finalData = {
-    //         ...data,
-    //         variantList: variantList
-    //     }
-    //     if (updateLocalTripId) {
-    //         handleUpdate(finalData);
-    //     } else {
-    //         handleCreate(finalData);
-    //     }
-    // };
+    useEffect(() => {
+        handleData("dropOffs", dropOffs);
+    }, [dropOffs])
+
+    useEffect(() => {
+        handleData("dropCity", dropCity);
+    }, [dropCity])
+
+    const handlePackageSubmit = async (e) => {
+        e.preventDefault();
+
+        let finalData = {
+            ...data,
+            tripType,
+            variantList: variantList
+        }
+        // console.log(finalData);
+
+        if (!finalData?.tripType || !!finalData?.PickupCity || !finalData?.variantList?.length)
+            return toast.error("Please fill complete details")
+
+        if (tripType === TRIP_TYPES.oneWay && !finalData?.dropCity)
+            return toast.error("Please fill complete details")
+
+        // console.log(finalData);
+        if (tripType === TRIP_TYPES.roundTrip) {
+
+            if (finalData?.dropOffs?.length <= 0 && !query)
+                return toast.error('Please fill complete details');
+
+            finalData = {
+                ...finalData,
+                dropCity: finalData?.dropCity ? finalData?.dropCity : "",
+                dropOffs: finalData?.dropOffs?.length > 0
+                    ? finalData?.dropOffs : [...dropOffs, query]
+            }
+        }
+        // console.log(finalData);
+        if (updatePackageId) {
+            handleUpdate(finalData);
+        } else {
+            handleCreate(finalData);
+        }
+    };
 
 
 
     return (
         <div className='w-full max-w-4xl mx-auto p-4'>
             <form
-                // onSubmit={handleSubmit} 
+                onSubmit={handlePackageSubmit}
                 className="space-y-4">
                 <div className='bg-white shadow-sm rounded-2xl p-6 border border-gray-100'>
                     <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-5'>
-                        {/* City Name */}
-                        {/* <TripType /> */}
 
-                        <Pickup />
+                        {/* Trip Type */}
+                        <div className="flex flex-col">
+                            <label className="text-sm font-medium mb-1">Trip Type <span className="text-red-500">*</span></label>
+                            <select
+                                {...register('tripType', { required: 'Trip type is required' })}
+                                className="border p-2 py-1 rounded-md"
+                            >
+                                <option value={TRIP_TYPES.oneWay}>{TRIP_TYPES.oneWay}</option>
+                                <option value={TRIP_TYPES.roundTrip}>{TRIP_TYPES.roundTrip}</option>
+                            </select>
+                            {errors.tripType && (
+                                <span className="text-red-500 text-xs">{errors.tripType.message}</span>
+                            )}
+                        </div>
 
-                        {/* <CityName updateLocalTripId={updateLocalTripId} /> */}
+                        <PickupCityName
+                            updateLocalTripId={updatePackageId}
+                        />
 
-                        {/* Hours */}
-                        <TripHours updateLocalTripId={updateLocalTripId} />
-
-                        {/* Kilometers */}
-                        <TripDistance updateLocalTripId={updateLocalTripId} />
+                        <LocationSearch
+                            register={register}
+                            unregister={unregister}
+                            setValue={setValue}
+                            dropOffs={dropOffs}
+                            setDropOffs={setDropOffs}
+                            tripType={tripType}
+                            query={query}
+                            setQuery={setQuery}
+                        />
                     </div>
 
                     {/* LocalTrip Variants in city */}
                     <div className='space-y-6'>
-                        <TripVariant updateLocalTripId={updateLocalTripId} />
+                        <TripVariant updateLocalTripId={updatePackageId} />
                     </div>
                 </div>
 
@@ -115,20 +176,20 @@ const LocalTripForm = () => {
                     >
                         {creating ? (
                             <Loader2 className="animate-spin w-5 h-5" />
-                        ) : !updateLocalTripId ? (
+                        ) : !updatePackageId ? (
                             <>
                                 <PlusCircle className="w-5 h-5" />
-                                Add Local Trip
+                                Add Package
                             </>
                         ) : (
                             <>
                                 <CircleCheckBig className="w-5 h-5" />
-                                Update Trip
+                                Update Package
                             </>
                         )}
                     </button>
 
-                    {updateLocalTripId && (
+                    {updatePackageId && (
                         <Dialog>
                             <DialogTrigger asChild>
                                 <button
@@ -136,7 +197,7 @@ const LocalTripForm = () => {
                                     className="h-12 bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
                                 >
                                     <LucideDelete className="w-5 h-5" />
-                                    Delete Trip
+                                    Delete Package
                                 </button>
                             </DialogTrigger>
                             <DialogContent className="rounded-2xl max-w-md">

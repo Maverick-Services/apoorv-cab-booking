@@ -45,7 +45,7 @@ const SkeletonLoader = () => {
 export default function page() {
     return (
         <div>
-            <InnerLayout heading={"Add New Local Trip"}>
+            <InnerLayout heading={"Add New Package"}>
                 <div className='flex justify-center w-full pb-6'>
                     <Suspense fallback={<SkeletonLoader />}>
                         <LocalTripForm />

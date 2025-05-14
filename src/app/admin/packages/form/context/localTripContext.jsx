@@ -1,6 +1,7 @@
 "use client"
 
 import { createNewLocalTrip, deleteLocalTrip, getLocalTripDetails, updateLocalTrip } from "@/lib/firebase/admin/localTrips";
+import { createTripPackage } from "@/lib/firebase/admin/tripPackage";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import toast from 'react-hot-toast';
@@ -12,7 +13,7 @@ export default function LocalTripFormContextProvider({ children }) {
     const [data, setData] = useState({});
     const [variantList, setVariantList] = useState([])
     const [otherError, setOtherError] = useState(null);
-    console.log(data)
+    // console.log(data)
     const [selectedCity, setSelectedCity] = useState({})
 
     // while fetching the data
@@ -68,12 +69,12 @@ export default function LocalTripFormContextProvider({ children }) {
         setOtherError(null)
         setCreating(true)
         try {
-            await createNewLocalTrip({ data });
-            toast.success('Local Trip Added Successfully!');
-            router.push('/admin/localTrips');
+            await createTripPackage({ data });
+            toast.success('Package Added Successfully!');
+            router.push('/admin/packages');
         } catch (error) {
             setOtherError(error?.message);
-            toast.error(error?.message || 'Error adding cab type');
+            toast.error(error?.message || 'Error adding package');
         }
         setCreating(false)
     }

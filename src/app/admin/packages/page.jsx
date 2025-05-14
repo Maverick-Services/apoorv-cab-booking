@@ -10,9 +10,9 @@ function page() {
             <div className='w-full flex flex-col gap-2'>
                 <div className='w-full flex justify-between px-1'>
                     <p className='font-semibold text-primary'>Total Packages: {30}</p>
-                    <Link href={'/admin/packages/new'}>
+                    <Link href={'/admin/packages/form'}>
                         <Badge className="text-base font-bold cursor-pointer">
-                            Add new Packages
+                            Add new Package
                         </Badge>
                     </Link>
                 </div>
