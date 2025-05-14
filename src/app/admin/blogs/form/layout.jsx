@@ -1,12 +1,5 @@
-import React from 'react'
-import FormContextProvider from './context/FormContext'
+import BlogFormContextProvider from "./contexts/BlogFormContext";
 
-function layout({ children }) {
-    return (
-        <FormContextProvider>
-            {children}
-        </FormContextProvider>
-    )
+export default function Layout({ children }) {
+    return <BlogFormContextProvider>{children}</BlogFormContextProvider>
 }
-
-export default layout
