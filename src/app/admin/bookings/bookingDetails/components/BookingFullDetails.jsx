@@ -7,7 +7,7 @@ import { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
 
 function BookingFullDetails({ booking, vendor }) {
 
-    console.log(booking)
+    // console.log(booking)
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Location Card */}
