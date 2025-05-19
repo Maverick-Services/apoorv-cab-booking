@@ -84,14 +84,17 @@ export default function Footer() {
             </div>
 
             {/* Social and Copyright */}
-            <div className="mt-10 border-t border-gray-700 pt-6">
-                <div className="flex justify-center space-x-6 text-gray-300 mb-4">
+            <div className="mt-10 border-t border-gray-700 pt-6 spaxe-y-2">
+                {/* <div className="flex justify-center space-x-6 text-gray-300 mb-4">
                     <Facebook className="w-6 h-6" />
                     <Instagram className="w-6 h-6" />
                     <Youtube className="w-6 h-6" />
-                </div>
+                </div> */}
                 <p className="text-sm text-gray-400 text-center">
-                    Copyright 2025 • <Link href="https://maverickservices.in/" target="_blank">Maverick</Link>, All Rights Reserved
+                    Copyright 2025 • <span className='font-bold'>Taps Cabs</span> , All Rights Reserved
+                </p>
+                <p className="text-sm text-gray-400 text-center">
+                    Designed by <Link href="https://matchbestsoftware.com/" target="_blank" className='font-bold'>Matchest Software</Link>
                 </p>
             </div>
         </footer>

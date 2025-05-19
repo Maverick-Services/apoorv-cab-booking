@@ -21,3 +21,10 @@ export default function isTimestampLike(obj) {
         typeof obj.nanoseconds === 'number'
     );
 }
+
+export const formatCompleteDate = (d) => {
+    if (isTimestampLike(d)) {
+        return parseFirestoreTimestamp(d)           // returns a Date()
+    }
+    return new Date(d)                            // Date from string
+}

@@ -350,7 +350,7 @@ export const cities = [
 export const ROLE = {
     ADMIN: 'admin',
     VENDOR: 'vendor',
-    CUSTOMER: 'Customer',
+    CUSTOMER: 'user',
 }
 
 export const TRIP_TYPES = {

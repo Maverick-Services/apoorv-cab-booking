@@ -4,10 +4,12 @@ import InnerLayout from '@/components/dashboard/layout/InnerLayout'
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
-import { getAllBookings, getBookingsByDate, getBookingsByCustomRange } from '@/lib/firebase/admin/booking'
+import { getAllBookings, getDateRange } from '@/lib/firebase/admin/booking'
 import BookingList from './components/BookingList'
 import { Loader2 } from 'lucide-react'
 import { CSVLink } from 'react-csv'
+import { formatCompleteDate } from '@/lib/firebase/services/formatDate'
+import { Timestamp } from 'firebase/firestore'
 
 // Helper function to flatten nested objects
 const flattenObject = (obj, prefix = '') => {
@@ -32,12 +34,40 @@ function Page() {
         setLoading(true);
         try {
             let res;
-            if (timeFilter === "all") {
-                res = await getAllBookings();
-            } else if (timeFilter === "custom" && customRange.start && customRange.end) {
-                res = await getBookingsByCustomRange(customRange.start, customRange.end);
-            } else {
-                res = await getBookingsByDate(timeFilter);
+            // if (timeFilter === "all") {
+            res = await getAllBookings();
+            // } 
+            if (timeFilter != "all") {
+                // res = await getAllBookings();
+                const range = getDateRange(timeFilter)
+                // console.log(timeFilter, range.start.toDate(), range.end.toDate());
+                let startDate = null;          // Timestamp -> Date
+                let endDate = null;
+
+                if (timeFilter === "custom") {
+                    const start = new Date(customRange?.start);
+                    start.setHours(0, 0, 0, 0);
+
+                    const end = new Date(customRange?.end);
+                    end.setHours(23, 59, 59, 999);
+
+                    const startTimestamp = Timestamp.fromDate(start);
+                    const endTimestamp = Timestamp.fromDate(end);
+
+                    startDate = startTimestamp.toDate();
+                    endDate = endTimestamp.toDate();
+                } else {
+                    startDate = range.start.toDate()          // Timestamp -> Date
+                    endDate = range.end.toDate()
+                }
+
+                res = res.filter(bk => {
+                    const bkDate = formatCompleteDate(bk.pickupDate)
+                    return bkDate >= startDate && (
+                        timeFilter === "upcoming" ? true : bkDate <= endDate
+                    )
+                })
+                // console.log(res);
             }
             setBookings(res);
         } catch (error) {
@@ -47,7 +77,7 @@ function Page() {
     }
 
     useEffect(() => {
-        if (timeFilter !== "custom" || (customRange.start && customRange.end)) {
+        if (timeFilter || (customRange.start && customRange.end)) {
             fetchAllBookings();
         }
     }, [timeFilter, customRange]);

@@ -32,7 +32,7 @@ export const getBookingDetails = async (id) => {
 export const getAllBookings = async () => {
     return await getDocs(query(
         collection(db, 'bookings'),
-        orderBy("createdAt", "desc")
+        orderBy("pickupDate", "desc")
     )).then((snaps) => snaps.docs.map((d) => d.data()))
 }
 
