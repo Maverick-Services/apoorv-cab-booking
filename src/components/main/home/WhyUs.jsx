@@ -21,7 +21,7 @@ function WhyUs() {
                 {/* Right Side - Content */}
                 <div className="sm:w-1/2">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-8">
-                        We offer the best experience <br /> with our rental deals
+                        We offer the best experience <br /> with our rides
                     </h2>
 
                     <div className="space-y-6">
@@ -55,9 +55,9 @@ function WhyUs() {
                                 <FaClock className="text-blue-500 text-xl" />
                             </div>
                             <div>
-                                <h4 className="font-semibold text-lg text-gray-900">24 hour car delivery</h4>
+                                <h4 className="font-semibold text-lg text-gray-900">24 hour car availability</h4>
                                 <p className="text-gray-500 text-sm">
-                                    Book your car anytime and we will deliver it directly to you.
+                                    Book your car anytime and we will never let down your bookings.
                                 </p>
                             </div>
                         </div>
@@ -69,7 +69,7 @@ function WhyUs() {
                             <div>
                                 <h4 className="font-semibold text-lg text-gray-900">24/7 technical support</h4>
                                 <p className="text-gray-500 text-sm">
-                                    Have a question? Contact Rentcars support any time when you have a problem.
+                                    Have a question? Contact TapsCabs support any time when you have a problem.
                                 </p>
                             </div>
                         </div>

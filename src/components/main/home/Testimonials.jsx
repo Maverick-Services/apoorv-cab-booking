@@ -13,29 +13,30 @@ const Slider = dynamic(() => import('react-slick'), { ssr: false });
 const testimonials = [
     {
         id: 1,
-        name: 'Charlie Johnson',
-        location: 'From New York, US',
+        name: 'Rahul Kumar',
+        location: 'From Mumbai, India',
         rating: 5,
         text: "I feel very secure when using caretall's services. Your customer care team is very enthusiastic and the driver is always on time.",
         image: MAIN_WEBSITE.client1,
     },
     {
         id: 2,
-        name: 'Sarah Wilson',
-        location: 'From New York, US',
+        name: 'Priya Singh',
+        location: 'From Delhi, India',
         rating: 5,
         text: "I’ve been using your services for years. Your service is great, I will continue to use your service.",
         image: MAIN_WEBSITE.client2,
     },
     {
         id: 3,
-        name: 'Liam Scott',
-        location: 'From New York, US',
+        name: 'Arjun Patel',
+        location: 'From Bangalore, India',
         rating: 5,
         text: "Everything was perfect! The process was smooth, and the car delivery was on time.",
         image: MAIN_WEBSITE.client3,
     },
 ];
+
 
 const sliderSettings = {
     dots: true,

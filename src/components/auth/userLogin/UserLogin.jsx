@@ -14,6 +14,7 @@ import {
     InputOTPSlot,
     InputOTPSeparator,
 } from '@/components/ui/input-otp'
+import toast from 'react-hot-toast'
 
 function UserLogin({ open, onOpenChange }) {
     const [loading, setLoading] = useState(false)
@@ -72,16 +73,20 @@ function UserLogin({ open, onOpenChange }) {
                 setOtp('')
 
                 if (res.success && res.userDetails) {
+                    toast.success("Login Successful")
                     setUserData(res.userDetails)
                     onOpenChange(false)
                 } else {
+                    toast.error("Login failed. Please try again.");
                     setErrorMessage('Login failed. Please try again.')
                 }
             } else {
+                toast.error("Incorrect OTP. Please try again.");
                 setErrorMessage('Incorrect OTP. Please try again.')
             }
         } catch (err) {
             console.error(err)
+            toast.error("Verification failed. Please try again.");
             setErrorMessage('Verification failed. Please try again.')
         }
         setLoading(false)

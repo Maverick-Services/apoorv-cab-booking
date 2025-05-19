@@ -4,8 +4,8 @@ export const MAIN_WEBSITE = {
     bg: '/bg.png',
     mobile: '/mobile.webp',
     client1: '/client1.png',
-    client2: '/client2.png',
-    client3: '/client3.jpeg',
+    client2: '/client2.jpg',
+    client3: '/client3.jpg',
     taxi: '/taxi1.png',
     signupImg: '/signup.jpg'
 };

@@ -1,32 +1,26 @@
+// components/Footer.js
 import { MAIN_WEBSITE } from '@/lib/assets/assets';
-import { Mail, MapPin, Phone, Facebook, Instagram, Youtube } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Footer() {
     return (
         <footer className="bg-[#0F253B] text-white py-12 px-6 md:px-16">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                 {/* Company Info */}
                 <div className="space-y-6">
-                    <div className="flex items-center space-x-2">
-                        <Image
-                            src={MAIN_WEBSITE.logo}
-                            height={80}
-                            width={180}
-                            alt='logo'
-                        />
-                    </div>
+                    <Image src={MAIN_WEBSITE.logo} height={80} width={180} alt="logo" />
                     <div className="flex items-start space-x-3">
                         <MapPin className="mt-1" />
                         <div>
-                            <p>10, Shiva Compound ,</p>
-                            <p>Delhi-UP border , Ghaziabad</p>
+                            <p>10, Shiva Compound,</p>
+                            <p>Delhi-UP border, Ghaziabad</p>
                         </div>
                     </div>
                     <div className="flex items-center space-x-3">
                         <Phone />
-                        <p>+917248772488</p>
+                        <p>+91 72487 72488</p>
                     </div>
                     <div className="flex items-center space-x-3">
                         <Mail />
@@ -34,67 +28,74 @@ export default function Footer() {
                     </div>
                 </div>
 
-                {/* Cab from Delhi */}
+                {/* Quick Links */}
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Cab from Delhi</h3>
-                    <ul className="space-y-2 text-gray-300">
-                        <li>Taxi from Delhi to Agra</li>
-                        <li>Taxi from Delhi to Jaipur</li>
-                        <li>Taxi from Delhi to Chandigarh</li>
-                        <li>Taxi from Delhi to Amritsar</li>
-                        <li>Taxi from Delhi to Manali</li>
+                    <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul className="space-y-3 text-gray-300">
+                        <li>
+                            <Link href="/" className="hover:text-white transition">
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/#why-us" className="hover:text-white transition">
+                                Why Us
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/#testimonials" className="hover:text-white transition">
+                                Testimonials
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/blogs" className="hover:text-white transition">
+                                Blogs
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/#contact" className="hover:text-white transition">
+                                Contact
+                            </Link>
+                        </li>
                     </ul>
                 </div>
 
-                {/* Cab from Bangalore */}
+                {/* Newsletter or Social */}
                 <div>
-                    <h3 className="text-lg font-semibold mb-4">Cab from Bangalore</h3>
-                    <ul className="space-y-2 text-gray-300">
-                        <li>Taxi from Bangalore to Mysore</li>
-                        <li>Taxi from Bangalore to Coorg</li>
-                        <li>Taxi from Bangalore to Ooty</li>
-                        <li>Taxi from Bangalore to Pondicherry</li>
-                        <li>Taxi from Bangalore to Goa</li>
-                    </ul>
-                </div>
-
-                {/* Cab from Mumbai */}
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Cab from Mumbai</h3>
-                    <ul className="space-y-2 text-gray-300">
-                        <li>Taxi from Mumbai to Shirdi</li>
-                        <li>Taxi from Mumbai to Shani Shingnapur</li>
-                        <li>Taxi from Mumbai to Mahabaleshwar</li>
-                        <li>Taxi from Mumbai to Nashik</li>
-                        <li>Taxi from Mumbai to Pune</li>
-                    </ul>
-                </div>
-
-                {/* Cab from Chennai */}
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Cab from Chennai</h3>
-                    <ul className="space-y-2 text-gray-300">
-                        <li>Taxi from Chennai to Bangalore</li>
-                        <li>Taxi from Chennai to Pondicherry</li>
-                        <li>Taxi from Chennai to Tirupati</li>
-                        <li>Taxi from Chennai to Mahabalipuram</li>
-                        <li>Taxi from Chennai to Kanchipuram</li>
-                    </ul>
+                    <h3 className="text-lg font-semibold mb-4">Stay Connected</h3>
+                    <p className="text-gray-300 mb-4">
+                        Subscribe to our newsletter for exclusive offers and updates.
+                    </p>
+                    {/* <form className="flex">
+                        <input
+                            type="email"
+                            placeholder="Your email"
+                            className="flex-1 px-4 py-2 rounded-l-lg focus:outline-none"
+                        />
+                        <button
+                            type="submit"
+                            className="bg-blue-600 px-4 py-2 rounded-r-lg hover:bg-blue-700 transition"
+                        >
+                            Subscribe
+                        </button>
+                    </form> */}
                 </div>
             </div>
 
-            {/* Social and Copyright */}
-            <div className="mt-10 border-t border-gray-700 pt-6 spaxe-y-2">
-                {/* <div className="flex justify-center space-x-6 text-gray-300 mb-4">
-                    <Facebook className="w-6 h-6" />
-                    <Instagram className="w-6 h-6" />
-                    <Youtube className="w-6 h-6" />
-                </div> */}
-                <p className="text-sm text-gray-400 text-center">
-                    Copyright 2025 • <span className='font-bold'>Taps Cabs</span> , All Rights Reserved
+            {/* Bottom Bar */}
+            <div className="mt-10 border-t border-gray-700 pt-6 text-center space-y-2">
+                <p className="text-sm text-gray-400">
+                    © 2025 <span className="font-bold">Taps Cabs</span>. All rights reserved.
                 </p>
-                <p className="text-sm text-gray-400 text-center">
-                    Designed by <Link href="https://matchbestsoftware.com/" target="_blank" className='font-bold'>Matchest Software</Link>
+                <p className="text-sm text-gray-400">
+                    Designed by{' '}
+                    <Link
+                        href="https://matchbestsoftware.com/"
+                        target="_blank"
+                        className="font-bold hover:text-white transition"
+                    >
+                        Matchest Software
+                    </Link>
                 </p>
             </div>
         </footer>

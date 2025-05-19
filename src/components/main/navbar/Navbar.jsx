@@ -92,6 +92,14 @@ export default function Navbar() {
                             </div>
                         </div>
 
+
+                        <Link
+                            href={"/blogs"}
+                            className="text-gray-600 hover:text-blue-900 transition-colors"
+                        >
+                            Blogs
+                        </Link>
+
                         {userData ? (
                             <div className="flex items-center space-x-6 ml-4">
                                 {userData?.role === ROLE.CUSTOMER && authLinks.map(({ href, label }) => (
@@ -103,6 +111,7 @@ export default function Navbar() {
                                         {label}
                                     </Link>
                                 ))}
+
                                 <div className="flex items-center space-x-4 border-l pl-6 ml-0 border-gray-200">
                                     <span className="text-gray-600 font-medium">
                                         Hi, {userData?.phoneNo?.split(' ')[0]}
@@ -194,6 +203,13 @@ export default function Navbar() {
                             </Link>
                         ))} */}
 
+                        <Link
+                            href={"/blogs"}
+                            className="block px-4 py-2.5 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                        >
+                            Blogs
+                        </Link>
+
                         {userData ? (
                             <>
                                 {userData?.role === ROLE.CUSTOMER && authLinks.map(({ href, label }) => (
@@ -205,6 +221,7 @@ export default function Navbar() {
                                         {label}
                                     </Link>
                                 ))}
+
                                 <div className="px-4 pt-4 mt-4 border-t border-gray-100">
                                     <div className="flex items-center justify-between mb-4">
                                         <span className="text-gray-600 font-medium">
@@ -222,7 +239,7 @@ export default function Navbar() {
                         ) : (
                             <button
                                 onClick={() => setIsDialogOpen(true)}
-                                className="w-full mt-2 bg-blue-900 text-white py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+                                className="w-full mt-2 bg-[#F0E628] text-white py-2.5 rounded-lg hover:bg-[#F3E934] transition-colors"
                             >
                                 Sign In
                             </button>

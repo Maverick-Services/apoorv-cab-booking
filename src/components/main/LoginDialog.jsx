@@ -7,16 +7,18 @@ import Login from './Login'
 import Signup from './Signup'
 import { useRouter, usePathname } from 'next/navigation'
 import { useFullUrl } from './useFullUrl'
+import { toast } from 'react-hot-toast';
 
 export default function LoginDialog({ open, onOpenChange }) {
     const router = useRouter()
     const path = usePathname()
 
     const fullUrl = useFullUrl()
-    
+
     // close + redirect back
     const handleSuccess = () => {
         onOpenChange(false)
+        toast.success("Login Successful")
         router.push(fullUrl)
     }
 

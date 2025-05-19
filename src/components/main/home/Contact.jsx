@@ -4,8 +4,45 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { FaPhoneAlt, FaFax, FaEnvelope } from "react-icons/fa";
+import { useForm } from 'react-hook-form';
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Contact() {
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm()
+    const [isSubmitting, setIsSubmitting] = useState(false)
+
+    const onSubmit = async (data) => {
+        setIsSubmitting(true)
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+
+            if (response.ok) {
+                toast.success(
+                    <div className="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>Message sent successfully!</span>
+                    </div>
+                )
+                reset()
+            } else {
+                toast.error('Failed to send message. Please try again.')
+            }
+        } catch (error) {
+            toast.error('An error occurred. Please try again later.')
+        } finally {
+            setIsSubmitting(false)
+        }
+    }
+
     return (
         <section id="contact" className="flex px-10 flex-col lg:flex-row gap-7 rounded-3xl overflow-hidden max-w-7xl mx-auto my-16">
             {/* Left Section: Form */}
@@ -14,13 +51,52 @@ export default function Contact() {
                     Get in <span className="text-blue-600">Touch</span>
                 </h2>
 
-                <form className="space-y-4">
-                    <Input placeholder="Name *" required />
-                    <Input placeholder="Email" type="email" />
-                    <Input placeholder="Phone number *" required />
-                    <Textarea placeholder="Query *" rows={4} required />
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    <div>
+                        <Input placeholder="Name *" required
+                            {...register('name', { required: 'Name is required' })}
+                        />
+                        {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>}
+                    </div>
 
-                    <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
+                    <div>
+                        <Input placeholder="Email" type="email" required
+                            {...register('email', {
+                                required: 'Email is required',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: 'Invalid email address'
+                                }
+                            })}
+                        />
+                        {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>}
+                    </div>
+
+                    <div>
+                        <Input placeholder="Phone number *" required
+                            {...register('phoneNo', {
+                                required: 'Contact Number is required',
+                                pattern: {
+                                    value: /^\+?[1-9]\d{1,14}$/,
+                                    message: 'Invalid phone number format'
+                                }
+                            })}
+                        />
+                        {errors.phoneNo && <p className="text-red-400 text-sm mt-1">{errors.phoneNo.message}</p>}
+                    </div>
+
+                    <div>
+                        <Textarea placeholder="Query *" rows={4} required
+                            {...register('message', { required: 'Message is required' })}
+                        />
+                        {errors.message && <p className="text-red-400 text-sm mt-1">{errors.message.message}</p>}
+                    </div>
+
+                    <Button
+                        disabled={isSubmitting}
+                        type="submit"
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                    >
                         SEND
                     </Button>
                 </form>
