@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/breadcrumb"
 import UserLogin from '@/components/auth/userLogin/UserLogin'
 import { Timestamp } from 'firebase/firestore'
+import { formatFirestoreDate } from '@/lib/firebase/services/formatDate'
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -154,6 +155,37 @@ export default function CheckoutDetails() {
                         );
 
                         if (verificationData.success) {
+                            // console.log("Payment Verified: ",)
+                            const { updatedBookingData } = verificationData;
+                            // Set template params for notification to customer
+                            let templateParams = [
+                                updatedBookingData?.userData?.name,
+                                updatedBookingData?.id,
+                                updatedBookingData?.tripType,
+                                `${formatFirestoreDate(updatedBookingData?.pickupDate)}, ${updatedBookingData?.pickupTime}`,
+                                updatedBookingData?.pickupCity,
+                                updatedBookingData?.userData?.exactPickup,
+                                `${updatedBookingData?.totalAmount}`,
+                                `${updatedBookingData?.bookingAmount}`,
+                                `${+updatedBookingData?.totalAmount - +updatedBookingData?.bookingAmount}`,
+                                `https://apoorv-cab-booking.vercel.app/my-trips`
+                            ]
+
+                            // Send Notification to Driver 
+                            const userRes = await fetch('/api/send-message', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    campaign: "customer_booking_confirmed_notification",
+                                    destination: updatedBookingData?.userData?.phoneNo || updatedBookingData?.userData?.phoneNumber,
+                                    templateParams,
+                                    paramsFallbackValue: {}
+                                }),
+                            });
+
+                            const userResult = await userRes.json();
+                            // console.log("Customer Booking Confirmed Notification Result", userResult);
+
                             router.push(`/booking-success?bookingId=${verificationData.bookingId}`);
                         } else {
                             toast.error("Payment verification failed");

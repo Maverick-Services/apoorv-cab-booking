@@ -53,7 +53,7 @@ export async function POST(request) {
         const bookingResult = await createNewBooking({ data: finalBookingData });
 
         ; return NextResponse.json(
-            { success: true, bookingId: bookingResult.data },
+            { success: true, bookingId: bookingResult.data, updatedBookingData: bookingResult.bookingData },
             { status: 200 }
         );
     } catch (err) {
