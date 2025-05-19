@@ -91,11 +91,11 @@ const LocalTripForm = () => {
                     </div>
                 )}
 
-                <div className="grid grid-cols-2 items-center gap-4">
+                <div className="flex items-center gap-4">
                     <button
                         type="submit"
                         disabled={creating}
-                        className="h-12 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="h-12 bg-gradient-to-r flex-grow from-blue-600 to-blue-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                         {creating ? (
                             <Loader2 className="animate-spin w-5 h-5" />
@@ -117,7 +117,7 @@ const LocalTripForm = () => {
                             <DialogTrigger asChild>
                                 <button
                                     type="button"
-                                    className="h-12 bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
+                                    className="h-12 flex-grow bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
                                 >
                                     <LucideDelete className="w-5 h-5" />
                                     Delete Trip
