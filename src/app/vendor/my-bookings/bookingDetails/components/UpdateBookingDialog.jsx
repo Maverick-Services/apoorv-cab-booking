@@ -146,8 +146,8 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 assginedDriver?.name,
                 assginedDriver?.phoneNo || assginedDriver?.phoneNumber,
                 assginedDriver?.cabType,
-                assginedDriver?.vehicleName,
                 assginedDriver?.vehicleNumber,
+                assginedDriver?.vehicleName,
                 `https://apoorv-cab-booking.vercel.app/my-trips`
             ]
 
