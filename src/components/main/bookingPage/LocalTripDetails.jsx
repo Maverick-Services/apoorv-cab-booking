@@ -92,7 +92,7 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
                     {
                         tripFilter?.map((tr, idx) =>
                             <TabsTrigger
-                                key={idx} value={tr}>{tr?.totalDistance}Kms {tr?.tripHours}Hrs</TabsTrigger>
+                                key={idx} value={tr}>{tr?.tripHours}Hrs | {tr?.totalDistance}Kms</TabsTrigger>
                         )
                     }
                 </TabsList>
