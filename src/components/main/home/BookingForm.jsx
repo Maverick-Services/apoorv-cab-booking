@@ -201,7 +201,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                         )}
 
                     {/* Pickup Date and Time */}
-                    <PickupDate register={register} control={control} />
+                    <PickupDate register={register} control={control} watch={watch} />
 
                     {/* Return Date */}
                     {tripType === TRIP_TYPES.roundTrip && (

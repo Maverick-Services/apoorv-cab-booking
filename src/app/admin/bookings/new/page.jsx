@@ -136,7 +136,7 @@ export default function Page() {
                         )}
 
                     {/* Pickup Date & Time */}
-                    <PickupDate register={register} control={control} />
+                    <PickupDate register={register} control={control} watch={watch} />
 
                     {/* Return Date - Only for Round Trip */}
                     {tripType === TRIP_TYPES.roundTrip && (
