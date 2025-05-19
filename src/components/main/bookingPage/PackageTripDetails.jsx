@@ -71,19 +71,22 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity }) => {
         let bookingData = {
             tripType: tripData?.tripType,
             pickupCity: tripData?.pickupCity,
+            dropCity: tripData?.dropCity ? tripData?.dropCity : "",
+            dropOffs: (tripData?.dropOffs && tripData?.dropOffs) ? tripData?.dropOffs : [],
             cab: {
                 ...cab,
                 actualPriceOneWay: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.actualPriceOneWay,
                 driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance
             },
             pickupDate: tripData?.pickupDate,
+            returnDate: tripData?.returnDate,
             pickupTime: tripData?.pickupTime,
             totalDistance: cab?.totalDistance,
             totalHours: cab?.tripHours,
             price: cab?.discountedPrice,
 
         }
-        // console.log(bookingData, tripData?.pickupDate);
+        // console.log(bookingData);
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }

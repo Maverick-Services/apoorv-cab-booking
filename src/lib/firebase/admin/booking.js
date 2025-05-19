@@ -14,8 +14,9 @@ export const createNewBooking = async ({ data }) => {
 
         // Update document with its ID
         await updateDoc(docRef, { id: docRef.id });
+        const bookingData = await getBookingDetails(docRef.id);
 
-        return { success: true, message: "Booking Added Successfully.", data: docRef.id };
+        return { success: true, message: "Booking Added Successfully.", data: docRef.id, bookingData };
     } catch (error) {
         console.error("Error adding Booking:", error);
         throw new Error(error.message || "Something went wrong.");

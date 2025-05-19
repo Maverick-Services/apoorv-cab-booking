@@ -40,23 +40,40 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                     vendor: selectedVendorId,
                 },
             };
+
+
+            const assginedVendor = vendors?.filter(v => v?.id === selectedVendorId)[0];
+            // console.log(assginedVendor);
+
+            // console.log(assginedVendor?.name,
+            //     updatedData?.id,
+            //     // updatedData?.id,
+            //     updatedData?.tripType,
+            //     updatedData?.pickupCity,
+            //     `https://apoorv-cab-booking.vercel.app/vendor/my-bookings/bookingDetails?id=${updatedData?.id}`)
+
             await updateBooking(updatedData);
 
             // Send Notification to Vendor 
-            // const res = await fetch('/api/send-message', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({
-            //         name: "Vendor Delhi",
-            //         bookingId: "QBKVMUM8GEQzC8qgfBFl",
-            //         tripType: "One Way",
-            //         pickupCity: "Delhi",
-            //         bookingUrl: "https://apoorv-cab-booking.vercel.app/vendor/my-bookings/bookingDetails?id=QBKVMUM8GEQzC8qgfBFl"
-            //     }),
-            // });
+            const res = await fetch('/api/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    campaign: "vendor-booking-assigned-notification",
+                    destination: assginedVendor?.phoneNo || assginedVendor?.phoneNumber,
+                    templateParams: [
+                        assginedVendor?.name,
+                        updatedData?.id,
+                        updatedData?.tripType,
+                        updatedData?.pickupCity,
+                        `https://apoorv-cab-booking.vercel.app/vendor/my-bookings/bookingDetails?id=${updatedData?.id}`
+                    ],
+                    paramsFallbackValue: {}
+                }),
+            });
 
-            // const result = await res.json();
-            // console.log("Notification Result", result);
+            const result = await res.json();
+            // console.log("Vendor Notification Result", result);
 
             onOpenChange(false);
         } catch (err) {

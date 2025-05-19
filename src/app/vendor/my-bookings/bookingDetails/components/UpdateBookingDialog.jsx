@@ -11,7 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 import { updateBooking } from '@/lib/firebase/admin/booking';
 import { getVendorAllDrivers } from '@/lib/firebase/vendor/driver';
-import { TRIP_STATUS } from '@/lib/constants/constants';
+import { TRIP_STATUS, TRIP_TYPES } from '@/lib/constants/constants';
+import { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
 
 function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetails, userData }) {
 
@@ -35,13 +36,137 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
         try {
             const updatedData = {
                 ...booking,
+                pickupDate: formatFirestoreDate(booking?.pickupDate),
                 status: {
                     ...booking.status,
                     driver: selectedDriverId,
                     trip: tripStatus
                 },
             };
+
+            const assginedDriver = drivers?.filter(d => d?.id === selectedDriverId)[0];
+            // console.log("driver", assginedDriver);
+            // console.log("booking data", updatedData);
+
+            //Update booking status
             await updateBooking(updatedData);
+
+            let templateParams = [];
+
+            // Set template params for driver notification
+            if (updatedData?.tripType === TRIP_TYPES.local || updatedData?.tripType === TRIP_TYPES.airport) {
+                templateParams = [
+                    assginedDriver?.name,
+                    updatedData?.tripType,
+                    updatedData?.id,
+                    updatedData?.tripType,
+                    `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
+                    updatedData?.pickupCity,
+                    updatedData?.userData?.exactPickup,
+                    updatedData?.totalDistance,
+                    updatedData?.totalHours,
+                    `${updatedData?.totalAmount}`,
+                    `${updatedData?.bookingAmount}`,
+                    `${+updatedData?.totalAmount - +updatedData?.bookingAmount}`,
+                    updatedData?.userData?.name,
+                    updatedData?.userData?.phoneNo || updatedData?.userData?.phoneNumber
+                ];
+            } else if (updatedData?.tripType === TRIP_TYPES.oneWay) {
+                templateParams = [
+                    assginedDriver?.name,
+                    updatedData?.tripType,
+                    updatedData?.id,
+                    updatedData?.tripType,
+                    `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
+                    updatedData?.pickupCity,
+                    updatedData?.dropCity,
+                    `${updatedData?.totalAmount}`,
+                    `${updatedData?.bookingAmount}`,
+                    `${+updatedData?.totalAmount - +updatedData?.bookingAmount}`,
+                    updatedData?.userData?.name,
+                    updatedData?.userData?.phoneNo || updatedData?.userData?.phoneNumber
+                ];
+            } else if (updatedData?.tripType === TRIP_TYPES.roundTrip) {
+
+                const updatedDrops = updatedData?.dropOffs?.map((location, index) => {
+                    const city = location.split(",")[0].trim().toLowerCase();
+                    return ` ${city} `;
+                }).join('->');
+
+                templateParams = [
+                    assginedDriver?.name,
+                    updatedData?.tripType,
+                    updatedData?.id,
+                    updatedData?.tripType,
+                    `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
+                    `${updatedData?.returnDate}`,
+                    updatedData?.pickupCity,
+                    updatedDrops,
+                    `${updatedData?.totalAmount}`,
+                    `${updatedData?.bookingAmount}`,
+                    `${+updatedData?.totalAmount - +updatedData?.bookingAmount}`,
+                    updatedData?.userData?.name,
+                    updatedData?.userData?.phoneNo || updatedData?.userData?.phoneNumber
+                ];
+            }
+
+            // Send Notification to Driver 
+            const res = await fetch('/api/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    campaign: (updatedData?.tripType === TRIP_TYPES.local || updatedData?.tripType === TRIP_TYPES.airport)
+                        ? "local_booking_assigned_to_driver" : (
+                            updatedData?.tripType === TRIP_TYPES.oneWay ? "one_way_booking_assigned_to_driver"
+                                : "round_trip_booking_assigned_to_driver"
+                        ),
+                    destination: assginedDriver?.phoneNo || assginedDriver?.phoneNumber,
+                    templateParams,
+                    paramsFallbackValue: {}
+                }),
+            });
+
+            const result = await res.json();
+            templateParams = [];
+            // console.log("Driver Notification Result", result);
+
+
+            // console.log(assginedDriver)
+            // Set template params for notification to customer
+            templateParams = [
+                updatedData?.userData?.name,
+                updatedData?.id,
+                updatedData?.tripType,
+                `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
+                updatedData?.pickupCity,
+                updatedData?.userData?.exactPickup,
+                `${updatedData?.totalAmount}`,
+                `${updatedData?.bookingAmount}`,
+                `${+updatedData?.totalAmount - +updatedData?.bookingAmount}`,
+                assginedDriver?.name,
+                assginedDriver?.phoneNo || assginedDriver?.phoneNumber,
+                assginedDriver?.cabType,
+                assginedDriver?.vehicleNumber,
+                assginedDriver?.vehicleName,
+                `https://apoorv-cab-booking.vercel.app/my-trips`
+            ]
+
+            // Send Notification to Driver 
+            const userRes = await fetch('/api/send-message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    campaign: "customer_driver_assigned_notification",
+                    destination: updatedData?.userData?.phoneNo || updatedData?.userData?.phoneNumber,
+                    templateParams,
+                    paramsFallbackValue: {}
+                }),
+            });
+
+            const userResult = await userRes.json();
+            // console.log("Customer Notification Result", userResult);
+            templateParams = [];
+
             onOpenChange(false);
         } catch (err) {
             console.error(err);
