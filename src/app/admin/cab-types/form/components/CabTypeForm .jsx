@@ -138,8 +138,8 @@ const CabTypeForm = () => {
                     ) : (
                         <>
                             {!updateCabTypeId ?
-                                <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Add </div>
-                                : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update </div>
+                                <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Create Cab Type</div>
+                                : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update Cab Type </div>
                             }
                         </>
                     )}
@@ -175,7 +175,7 @@ const CabTypeForm = () => {
                                         <Loader2 className="animate-spin" size={20} />
                                     ) : (
                                         <>
-                                            <LucideDelete size={20} /> Delete
+                                            <LucideDelete size={20} /> Delete Cab Type
                                         </>
                                     )}
                                 </Button>

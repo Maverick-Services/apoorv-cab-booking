@@ -102,12 +102,12 @@ const LocalTripForm = () => {
                         ) : !updateLocalTripId ? (
                             <>
                                 <PlusCircle className="w-5 h-5" />
-                                Add Local Trip
+                                Create Local Trip
                             </>
                         ) : (
                             <>
                                 <CircleCheckBig className="w-5 h-5" />
-                                Update Trip
+                                Update Local Trip
                             </>
                         )}
                     </button>
@@ -120,7 +120,7 @@ const LocalTripForm = () => {
                                     className="h-12 flex-grow bg-gradient-to-r from-red-600 to-red-500 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2"
                                 >
                                     <LucideDelete className="w-5 h-5" />
-                                    Delete Trip
+                                    Delete Local Trip
                                 </button>
                             </DialogTrigger>
                             <DialogContent className="rounded-2xl max-w-md">

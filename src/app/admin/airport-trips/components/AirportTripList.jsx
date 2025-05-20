@@ -56,7 +56,7 @@ function AirportTripList({ loading, airportTrips, fetchAirportTrips }) {
                                     </div>
                                 </div>
                             </div>
-                            {/* <Link href={`/admin/airportTrips/form?id=${trip.id}`}>
+                            {/* <Link href={`/admin/airport-trips/form?id=${trip.id}`}>
                                 <Button
                                     size="icon"
                                     variant="ghost"

@@ -106,8 +106,8 @@ const PickupCityForm = ({ setEditPickup }) => {
                     ) : (
                         <>
                             {!updatePickupCityId ?
-                                <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Add </div>
-                                : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update </div>
+                                <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Create Pickup City </div>
+                                : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update Pickup City </div>
                             }
                         </>
                     )}
@@ -121,7 +121,7 @@ const PickupCityForm = ({ setEditPickup }) => {
                                 type="button"
                                 className="bg-red-600 w-full flex gap-2 items-center justify-center text-white py-2 px-4 rounded-md hover:bg-red-800 cursor-pointer transition"
                             >
-                                <LucideDelete size={20} /> Delete
+                                <LucideDelete size={20} /> Delete Pickup City
                             </button>
                         </DialogTrigger>
                         <DialogContent className="sm:max-w-[425px]">
@@ -143,7 +143,7 @@ const PickupCityForm = ({ setEditPickup }) => {
                                         <Loader2 className="animate-spin" size={20} />
                                     ) : (
                                         <>
-                                            <LucideDelete size={20} /> Delete
+                                            <LucideDelete size={20} /> Delete Pickup City
                                         </>
                                     )}
                                 </Button>

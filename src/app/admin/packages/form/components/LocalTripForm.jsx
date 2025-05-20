@@ -184,7 +184,7 @@ const LocalTripForm = () => {
                         ) : !updatePackageId ? (
                             <>
                                 <PlusCircle className="w-5 h-5" />
-                                Add Package
+                                Create New Package
                             </>
                         ) : (
                             <>

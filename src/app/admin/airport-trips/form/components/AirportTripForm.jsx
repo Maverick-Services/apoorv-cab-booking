@@ -109,8 +109,8 @@ const AirportTripForm = () => {
                     ) : (
                         <>
                             {!updateCabTypeId ?
-                                <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Add </div>
-                                : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Update </div>
+                                <div className='flex justify-center items-center gap-2'> <PlusCircle size={20} /> Create Local Trip </div>
+                                : <div className='flex justify-center items-center gap-2'> <CircleCheckBig size={20} /> Edit Local Trip </div>
                             }
                         </>
                     )}
@@ -146,7 +146,7 @@ const AirportTripForm = () => {
                                         <Loader2 className="animate-spin" size={20} />
                                     ) : (
                                         <>
-                                            <LucideDelete size={20} /> Delete
+                                            <LucideDelete size={20} /> Delete Local Trip
                                         </>
                                     )}
                                 </Button>
