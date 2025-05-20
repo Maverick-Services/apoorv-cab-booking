@@ -6,8 +6,8 @@ import AuthProvider from "@/components/main/AuthProvider";
 import { Toaster } from "react-hot-toast";
 
 export const metadata = {
-  title: "Apoorv Cab Booking",
-  description: "Books cabs instantly.",
+  title: "Taps Cabs",
+  description: "Go anywhere, effortlessly.",
 };
 
 export default function RootLayout({ children }) {
