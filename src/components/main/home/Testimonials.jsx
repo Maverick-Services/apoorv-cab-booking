@@ -16,7 +16,7 @@ const testimonials = [
         name: 'Rahul Kumar',
         location: 'From Mumbai, India',
         rating: 5,
-        text: "I feel very secure when using caretall's services. Your customer care team is very enthusiastic and the driver is always on time.",
+        text: "I feel very secure when using TapsCabs's services. Your customer care team is very enthusiastic and the driver is always on time.",
         image: MAIN_WEBSITE.client1,
     },
     {
