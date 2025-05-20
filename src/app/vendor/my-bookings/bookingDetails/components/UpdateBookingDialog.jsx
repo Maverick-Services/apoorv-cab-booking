@@ -63,6 +63,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                     `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
                     updatedData?.pickupCity,
                     updatedData?.userData?.exactPickup,
+                    updatedData?.userData?.exactDrop,
                     updatedData?.totalDistance,
                     updatedData?.totalHours,
                     `${updatedData?.totalAmount}`,
@@ -79,6 +80,8 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                     updatedData?.tripType,
                     `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
                     updatedData?.pickupCity,
+                    updatedData?.userData?.exactPickup,
+                    updatedData?.userData?.exactDrop,
                     updatedData?.dropCity,
                     `${updatedData?.totalAmount}`,
                     `${updatedData?.bookingAmount}`,
@@ -101,6 +104,8 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                     `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
                     `${updatedData?.returnDate}`,
                     updatedData?.pickupCity,
+                    updatedData?.userData?.exactPickup,
+                    updatedData?.userData?.exactDrop,
                     updatedDrops,
                     `${updatedData?.totalAmount}`,
                     `${updatedData?.bookingAmount}`,
@@ -116,9 +121,9 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     campaign: (updatedData?.tripType === TRIP_TYPES.local || updatedData?.tripType === TRIP_TYPES.airport)
-                        ? "local_booking_assigned_to_driver" : (
-                            updatedData?.tripType === TRIP_TYPES.oneWay ? "one_way_booking_assigned_to_driver"
-                                : "round_trip_booking_assigned_to_driver"
+                        ? "local_booking_assigned_to_driver2" : (
+                            updatedData?.tripType === TRIP_TYPES.oneWay ? "one_way_booking_assigned_to_driver2"
+                                : "round_trip_booking_assigned_to_driver2"
                         ),
                     destination: assginedDriver?.phoneNo || assginedDriver?.phoneNumber,
                     templateParams,
@@ -140,6 +145,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 `${updatedData?.pickupDate}, ${updatedData?.pickupTime}`,
                 updatedData?.pickupCity,
                 updatedData?.userData?.exactPickup,
+                updatedData?.userData?.exactDrop,
                 `${updatedData?.totalAmount}`,
                 `${updatedData?.bookingAmount}`,
                 `${+updatedData?.totalAmount - +updatedData?.bookingAmount}`,
@@ -148,7 +154,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 assginedDriver?.cabType,
                 assginedDriver?.vehicleNumber,
                 assginedDriver?.vehicleName,
-                `https://apoorv-cab-booking.vercel.app/my-trips`
+                `${process.env.NEXT_PUBLIC_LIVE_LINK}/my-trips`
             ]
 
             // Send Notification to Driver 
@@ -156,7 +162,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    campaign: "customer_driver_assigned_notification",
+                    campaign: "customer_driver_assigned_notification2",
                     destination: updatedData?.userData?.phoneNo || updatedData?.userData?.phoneNumber,
                     templateParams,
                     paramsFallbackValue: {}

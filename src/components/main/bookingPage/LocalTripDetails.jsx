@@ -85,10 +85,10 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
         return <Loader2 />
 
     return (
-        <div className="lg:w-11/12 mx-auto bg-white rounded-2xl shadow-md p-4 space-y-6">
+        <div className="mx-auto  rounded-2xl shadow-md p-4 space-y-6 bg-gradient-to-br from-indigo-50 to-purple-50 sm:p-6 border border-indigo-100">
             <h1 className='text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent'>Regular Trips</h1>
             <Tabs defaultValue={tripFilter && tripFilter[0]} >
-                <TabsList className="w-full justify-start mb-4 ">
+                <TabsList className="w-full justify-start mb-4 border-2 border-indigo-100">
                     {
                         tripFilter?.map((tr, idx) =>
                             <TabsTrigger
@@ -111,7 +111,7 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
                                     lt?.variantList?.map((cab, index) => (
                                         <div
                                             key={index}
-                                            className="grid grid-cols-1 sm:grid-cols-[auto_auto_1fr_auto_auto] items-center gap-4 border-b last:border-b-0 pb-4"
+                                            className="grid grid-cols-1 sm:grid-cols-[auto_auto_1fr_auto_auto] items-center gap-4 border-b last:border-b-0 pb-4 bg-white p-4 rounded-xl"
                                         >
                                             <img
                                                 src={MAIN_WEBSITE.car1}

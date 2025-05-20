@@ -109,13 +109,6 @@ export default function Contact() {
                             <div className="text-red-500">+917248772488</div>
                         </div>
                     </div>
-                    {/* <div className="flex items-start gap-2">
-                        <FaFax className="mt-1 text-xl text-black" />
-                        <div>
-                            <div className="font-semibold uppercase text-xs">Fax</div>
-                            <div className="text-red-500">03 5432 1234</div>
-                        </div>
-                    </div> */}
                     <div className="flex items-start gap-2">
                         <FaEnvelope className="mt-1 text-xl text-black" />
                         <div>
@@ -131,16 +124,14 @@ export default function Contact() {
                 <div className="w-full h-[400px] md:h-full rounded-2xl">
                     <iframe
                         title="Map"
-                        className="w-full h-full  rounded-4xl bg-transparent z-0"
+                        className="w-full h-full rounded-4xl bg-transparent z-0"
                         frameBorder="0"
                         scrolling="no"
                         marginHeight={0}
                         marginWidth={0}
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.520284890859!2d106.81842391538516!3d-6.199785895516195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e8b3cbf3b9%3A0x1a25f8c59e03a6c0!2sHotel%20Ascott%20Jakarta!5e0!3m2!1sen!2sid!4v1713459800000!5m2!1sen!2sid"
+                        src="https://www.google.com/maps?q=Ghaziabad,+Uttar+Pradesh&output=embed"
                     />
                 </div>
-                {/* Curved effect - simulated corner */}
-                {/* <div className="absolute top-0 right-0 w-24 h-24 bg-white rounded-bl-[4rem] z-10"></div> */}
             </div>
         </section>
     );

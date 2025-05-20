@@ -43,7 +43,6 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
 
 
             const assginedVendor = vendors?.filter(v => v?.id === selectedVendorId)[0];
-            // console.log(assginedVendor);
 
             // console.log(assginedVendor?.name,
             //     updatedData?.id,
@@ -66,7 +65,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                         updatedData?.id,
                         updatedData?.tripType,
                         updatedData?.pickupCity,
-                        `https://apoorv-cab-booking.vercel.app/vendor/my-bookings/bookingDetails?id=${updatedData?.id}`
+                        `${process.env.NEXT_PUBLIC_LIVE_LINK}/vendor/my-bookings/bookingDetails?id=${updatedData?.id}`
                     ],
                     paramsFallbackValue: {}
                 }),

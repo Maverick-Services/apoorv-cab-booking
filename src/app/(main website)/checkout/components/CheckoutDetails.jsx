@@ -30,7 +30,8 @@ export default function CheckoutDetails() {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
-        exactPickup: ''
+        exactPickup: '',
+        exactDrop: ''
     });
 
     useEffect(() => {
@@ -93,10 +94,6 @@ export default function CheckoutDetails() {
         if (!formData.name || !formData.email || !formData.exactPickup || !userData.phoneNo)
             return toast.error('Please fill all the details');
 
-        // if (!userData) {
-        //     return await handleUserDetails(name, email, phoneNo);
-        // }
-
         const ok = await loadRazorpay()
         if (!ok || !window.Razorpay) {
             toast.error("Could not load Razorpay SDK. Please try again later.")
@@ -140,7 +137,7 @@ export default function CheckoutDetails() {
                                     totalAmount,
                                     driverAllowance,
                                     priceWithAllowance,
-                                    bookingAmount,
+                                    bookingAmount: amount,
                                     userData: {
                                         phoneNo: userData.phoneNo,
                                         ...formData
@@ -157,6 +154,8 @@ export default function CheckoutDetails() {
                         if (verificationData.success) {
                             // console.log("Payment Verified: ",)
                             const { updatedBookingData } = verificationData;
+                            // console.log(updatedBookingData)
+
                             // Set template params for notification to customer
                             let templateParams = [
                                 updatedBookingData?.userData?.name,
@@ -165,10 +164,11 @@ export default function CheckoutDetails() {
                                 `${formatFirestoreDate(updatedBookingData?.pickupDate)}, ${updatedBookingData?.pickupTime}`,
                                 updatedBookingData?.pickupCity,
                                 updatedBookingData?.userData?.exactPickup,
+                                updatedBookingData?.userData?.exactDrop,
                                 `${updatedBookingData?.totalAmount}`,
                                 `${updatedBookingData?.bookingAmount}`,
                                 `${+updatedBookingData?.totalAmount - +updatedBookingData?.bookingAmount}`,
-                                `https://apoorv-cab-booking.vercel.app/my-trips`
+                                `${process.env.NEXT_PUBLIC_LIVE_LINK}/my-trips`
                             ]
 
                             // Send Notification to Driver 
@@ -176,7 +176,7 @@ export default function CheckoutDetails() {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
-                                    campaign: "customer_booking_confirmed_notification",
+                                    campaign: "customer_booking_confirmed_notification2",
                                     destination: updatedBookingData?.userData?.phoneNo || updatedBookingData?.userData?.phoneNumber,
                                     templateParams,
                                     paramsFallbackValue: {}
@@ -375,22 +375,17 @@ export default function CheckoutDetails() {
                                         required
                                     />
                                 </label>
+                                <label className="flex flex-col gap-2 pb-2 border-gray-200">
+                                    <p className="text-gray-600">Drop Location:</p>
+                                    <input
+                                        className="w-full font-medium text-gray-800 outline rounded-xs px-1"
+                                        name="exactDrop"
+                                        value={formData.exactDrop}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </label>
                             </div>
-
-                            {/* <div className="space-y-4">
-                                <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-                                    <span className="text-gray-600">Name:</span>
-                                    <span className="font-medium text-gray-800">{userData?.name}</span>
-                                </div>
-                                <div className="flex justify-between items-center pb-2 border-b border-gray-200">
-                                    <span className="text-gray-600">Email:</span>
-                                    <span className="font-medium text-gray-800">{userData?.email}</span>
-                                </div>
-                                <div className="flex justify-between items-center">
-                                    <span className="text-gray-600">Phone:</span>
-                                    <span className="font-medium text-gray-800">{userData?.phoneNo}</span>
-                                </div>
-                            </div> */}
                         </div>
 
                         {/* Price Details */}

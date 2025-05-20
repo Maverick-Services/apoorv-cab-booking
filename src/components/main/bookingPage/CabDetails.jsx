@@ -220,8 +220,13 @@ export const CabDetails = () => {
                                         ) : (
                                             <div className="flex items-center gap-2 sm:gap-4 text-sm sm:text-lg">
                                                 <span className="bg-gradient-to-br text-sm sm:text-lg from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full shadow-lg">{tripData.pickupCity}</span>
-                                                <ArrowRight className="w-6 h-6 text-teal-500 mx-2" />
-                                                <span className="bg-white px-4 py-2 rounded-full border-2 border-teal-200 shadow-md">{tripData.dropCity}</span>
+                                                {
+                                                    tripData?.dropCity &&
+                                                    <div className="flex items-center gap-2 sm:gap-4">
+                                                        <ArrowRight className="w-6 h-6 text-teal-500 mx-2" />
+                                                        <span className="bg-white px-4 py-2 rounded-full border-2 border-teal-200 shadow-md">{tripData.dropCity}</span>
+                                                    </div>
+                                                }
                                             </div>
                                         )}
                                     </div>
@@ -234,7 +239,7 @@ export const CabDetails = () => {
                                         { icon: Clock, label: "Pickup Time", value: tripData.pickupTime, color: "text-purple-500" },
                                         ...(tripData?.returnDate ? [{ icon: CalendarCheck, label: "Return Date", value: tripData.returnDate, color: "text-indigo-500" }] : []),
                                         { icon: Compass, label: "Trip Type", value: tripData.tripType, color: "text-teal-500" },
-                                        ...(tripData?.totalDistance ? [{ icon: Route, label: "Total Distance", value: `${tripData.totalDistance} km`, color: "text-purple-500" }] : [])
+                                        ...(tripData?.totalDistance > 0 ? [{ icon: Route, label: "Total Distance", value: `${tripData.totalDistance} km`, color: "text-purple-500" }] : [])
                                     ].map((item, index) => (
                                         <div key={index} className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-xl hover:bg-indigo-50 transition-all shadow-sm hover:shadow-md">
                                             <item.icon className={`w-7 h-7 ${item.color}`} />
