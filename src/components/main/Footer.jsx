@@ -94,7 +94,7 @@ export default function Footer() {
                         target="_blank"
                         className="font-bold hover:text-white transition"
                     >
-                        Matchest Software
+                        Matchbest Software
                     </Link>
                 </p>
             </div>
