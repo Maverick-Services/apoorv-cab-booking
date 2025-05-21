@@ -44,13 +44,10 @@ export default function Contact() {
     }
 
     return (
-        <section id="contact" className="pb-16 pt-12">
+        <section id="contact" className="pb-16 pt-12 w-11/12">
             <div className="w-full lg:w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Section Header */}
-
-
                 {/* Content Container */}
-                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+                <div className="w-full flex flex-col lg:flex-row gap-8 lg:gap-12 bg-white rounded-2xl shadow-lg p-6 sm:p-8">
                     {/* Form Section */}
                     <motion.div
                         className="w-full lg:w-1/2"
@@ -66,7 +63,7 @@ export default function Contact() {
                                     transition={{ duration: 0.4 }}
                                     className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4"
                                 >
-                                    Get in <span className="text-blue-600">Touch</span>
+                                    Get in <span className="text-[#2f1889]">Touch</span>
                                 </motion.h2>
                                 <motion.p
                                     initial={{ opacity: 0 }}
@@ -81,7 +78,7 @@ export default function Contact() {
                                     <Input
                                         placeholder="Full Name *"
                                         {...register('name', { required: 'Name is required' })}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2f1889] focus:border-transparent"
                                     />
                                     {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
                                 </div>
@@ -97,7 +94,7 @@ export default function Contact() {
                                                 message: 'Invalid email address'
                                             }
                                         })}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2f1889] focus:border-transparent"
                                     />
                                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
                                 </div>
@@ -112,7 +109,7 @@ export default function Contact() {
                                                 message: 'Invalid phone number format'
                                             }
                                         })}
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#2f1889] focus:border-transparent"
                                     />
                                     {errors.phoneNo && <p className="text-red-500 text-sm mt-1">{errors.phoneNo.message}</p>}
                                 </div>
@@ -132,7 +129,7 @@ export default function Contact() {
                                 <Button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-lg font-semibold transition-all"
+                                    className="w-full bg-[#2f1889] text-white py-4 rounded-lg font-semibold transition-all"
                                 >
                                     {isSubmitting ? 'Sending...' : 'Send Message'}
                                 </Button>
@@ -143,7 +140,7 @@ export default function Contact() {
                         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                 <div className="p-2 bg-blue-100 rounded-full">
-                                    <FaPhoneAlt className="text-blue-600" />
+                                    <FaPhoneAlt className="text-[#2f1889]" />
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Phone</p>
@@ -153,7 +150,7 @@ export default function Contact() {
 
                             <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                                 <div className="p-2 bg-blue-100 rounded-full">
-                                    <FaEnvelope className="text-blue-600" />
+                                    <FaEnvelope className="text-[#2f1889]" />
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Email</p>

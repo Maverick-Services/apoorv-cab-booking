@@ -27,8 +27,8 @@ function WhyUs() {
                     <div className="space-y-6">
                         {/* Feature Item */}
                         <div className="flex items-start gap-4">
-                            <div className="bg-blue-100 p-3 rounded-xl">
-                                <FaDollarSign className="text-blue-500 text-xl" />
+                            <div className="bg-[#2f188915] p-3 rounded-xl">
+                                <FaDollarSign className="text-[#2f1889] text-xl" />
                             </div>
                             <div>
                                 <h4 className="font-semibold text-lg text-gray-900">Best price guaranteed</h4>
@@ -39,8 +39,8 @@ function WhyUs() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="bg-blue-100 p-3 rounded-xl">
-                                <FaUser className="text-blue-500 text-xl" />
+                            <div className="bg-[#2f188915] p-3 rounded-xl">
+                                <FaUser className="text-[#2f1889] text-xl" />
                             </div>
                             <div>
                                 <h4 className="font-semibold text-lg text-gray-900">Experienced driver</h4>
@@ -51,8 +51,8 @@ function WhyUs() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="bg-blue-100 p-3 rounded-xl">
-                                <FaClock className="text-blue-500 text-xl" />
+                            <div className="bg-[#2f188915] p-3 rounded-xl">
+                                <FaClock className="text-[#2f1889] text-xl" />
                             </div>
                             <div>
                                 <h4 className="font-semibold text-lg text-gray-900">24 hour car availability</h4>
@@ -63,8 +63,8 @@ function WhyUs() {
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="bg-blue-100 p-3 rounded-xl">
-                                <FaHeadset className="text-blue-500 text-xl" />
+                            <div className="bg-[#2f188915] p-3 rounded-xl">
+                                <FaHeadset className="text-[#2f1889] text-xl" />
                             </div>
                             <div>
                                 <h4 className="font-semibold text-lg text-gray-900">24/7 technical support</h4>

@@ -1,5 +1,5 @@
 export const MAIN_WEBSITE = {
-    logo: "/logo.png",
+    logo: "/logo3.png",
     car1: '/car1.png',
     bg: '/bg.png',
     mobile: '/mobile.webp',

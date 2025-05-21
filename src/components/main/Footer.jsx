@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function Footer() {
     return (
-        <footer className="bg-[#0F253B] text-white py-12 px-6 md:px-16">
+        <footer className="bg-[#2f1889] text-white py-12 px-6 md:px-16">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
                 {/* Company Info */}
                 <div className="space-y-6">
@@ -92,7 +92,7 @@ export default function Footer() {
                     <Link
                         href="https://matchbestsoftware.com/"
                         target="_blank"
-                        className="font-bold hover:text-white transition"
+                        className="font-bold text-white hover:text-gray-300 transition"
                     >
                         Matchbest Software
                     </Link>

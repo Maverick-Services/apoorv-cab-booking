@@ -37,9 +37,9 @@ export default function Navbar() {
                     <Link href="/" className="flex items-center space-x-2">
                         <Image
                             src={MAIN_WEBSITE.logo}
-                            height={180}
+                            height={120}
                             quality={100}
-                            width={240}
+                            width={120}
                             alt="logo"
                             className="hover:opacity-90 transition-opacity max-w-40 sm:max-w-full"
                         />
@@ -47,20 +47,7 @@ export default function Navbar() {
 
                     {/* Desktop Navigation */}
                     <div className="hidden md:flex items-center space-x-2">
-                        {/* {navLinks.map(({ href, label }) => (
-                            <Link
-                                key={href}
-                                href={href}
-                                className="text-gray-600 hover:text-blue-900 transition-colors relative group"
-                            >
-                                {label}
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-900 transition-all group-hover:w-full"></span>
-                            </Link>
-                        ))} */}
-
                         <div className="relative ">
-                            {/* Soft gradient glow behind */}
-                            {/* <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 opacity-20 rounded-2xl blur-lg" /> */}
 
                             {/* Main Card Container */}
                             <div className="relative flex items-center divide-gray-300 bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm px-4 py-3 rounded-2xl border border-gray-200 shadow-sm transition-transform hover:shadow-md ">
@@ -128,7 +115,7 @@ export default function Navbar() {
                         ) : (
                             <button
                                 onClick={() => setIsDialogOpen(true)}
-                                className="bg-gradient-to-br from-blue-900 to-indigo-700 text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg transition-all hover:scale-[1.02]"
+                                className="bg-gradient-to-br from-[#2f1889] to-[#36247e] text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg transition-all hover:scale-[1.02]"
                             >
                                 Sign In
                             </button>

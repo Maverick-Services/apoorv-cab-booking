@@ -1,12 +1,18 @@
 "use client"
 import { motion } from 'framer-motion'
+import {
+    CarFront,
+    Smile,
+    Clock,
+    MapPin
+} from 'lucide-react'
 
 export default function Facts() {
     const stats = [
-        { icon: "🚗", value: "200+ Cars", label: "Well-maintained & comfortable vehicles" },
-        { icon: "🧍‍♂️", value: "20,000+", label: "Happy Customers Rated 4.9/5" },
-        { icon: "🕒", value: "99%", label: "On-Time Rides Guarantee" },
-        { icon: "🌆", value: "15+ Cities", label: "Expanding Presence Daily" }
+        { icon: <CarFront size={40} />, value: "200+ Cars", label: "Well-maintained & comfortable vehicles" },
+        { icon: <Smile size={40} />, value: "20,000+", label: "Happy Customers Rated 4.9/5" },
+        { icon: <Clock size={40} />, value: "99%", label: "On-Time Rides Guarantee" },
+        { icon: <MapPin size={40} />, value: "15+ Cities", label: "Expanding Presence Daily" }
     ]
 
     return (
@@ -19,7 +25,7 @@ export default function Facts() {
                     backgroundPosition: 'center',
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
-                    filter: 'brightness(0) invert(0.1)' // Adjust to get desired color
+                    filter: 'brightness(0) invert(0.1)'
                 }}
             />
 
@@ -47,7 +53,7 @@ export default function Facts() {
                             className="bg-white/10 backdrop-blur-lg rounded-xl p-6 hover:bg-white/20 transition-all"
                         >
                             <div className="flex flex-col items-center text-center">
-                                <span className="text-4xl mb-4">{stat.icon}</span>
+                                <div className="text-white mb-4">{stat.icon}</div>
                                 <h3 className="text-3xl font-bold text-white mb-2">
                                     {stat.value}
                                 </h3>
