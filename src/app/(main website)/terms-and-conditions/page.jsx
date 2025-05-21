@@ -56,7 +56,7 @@ function TermsAndConditions() {
 
                 <h2 className="text-2xl font-semibold mt-6 mb-3">8. Governing Law</h2>
                 <p className="mb-6">
-                    These Terms and Conditions are governed by and construed in accordance with the laws of [Your Country/State].
+                    These Terms and Conditions are governed by and construed in accordance with the laws of India.
                 </p>
 
                 <h2 className="text-2xl font-semibold mt-6 mb-3">9. Contact Us</h2>

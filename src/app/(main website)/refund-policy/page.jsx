@@ -17,7 +17,7 @@ function RefundPolicy() {
 
                 <h2 className="text-2xl font-semibold mt-6 mb-3">1. Booking Cancellations</h2>
                 <ul className="list-disc list-inside mb-6">
-                    <li><strong>Customer-Initiated Cancellations:</strong>
+                    <li><strong>Customer-Initiated Cancellations: </strong>
                         Full refund will be provided if the ride is cancelled at least 30 minutes before the scheduled pickup time.
                     </li>
                     <li>
