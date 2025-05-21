@@ -59,7 +59,7 @@ export default function Footer() {
                     <div>
                         <h3 className="text-xl font-bold mb-6 text-white border-l-4 border-blue-400 pl-3">Policies</h3>
                         <ul className="space-y-4">
-                            {['Terms & Conditions', 'Privacy Policy', 'Refund Policy'].map((policy) => (
+                            {['Terms and Conditions', 'Privacy Policy', 'Refund Policy'].map((policy) => (
                                 <li key={policy}>
                                     <Link
                                         href={`/${policy.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}`}
