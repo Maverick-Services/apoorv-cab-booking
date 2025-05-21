@@ -37,10 +37,11 @@ export default function Navbar() {
                     <Link href="/" className="flex items-center space-x-2">
                         <Image
                             src={MAIN_WEBSITE.logo}
-                            height={108}
+                            height={180}
+                            quality={100}
                             width={240}
                             alt="logo"
-                            className="hover:opacity-90 transition-opacity"
+                            className="hover:opacity-90 transition-opacity max-w-40 sm:max-w-full"
                         />
                     </Link>
 
