@@ -165,10 +165,10 @@ export default function BookingForm({ editTrip, setEditTrip }) {
     // console.log(errors);
 
     return (
-        <div className="w-full max-w-7xl mx-auto">
+        <div className="w-full max-w-7xl mx-auto bg-white pb-2">
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-white px-6 py-3 shadow-2xl border border-gray-100"
+                className="px-6 pb-3"
             >
                 {/* Trip Type Buttons */}
                 <TripType setValue={setValue} tripType={tripType} />
@@ -221,7 +221,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                     {/* Submit */}
                     <button
                         type="submit"
-                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2 px-6 rounded-lg flex items-center justify-center gap-2"
+                        className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-2 mt-1 px-6 rounded-xl flex items-center justify-center gap-2"
                     >
                         {loading ? (
                             <Loader2 className="animate-spin" size={20} />

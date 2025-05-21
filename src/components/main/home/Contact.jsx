@@ -1,5 +1,5 @@
 'use client';
-
+import { motion } from 'framer-motion'
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -44,93 +44,140 @@ export default function Contact() {
     }
 
     return (
-        <section id="contact" className="flex px-10 flex-col lg:flex-row gap-7 rounded-3xl overflow-hidden max-w-7xl mx-auto my-16">
-            {/* Left Section: Form */}
-            <div className="w-full lg:w-1/2">
-                <h2 className="text-4xl font-bold mb-6">
-                    Get in <span className="text-blue-600">Touch</span>
-                </h2>
+        <section id="contact" className="pb-16 pt-12">
+            <div className="w-full lg:w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Section Header */}
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    <div>
-                        <Input placeholder="Name *" required
-                            {...register('name', { required: 'Name is required' })}
-                        />
-                        {errors.name && <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>}
-                    </div>
 
-                    <div>
-                        <Input placeholder="Email" type="email" required
-                            {...register('email', {
-                                required: 'Email is required',
-                                pattern: {
-                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                    message: 'Invalid email address'
-                                }
-                            })}
-                        />
-                        {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>}
-                    </div>
-
-                    <div>
-                        <Input placeholder="Phone number *" required
-                            {...register('phoneNo', {
-                                required: 'Contact Number is required',
-                                pattern: {
-                                    value: /^\+?[1-9]\d{1,14}$/,
-                                    message: 'Invalid phone number format'
-                                }
-                            })}
-                        />
-                        {errors.phoneNo && <p className="text-red-400 text-sm mt-1">{errors.phoneNo.message}</p>}
-                    </div>
-
-                    <div>
-                        <Textarea placeholder="Query *" rows={4} required
-                            {...register('message', { required: 'Message is required' })}
-                        />
-                        {errors.message && <p className="text-red-400 text-sm mt-1">{errors.message.message}</p>}
-                    </div>
-
-                    <Button
-                        disabled={isSubmitting}
-                        type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700"
+                {/* Content Container */}
+                <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+                    {/* Form Section */}
+                    <motion.div
+                        className="w-full lg:w-1/2"
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4 }}
                     >
-                        SEND
-                    </Button>
-                </form>
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                            <div className="text-center mb-7">
+                                <motion.h2
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="text-4xl sm:text-5xl font-bold text-gray-900 mb-4"
+                                >
+                                    Get in <span className="text-blue-600">Touch</span>
+                                </motion.h2>
+                                <motion.p
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
+                                    className="text-gray-600 text-lg"
+                                >
+                                    We're here to help you with your transportation needs
+                                </motion.p>
+                            </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <Input
+                                        placeholder="Full Name *"
+                                        {...register('name', { required: 'Name is required' })}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    />
+                                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                                </div>
 
-                <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm text-gray-700">
-                    <div className="flex items-start gap-2">
-                        <FaPhoneAlt className="mt-1 text-xl text-black" />
-                        <div>
-                            <div className="font-semibold uppercase text-xs">Phone</div>
-                            <div className="text-red-500">+917248772488</div>
-                        </div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                        <FaEnvelope className="mt-1 text-xl text-black" />
-                        <div>
-                            <div className="font-semibold uppercase text-xs">Email</div>
-                            <div className="text-red-500">help@tapscabs.com</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                <div>
+                                    <Input
+                                        type="email"
+                                        placeholder="Email Address *"
+                                        {...register('email', {
+                                            required: 'Email is required',
+                                            pattern: {
+                                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                                message: 'Invalid email address'
+                                            }
+                                        })}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    />
+                                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+                                </div>
 
-            {/* Right Section: Map */}
-            <div className="w-full lg:w-1/2 relative flex items-center justify-center">
-                <div className="w-full h-[400px] md:h-full rounded-2xl">
-                    <iframe
-                        title="Map"
-                        className="w-full h-full rounded-4xl bg-transparent z-0"
-                        frameBorder="0"
-                        scrolling="no"
-                        marginHeight={0}
-                        marginWidth={0}
-                        src="https://www.google.com/maps?q=Ghaziabad,+Uttar+Pradesh&output=embed"
-                    />
+                                <div>
+                                    <Input
+                                        placeholder="Phone Number *"
+                                        {...register('phoneNo', {
+                                            required: 'Contact Number is required',
+                                            pattern: {
+                                                value: /^\+?[1-9]\d{1,14}$/,
+                                                message: 'Invalid phone number format'
+                                            }
+                                        })}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    />
+                                    {errors.phoneNo && <p className="text-red-500 text-sm mt-1">{errors.phoneNo.message}</p>}
+                                </div>
+
+                                <div>
+                                    <Textarea
+                                        rows={4}
+                                        placeholder="Your Message *"
+                                        {...register('message', { required: 'Message is required' })}
+                                        className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    />
+                                    {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message.message}</p>}
+                                </div>
+                            </div>
+
+                            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                                <Button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-lg font-semibold transition-all"
+                                >
+                                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                                </Button>
+                            </motion.div>
+                        </form>
+
+                        {/* Contact Info */}
+                        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                <div className="p-2 bg-blue-100 rounded-full">
+                                    <FaPhoneAlt className="text-blue-600" />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Phone</p>
+                                    <p className="font-medium text-gray-900">+917248772488</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                                <div className="p-2 bg-blue-100 rounded-full">
+                                    <FaEnvelope className="text-blue-600" />
+                                </div>
+                                <div>
+                                    <p className="text-sm text-gray-600">Email</p>
+                                    <p className="font-medium text-gray-900">help@tapscabs.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    {/* Map Section */}
+                    <motion.div
+                        className="w-full lg:w-1/2 h-[500px] rounded-xl overflow-hidden border border-gray-200 shadow-sm"
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.4 }}
+                    >
+                        <iframe
+                            title="Office Location"
+                            className="w-full h-full"
+                            loading="lazy"
+                            allowFullScreen
+                            src="https://www.google.com/maps?q=Ghaziabad,+Uttar+Pradesh&output=embed"
+                        />
+                    </motion.div>
                 </div>
             </div>
         </section>
