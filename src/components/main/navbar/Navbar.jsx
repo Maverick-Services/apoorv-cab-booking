@@ -30,17 +30,18 @@ export default function Navbar() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
     return (
-        <div className=" bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm z-50 py-3 w-screen">
+        <div className=" bg-white/95 backdrop-blur-md  z-50 py-3 w-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2">
                         <Image
                             src={MAIN_WEBSITE.logo}
-                            height={48}
-                            width={140}
+                            height={180}
+                            quality={100}
+                            width={240}
                             alt="logo"
-                            className="hover:opacity-90 transition-opacity"
+                            className="hover:opacity-90 transition-opacity max-w-40 sm:max-w-full"
                         />
                     </Link>
 

@@ -5,7 +5,7 @@ import { FaDollarSign, FaUser, FaClock, FaHeadset } from 'react-icons/fa';
 
 function WhyUs() {
     return (
-        <section id='why-us' className="py-24 px-10">
+        <section id='why-us' className="pt-10 pb-24 px-10">
             <div className='max-w-[1200px] mx-auto flex flex-col-reverse sm:flex-row lg:gap-10 items-center'>
                 {/* Left Side - Car Image */}
                 <div className="mb-12 sm:mb-0 sm:w-1/2 mt-12 sm:mt-0">
