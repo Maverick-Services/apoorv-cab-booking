@@ -199,13 +199,13 @@ export default function BookingData() {
                                 </div>
                             </div>
 
-                            <div className="mt-6 pt-4 border-t border-gray-200">
+                            {/* <div className="mt-6 pt-4 border-t border-gray-200">
                                 <p className="text-sm text-gray-500 text-center">
                                     {bookingData.payment?.status === 'completed'
                                         ? "Payment receipt has been sent to your email"
                                         : "Payment receipt will be sent to your email"}
                                 </p>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
