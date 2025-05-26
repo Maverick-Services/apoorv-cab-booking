@@ -10,7 +10,7 @@ import { Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { getAirportTripsByCity } from '@/lib/firebase/admin/airportTrips';
 
-export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity, currentCab, cabTypes, noOfDays }) => {
+export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes }) => {
 
     // console.log(tripData)
     const [loading, setLoading] = useState(false);
@@ -67,7 +67,9 @@ export const LocalTripDetails = ({ router, userData, tripData, currentPickupCity
             cab: {
                 ...cab,
                 actualPriceOneWay: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.actualPriceOneWay,
-                driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance
+                driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance,
+                luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
+                seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,

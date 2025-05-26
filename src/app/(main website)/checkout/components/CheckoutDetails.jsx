@@ -252,17 +252,19 @@ export default function CheckoutDetails() {
                                 <FaCar className="text-blue-600 text-xl" />
                                 <h2 className="text-xl font-semibold text-gray-800">Cab Details</h2>
                             </div>
-                            <div className="flex flex-col items-center">
-                                <Image
-                                    src={'/car1.png'}
-                                    width={350}
-                                    height={150}
-                                    alt="Car Image"
-                                    className="w-full max-w-xs h-48 object-contain mb-6"
-                                />
-                                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                                    {bookingData.cab.name}
-                                </h3>
+                            <div className="flex flex-col">
+                                <div className="flex justify-between items-center pb-2">
+                                    <span className="text-gray-600">Cab Type:</span>
+                                    <span className="font-medium text-gray-800">{bookingData.cab.name}</span>
+                                </div>
+                                <div className="flex justify-between items-center pb-2">
+                                    <span className="text-gray-600">Seating Capacity:</span>
+                                    <span className="font-medium text-gray-800">{bookingData.cab.seatingCapacity}</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-gray-600">Luggage Capacity:</span>
+                                    <span className="font-medium text-gray-800">{bookingData.cab.luggageCapacity}</span>
+                                </div>
                             </div>
                         </div>
 

@@ -124,7 +124,9 @@ export const CabDetails = () => {
             dropOffs: tripData?.dropOffs,
             cab: {
                 ...cab,
-                driverAllowance: noOfDays * cab?.driverAllowance
+                driverAllowance: noOfDays * cab?.driverAllowance,
+                luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
+                seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,

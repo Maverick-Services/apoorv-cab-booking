@@ -7,7 +7,7 @@ import { getPackageTripsByTripType } from '@/lib/firebase/admin/tripPackage'
 import { Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
-export const PackageTripDetails = ({ router, tripData, currentPickupCity }) => {
+export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTypes }) => {
 
     const [loading, setLoading] = useState(false);
     const [trips, setTrips] = useState([]);
@@ -78,7 +78,9 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity }) => {
             cab: {
                 ...cab,
                 actualPriceOneWay: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.actualPriceOneWay,
-                driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance
+                driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance,
+                luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
+                seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
             },
             pickupDate: tripData?.pickupDate,
             returnDate: tripData?.returnDate,
