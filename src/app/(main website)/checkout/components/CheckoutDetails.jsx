@@ -308,10 +308,7 @@ export default function CheckoutDetails() {
                                                     <div>
                                                         <p className="font-semibold text-indigo-900">Base Fare</p>
                                                         <p className="text-lg font-bold text-teal-600">
-                                                            ₹{bookingData?.tripType === "Round Trip"
-                                                                ? bookingData?.cab?.discountedPriceRoundTrip
-                                                                : bookingData?.cab?.discountedPriceOneWay
-                                                            }/Km
+                                                            ₹{bookingData?.cab?.basePrice}/Km
                                                         </p>
                                                     </div>
                                                 </div>

@@ -59,6 +59,9 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
             fetchTrips();
     }, [tripData]);
 
+    // console.log(currentPickupCity);
+
+
     const handleCabBooking = (cab) => {
 
         let bookingData = {
@@ -71,6 +74,9 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
                 terms: currentPickupCity?.terms,
+                basePrice: tripData?.tripType === "Round Trip"
+                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceRoundTrip
+                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceOneWay
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,
@@ -79,7 +85,6 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
             price: cab?.discountedPrice,
 
         }
-        // console.log(bookingData, tripData?.pickupDate);
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
@@ -182,8 +187,8 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
                                                                             <p className="font-semibold text-indigo-900">Base Fare</p>
                                                                             <p className="text-lg font-bold text-teal-600">
                                                                                 ₹{tripData?.tripType === "Round Trip"
-                                                                                    ? cab?.discountedPriceRoundTrip
-                                                                                    : cab?.discountedPriceOneWay
+                                                                                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceRoundTrip
+                                                                                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceOneWay
                                                                                 }/Km
                                                                             </p>
                                                                         </div>

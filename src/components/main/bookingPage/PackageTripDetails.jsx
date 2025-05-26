@@ -84,6 +84,9 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
                 terms: currentPickupCity?.terms,
+                basePrice: tripData?.tripType === "Round Trip"
+                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceRoundTrip
+                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceOneWay
             },
             pickupDate: tripData?.pickupDate,
             returnDate: tripData?.returnDate,
@@ -179,8 +182,8 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                                                             <p className="font-semibold text-indigo-900">Base Fare</p>
                                                             <p className="text-lg font-bold text-teal-600">
                                                                 ₹{tripData?.tripType === "Round Trip"
-                                                                    ? cab?.discountedPriceRoundTrip
-                                                                    : cab?.discountedPriceOneWay
+                                                                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceRoundTrip
+                                                                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceOneWay
                                                                 }/Km
                                                             </p>
                                                         </div>
