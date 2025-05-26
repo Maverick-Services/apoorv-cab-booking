@@ -127,6 +127,9 @@ export const CabDetails = () => {
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
                 terms: currentPickupCity?.terms,
+                basePrice: tripData?.tripType === "Round Trip"
+                    ? cab?.discountedPriceRoundTrip
+                    : cab?.discountedPriceOneWay
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,
