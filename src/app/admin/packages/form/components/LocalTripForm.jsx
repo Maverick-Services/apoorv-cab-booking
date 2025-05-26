@@ -14,8 +14,6 @@ import {
 } from "@/components/ui/dialog"
 import { Button } from '@/components/ui/button';
 import TripVariant from './TripVariant';
-import TripHours from './TripHours';
-import TripDistance from './TripDistance';
 import { useLocalTripFromForm } from '../context/localTripContext';
 import { useForm } from 'react-hook-form';
 import Pickup from '@/components/main/home/bookingForm/Pickup';
@@ -119,8 +117,6 @@ const LocalTripForm = () => {
         }
     };
 
-
-
     return (
         <div className='w-full max-w-4xl mx-auto p-4'>
             <form
@@ -158,6 +154,18 @@ const LocalTripForm = () => {
                             tripType={tripType}
                             query={query}
                             setQuery={setQuery}
+                        />
+                    </div>
+
+                    <div className="flex flex-col my-4">
+                        <label className="text-sm font-medium text-gray-700 mb-1">No of Days</label>
+                        <input
+                            type="number"
+                            min={0}
+                            value={data?.noOfDays}
+                            onChange={(e) => handleData('noOfDays', e.target.value)}
+                            placeholder="Eg. 4"
+                            className="input-field"
                         />
                     </div>
 

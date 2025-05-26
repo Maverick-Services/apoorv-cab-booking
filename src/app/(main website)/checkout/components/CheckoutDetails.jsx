@@ -331,6 +331,13 @@ export default function CheckoutDetails() {
                                         <span className="font-medium text-blue-600">{bookingData.returnDate}</span>
                                     </div>
                                 }
+                                {
+                                    bookingData?.noOfDays &&
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-gray-600">No of Days Trip:</span>
+                                        <span className="font-medium text-blue-600">{bookingData.noOfDays}</span>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

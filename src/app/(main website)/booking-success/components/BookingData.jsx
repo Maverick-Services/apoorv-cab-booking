@@ -134,10 +134,10 @@ export default function BookingData() {
                                             <span className="font-medium">{bookingData.pickupTime}</span>
                                         </div>
                                         {
-                                            isRoundTrip && bookingData?.returnDate &&
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-600">Return Date:</span>
-                                                <span className="font-medium">{bookingData.returnDate}</span>
+                                            bookingData?.noOfDays &&
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-gray-600">No of Days Trip:</span>
+                                                <span className="font-medium text-blue-600">{bookingData.noOfDays}</span>
                                             </div>
                                         }
                                     </div>

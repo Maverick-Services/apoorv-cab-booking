@@ -24,6 +24,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity }) => {
                     pickupCity: trip.pickupCity,
                     dropCity: trip.dropCity,
                     dropOffs: trip.dropOffs,
+                    noOfDays: trip.noOfDays,
                     totalDistance: tripData.totalDistance,
                     // tripHours: trip.tripHours,
                     variantList: trip.variantList.map(variant => ({
@@ -72,6 +73,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity }) => {
             tripType: tripData?.tripType,
             pickupCity: tripData?.pickupCity,
             dropCity: tripData?.dropCity ? tripData?.dropCity : "",
+            noOfDays: cab.noOfDays,
             dropOffs: (tripData?.dropOffs && tripData?.dropOffs) ? tripData?.dropOffs : [],
             cab: {
                 ...cab,
@@ -117,10 +119,12 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity }) => {
                                 <p className="font-bold">{cab?.name}</p>
                             </div>
 
-                            {/* <div className="text-lg text-gray-700 self-center flex justify-start items-center gap-2">
-                            <p className="font-bold">{cab?.totalDistance} Kms</p>
-                            <p className="font-bold">For {cab?.tripHours} Hours</p>
-                        </div> */}
+                            {
+                                lt?.noOfDays &&
+                                <div className="text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                    <p className="font-bold">{lt?.noOfDays} Days Trip</p>
+                                </div>
+                            }
 
                             <div className="text-right space-y-0.5">
                                 <div className="line-through text-sm text-gray-400">
@@ -144,7 +148,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity }) => {
 
                             <Button
                                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold px-6 py-2 rounded-lg w-full sm:w-auto"
-                                onClick={() => handleCabBooking(cab)}
+                                onClick={() => handleCabBooking({ ...cab, noOfDays: lt?.noOfDays })}
                             >
                                 Book Now
                             </Button>

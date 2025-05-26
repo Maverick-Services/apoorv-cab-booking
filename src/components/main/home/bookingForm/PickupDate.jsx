@@ -78,6 +78,7 @@ export default function PickupDate({ register, control, watch }) {
                     type="date"
                     {...register('pickupDate', { required: true })}
                     className="w-full px-4 py-1 rounded-lg border border-gray-300"
+                    min={new Date().toISOString().split('T')[0]}
                 />
             </div>
 

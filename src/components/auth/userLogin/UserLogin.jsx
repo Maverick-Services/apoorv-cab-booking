@@ -36,6 +36,7 @@ function UserLogin({ open, onOpenChange }) {
     // 1️⃣ Send OTP via 2Factor
     async function handleSendOtp() {
         const phone = getValues('phone')
+        console.log(phone)
 
         if (!/^\d{10}$/.test(phone)) {
             setErrorMessage('Enter a valid 10-digit phone number')
@@ -75,7 +76,8 @@ function UserLogin({ open, onOpenChange }) {
                 if (res.success && res.userDetails) {
                     toast.success("Login Successful")
                     setUserData(res.userDetails)
-                    onOpenChange(false)
+                    setOtpSent(false);
+                    onOpenChange(false);
                 } else {
                     toast.error("Login failed. Please try again.");
                     setErrorMessage('Login failed. Please try again.')
@@ -154,13 +156,26 @@ function UserLogin({ open, onOpenChange }) {
                         <p className="text-red-600 text-sm">{errorMessage}</p>
                     )}
 
-                    <Button type="submit" disabled={loading}>
-                        {loading
-                            ? 'Processing...'
-                            : otpSent
-                                ? 'Verify & Login'
-                                : 'Send OTP'}
-                    </Button>
+                    <div className='flex gap-2 items-center'>
+                        {
+                            otpSent &&
+                            <Button type="button" onClick={() => handleSendOtp()} disabled={loading}>
+                                {
+                                    loading
+                                        ? 'Processing...'
+                                        : 'Resend OTP'
+                                }
+                            </Button>
+                        }
+
+                        <Button type="submit" disabled={loading}>
+                            {loading
+                                ? 'Processing...'
+                                : otpSent
+                                    ? 'Verify & Login'
+                                    : 'Send OTP'}
+                        </Button>
+                    </div>
                 </form>
             </DialogContent>
         </Dialog>
