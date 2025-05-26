@@ -1,7 +1,6 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { MdOutlineLuggage, MdAirlineSeatReclineExtra } from "react-icons/md";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -24,7 +23,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Loader2, MapPin, CalendarDays, Clock, CalendarCheck, Compass, Pencil, Route, Info, Fuel } from "lucide-react";
+import { ArrowRight, Loader2, MapPin, CalendarDays, Clock, CalendarCheck, Compass, Pencil, Route, Info, Fuel, TerminalIcon, ListTodoIcon, ListCheckIcon } from "lucide-react";
 import BookingForm from "../home/BookingForm";
 import { getAllPickupCities } from "@/lib/firebase/admin/pickupCity";
 import { Fragment, useEffect, useState } from "react";
@@ -127,6 +126,7 @@ export const CabDetails = () => {
                 driverAllowance: noOfDays * cab?.driverAllowance,
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
+                terms: currentPickupCity?.terms,
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,
@@ -143,8 +143,6 @@ export const CabDetails = () => {
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }
-
-    // console.log(currentPickupCity)
     // console.log("No of days trip", noOfDays);
 
     if (loading || !currentPickupCity || !noOfDays)
@@ -266,6 +264,7 @@ export const CabDetails = () => {
                     tripData={tripData}
                     currentPickupCity={currentPickupCity}
                     currentCab={currentCab}
+                    setCurrentCab={setCurrentCab}
                     cabTypes={cabTypes}
                     noOfDays={noOfDays}
                 />
@@ -279,6 +278,7 @@ export const CabDetails = () => {
                                 tripData={tripData}
                                 currentPickupCity={currentPickupCity}
                                 currentCab={currentCab}
+                                setCurrentCab={setCurrentCab}
                                 cabTypes={cabTypes}
                                 noOfDays={noOfDays}
                             />
@@ -307,7 +307,7 @@ export const CabDetails = () => {
                                                         if (!isOpen) setCurrentCab(null);
                                                     }}
                                                 >
-                                                    {tripData?.tripType === "Round Trip" && (
+                                                    {(
                                                         <DialogTrigger
                                                             className="text-sm text-teal-600 hover:text-teal-800 mt-1 flex items-center gap-1"
                                                             onClick={() =>
@@ -335,7 +335,7 @@ export const CabDetails = () => {
 
                                                         <Tabs defaultValue="inclusions" className="w-full">
                                                             <TabsList className="w-full grid grid-cols-4 gap-2 bg-indigo-50 rounded-xl p-2 mb-6">
-                                                                {["inclusions", "exclusions", "facilities", "tnc"].map((tab) => (
+                                                                {["inclusions", "facilities", "t&C"].map((tab) => (
                                                                     <TabsTrigger
                                                                         key={tab}
                                                                         value={tab}
@@ -365,7 +365,41 @@ export const CabDetails = () => {
                                                                 {/* Similar styled blocks for other inclusions */}
                                                             </TabsContent>
 
-                                                            {/* Other Tab Contents with similar styling */}
+                                                            {/* Tab Contents */}
+                                                            <TabsContent value="facilities" className="space-y-3">
+                                                                <div className="flex flex-col gap-1 p-3 bg-white rounded-lg">
+                                                                    <div className="flex items-center gap-2">
+                                                                        <p className="font-bold text-indigo-900">Luggage Capacity: </p>
+                                                                        <p className="font-semibold text-teal-600">
+                                                                            {
+                                                                                cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2">
+                                                                        <p className="font-bold text-indigo-900">Seating Capacity: </p>
+                                                                        <p className="font-semibold text-teal-600">
+                                                                            {
+                                                                                cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity
+                                                                            }
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </TabsContent>
+
+                                                            {/* Tab Contents */}
+                                                            <TabsContent value="t&C" className="space-y-3">
+                                                                <div className="flex flex-col gap-2 p-3 bg-white rounded-lg">
+                                                                    {
+                                                                        currentPickupCity?.terms?.map((tc, id) => (
+                                                                            <p key={id} className="flex items-center gap-2">
+                                                                                <ArrowRight size={30} />
+                                                                                {tc}
+                                                                            </p>
+                                                                        ))
+                                                                    }
+                                                                </div>
+                                                            </TabsContent>
                                                         </Tabs>
                                                     </DialogContent>
                                                 </Dialog>

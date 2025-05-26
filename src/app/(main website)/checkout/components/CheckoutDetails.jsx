@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useMemo, useState } from 'react'
-import Image from 'next/image'
 import useAuthStore from '@/store/useAuthStore'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FaCar, FaUser, FaWallet, FaReceipt, FaMapMarkerAlt } from 'react-icons/fa'
@@ -19,6 +18,9 @@ import {
 import UserLogin from '@/components/auth/userLogin/UserLogin'
 import { Timestamp } from 'firebase/firestore'
 import { formatFirestoreDate } from '@/lib/firebase/services/formatDate'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { ArrowRight, Fuel, Info } from 'lucide-react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function CheckoutDetails() {
     const router = useRouter();
@@ -265,6 +267,95 @@ export default function CheckoutDetails() {
                                     <span className="text-gray-600">Luggage Capacity:</span>
                                     <span className="font-medium text-gray-800">{bookingData.cab.luggageCapacity}</span>
                                 </div>
+                                <Dialog>
+                                    {(
+                                        <DialogTrigger
+                                            className="text-sm text-teal-600 hover:text-teal-800 flex items-center gap-1 mt-4"
+                                        >
+                                            <Info className="w-4 h-4" />
+                                            View Complete Details
+                                        </DialogTrigger>
+                                    )}
+
+                                    {/* Dialog Content */}
+                                    <DialogContent className="max-w-4xl rounded-2xl bg-gradient-to-b from-indigo-50 to-white">
+                                        <DialogHeader>
+                                            <DialogTitle className="text-2xl font-bold text-indigo-900">
+                                                {bookingData?.cab?.name} Specifications
+                                                <div className="h-1 bg-gradient-to-r from-teal-400 to-purple-400 w-24 mt-2 rounded-full" />
+                                            </DialogTitle>
+                                        </DialogHeader>
+
+                                        <Tabs defaultValue="inclusions" className="w-full">
+                                            <TabsList className="w-full grid grid-cols-4 gap-2 bg-indigo-50 rounded-xl p-2 mb-6">
+                                                {["inclusions", "facilities", "t&C"].map((tab) => (
+                                                    <TabsTrigger
+                                                        key={tab}
+                                                        value={tab}
+                                                        className="data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 rounded-lg py-2"
+                                                    >
+                                                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                                    </TabsTrigger>
+                                                ))}
+                                            </TabsList>
+
+                                            {/* Tab Contents */}
+                                            <TabsContent value="inclusions" className="space-y-3">
+                                                <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                                                    <div className="p-2 bg-teal-100 rounded-full">
+                                                        <Fuel className="w-5 h-5 text-teal-600" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-semibold text-indigo-900">Base Fare</p>
+                                                        <p className="text-lg font-bold text-teal-600">
+                                                            ₹{bookingData?.tripType === "Round Trip"
+                                                                ? bookingData?.cab?.discountedPriceRoundTrip
+                                                                : bookingData?.cab?.discountedPriceOneWay
+                                                            }/Km
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                {/* Similar styled blocks for other inclusions */}
+                                            </TabsContent>
+
+                                            {/* Tab Contents */}
+                                            <TabsContent value="facilities" className="space-y-3">
+                                                <div className="flex flex-col gap-1 p-3 bg-white rounded-lg">
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="font-bold text-indigo-900">Luggage Capacity: </p>
+                                                        <p className="font-semibold text-teal-600">
+                                                            {
+                                                                bookingData?.cab?.luggageCapacity
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="font-bold text-indigo-900">Seating Capacity: </p>
+                                                        <p className="font-semibold text-teal-600">
+                                                            {
+                                                                bookingData?.cab?.seatingCapacity
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </TabsContent>
+
+                                            {/* Tab Contents */}
+                                            <TabsContent value="t&C" className="space-y-3">
+                                                <div className="flex flex-col gap-2 p-3 bg-white rounded-lg">
+                                                    {
+                                                        bookingData?.cab?.terms?.map((tc, id) => (
+                                                            <p key={id} className="flex items-center gap-2">
+                                                                <ArrowRight size={30} />
+                                                                {tc}
+                                                            </p>
+                                                        ))
+                                                    }
+                                                </div>
+                                            </TabsContent>
+                                        </Tabs>
+                                    </DialogContent>
+                                </Dialog>
                             </div>
                         </div>
 

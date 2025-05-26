@@ -1,13 +1,15 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MAIN_WEBSITE } from '@/lib/assets/assets'
 import { TRIP_TYPES } from '@/lib/constants/constants'
 import { getPackageTripsByTripType } from '@/lib/firebase/admin/tripPackage'
-import { Loader2 } from 'lucide-react'
+import { ArrowRight, Fuel, Info, Loader2 } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
-export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTypes }) => {
+export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTypes, setCurrentCab }) => {
 
     const [loading, setLoading] = useState(false);
     const [trips, setTrips] = useState([]);
@@ -81,6 +83,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                 driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance,
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
+                terms: currentPickupCity?.terms,
             },
             pickupDate: tripData?.pickupDate,
             returnDate: tripData?.returnDate,
@@ -111,20 +114,125 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                             key={index}
                             className="bg-white grid grid-cols-1 sm:grid-cols-[auto_auto_1fr_auto_auto] items-center gap-4 border-b last:border-b-0 p-4 rounded-2xl shadow-sm"
                         >
-                            <img
-                                src={MAIN_WEBSITE.car1}
-                                alt={cab?.name}
-                                className="w-20 h-14 object-contain"
-                            />
+                            {/* CaB details and terms and Conditions */}
+                            <div className="flex items-center gap-4">
+                                <img
+                                    src={MAIN_WEBSITE.car1}
+                                    alt={cab?.name}
+                                    className="w-24 h-16 object-contain p-2 bg-indigo-50 rounded-lg border border-indigo-100"
+                                />
+                                <div>
+                                    <h3 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                        {cab?.name}
+                                    </h3>
+                                    <Dialog
+                                        onOpenChange={(isOpen) => {
+                                            if (!isOpen) setCurrentCab(null);
+                                        }}
+                                    >
+                                        {(
+                                            <DialogTrigger
+                                                className="text-sm text-teal-600 hover:text-teal-800 mt-1 flex items-center gap-1"
+                                                onClick={() =>
+                                                    setCurrentCab(
+                                                        cabTypes.find(
+                                                            (cb) =>
+                                                                cb?.name_lower === cab?.name?.toLowerCase()
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                <Info className="w-4 h-4" />
+                                                View Full Specifications
+                                            </DialogTrigger>
+                                        )}
 
-                            <div className="text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                                <p className="font-bold">{cab?.name}</p>
+                                        {/* Dialog Content */}
+                                        <DialogContent className="max-w-4xl rounded-2xl bg-gradient-to-b from-indigo-50 to-white">
+                                            <DialogHeader>
+                                                <DialogTitle className="text-2xl font-bold text-indigo-900">
+                                                    {cab?.name} Specifications
+                                                    <div className="h-1 bg-gradient-to-r from-teal-400 to-purple-400 w-24 mt-2 rounded-full" />
+                                                </DialogTitle>
+                                            </DialogHeader>
+
+                                            <Tabs defaultValue="inclusions" className="w-full">
+                                                <TabsList className="w-full grid grid-cols-4 gap-2 bg-indigo-50 rounded-xl p-2 mb-6">
+                                                    {["inclusions", "facilities", "t&C"].map((tab) => (
+                                                        <TabsTrigger
+                                                            key={tab}
+                                                            value={tab}
+                                                            className="data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 rounded-lg py-2"
+                                                        >
+                                                            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                                        </TabsTrigger>
+                                                    ))}
+                                                </TabsList>
+
+                                                {/* Tab Contents */}
+                                                <TabsContent value="inclusions" className="space-y-3">
+                                                    <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+                                                        <div className="p-2 bg-teal-100 rounded-full">
+                                                            <Fuel className="w-5 h-5 text-teal-600" />
+                                                        </div>
+                                                        <div>
+                                                            <p className="font-semibold text-indigo-900">Base Fare</p>
+                                                            <p className="text-lg font-bold text-teal-600">
+                                                                ₹{tripData?.tripType === "Round Trip"
+                                                                    ? cab?.discountedPriceRoundTrip
+                                                                    : cab?.discountedPriceOneWay
+                                                                }/Km
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    {/* Similar styled blocks for other inclusions */}
+                                                </TabsContent>
+
+                                                {/* Tab Contents */}
+                                                <TabsContent value="facilities" className="space-y-3">
+                                                    <div className="flex flex-col gap-1 p-3 bg-white rounded-lg">
+                                                        <div className="flex items-center gap-2">
+                                                            <p className="font-bold text-indigo-900">Luggage Capacity: </p>
+                                                            <p className="font-semibold text-teal-600">
+                                                                {
+                                                                    cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex items-center gap-2">
+                                                            <p className="font-bold text-indigo-900">Seating Capacity: </p>
+                                                            <p className="font-semibold text-teal-600">
+                                                                {
+                                                                    cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity
+                                                                }
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </TabsContent>
+
+                                                {/* Tab Contents */}
+                                                <TabsContent value="t&C" className="space-y-3">
+                                                    <div className="flex flex-col gap-2 p-3 bg-white rounded-lg">
+                                                        {
+                                                            currentPickupCity?.terms?.map((tc, id) => (
+                                                                <p key={id} className="flex items-center gap-2">
+                                                                    <ArrowRight size={30} />
+                                                                    {tc}
+                                                                </p>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                </TabsContent>
+                                            </Tabs>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
                             </div>
 
                             {
                                 lt?.noOfDays &&
-                                <div className="text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                                    <p className="font-bold">{lt?.noOfDays} Days Trip</p>
+                                <div className="text-lg bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent sm:ml-8 w-full">
+                                    <p className="font-bold text-center w-full">{lt?.noOfDays} Days Trip</p>
                                 </div>
                             }
 
