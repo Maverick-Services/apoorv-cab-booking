@@ -1,4 +1,3 @@
-// import { OpenSans } from "next/font/google";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import "./globals.css";
@@ -21,11 +20,30 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body className="font-open-sans antialiased">
+        {/* Google Analytics 4 */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-113ZV8TKEE"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-113ZV8TKEE');
+            `,
+          }}
+        />
+
         <AuthProvider>
           {children}
           <Toaster position="top-right" reverseOrder={false} />
         </AuthProvider>
 
+        {/* Tawk.to Chat Widget */}
         <Script
           id="tawkto-widget"
           strategy="afterInteractive"
