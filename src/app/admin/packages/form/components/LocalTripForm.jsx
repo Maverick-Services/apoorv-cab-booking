@@ -21,6 +21,7 @@ import { TRIP_TYPES } from '@/lib/constants/constants';
 import PickupCityName from './PickupCityName';
 import LocationSearch from '@/components/main/home/bookingForm/DropSuggestionForm';
 import toast from 'react-hot-toast';
+import Terms from './Terms';
 
 const LocalTripForm = () => {
     const searchParams = useSearchParams();
@@ -40,6 +41,7 @@ const LocalTripForm = () => {
         handleDelete,
         data, setData, handleData,
         handleVariant, variant, setVariant, variantList, setVariantList,
+        termsArray, setTermsArray,
     } = useLocalTripFromForm();
 
     const {
@@ -63,6 +65,7 @@ const LocalTripForm = () => {
                 setData(resp)
                 setValue('tripType', resp?.tripType)
                 setValue('dropCity', resp?.dropCity)
+                setTermsArray(resp?.terms);
                 setQuery(resp?.dropCity)
                 setDropOffs(resp?.dropOffs)
                 setVariantList(resp?.variantList)
@@ -70,7 +73,7 @@ const LocalTripForm = () => {
         }
     }, [updatePackageId]);
 
-    console.log(data)
+    // console.log(data)
 
     useEffect(() => {
         handleData("dropOffs", dropOffs);
@@ -85,6 +88,7 @@ const LocalTripForm = () => {
 
         let finalData = {
             ...data,
+            terms: [...termsArray],
             tripType,
             variantList: variantList
         }
@@ -157,16 +161,20 @@ const LocalTripForm = () => {
                         />
                     </div>
 
-                    <div className="flex flex-col my-4">
-                        <label className="text-sm font-medium text-gray-700 mb-1">No of Days</label>
-                        <input
-                            type="number"
-                            min={0}
-                            value={data?.noOfDays}
-                            onChange={(e) => handleData('noOfDays', e.target.value)}
-                            placeholder="Eg. 4"
-                            className="input-field"
-                        />
+                    <div className='flex items-center gap-6'>
+                        <div className="flex flex-col my-4">
+                            <label className="text-sm font-medium text-gray-700 mb-1">No of Days</label>
+                            <input
+                                type="number"
+                                min={0}
+                                value={data?.noOfDays}
+                                onChange={(e) => handleData('noOfDays', e.target.value)}
+                                placeholder="Eg. 4"
+                                className="input-field"
+                            />
+                        </div>
+                        {/* Terms and Conditions */}
+                        <Terms />
                     </div>
 
                     {/* LocalTrip Variants in city */}

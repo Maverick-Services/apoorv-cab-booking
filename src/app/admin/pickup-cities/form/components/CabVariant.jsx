@@ -9,6 +9,8 @@ import RoundTripPrice from './variant/RoundTripPrice'
 import OneWayPrice from './variant/OneWayPrice'
 import DriverAllowance from './variant/DriverAllowance'
 import { usePickupCityForm } from '../context/PickupCityContext'
+import LocalTripPrice from './variant/LocalTripPrice'
+import AirportTripPrice from './variant/AirportTripPrice'
 
 function CabVariant() {
 
@@ -82,6 +84,12 @@ function CabVariant() {
 
                 {/* One Way Trip Pricing Section */}
                 <OneWayPrice />
+
+                {/* Local Trip Pricing Section */}
+                <LocalTripPrice />
+
+                {/* Airport Trip Pricing Section */}
+                <AirportTripPrice />
 
                 {/* Driver Allowance Section */}
                 <DriverAllowance />

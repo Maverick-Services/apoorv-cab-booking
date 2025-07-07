@@ -11,23 +11,43 @@ function VariantCard({ variant, onEdit, onDelete }) {
                     <div className="grid grid-cols-2 gap-3 text-sm">
                         <div className="space-y-1">
                             <p className="text-gray-600">
-                                <span className="font-medium">Min KM:</span> {variant.minKilometers}
+                                <span className="font-medium">One Way:</span>
+                                <span className="ml-2">
+                                    <span className="line-through text-red-600">₹{variant.actualPriceOneWay}/km</span>
+                                    <span className="ml-2 text-green-600">₹{variant.discountedPriceOneWay}/km</span>
+                                </span>
+                            </p>
+                            <p className="text-gray-600">
+                                <span className="font-medium">Min KM One Way:</span> {variant.minKilometersOneWay}
                             </p>
                             <p className="text-gray-600">
                                 <span className="font-medium">Round Trip:</span>
                                 <span className="ml-2">
-                                    <span className="line-through text-red-600">₹{variant.actualPriceRoundTrip}</span>
-                                    <span className="ml-2 text-green-600">₹{variant.discountedPriceRoundTrip}</span>
+                                    <span className="line-through text-red-600">₹{variant.actualPriceRoundTrip}/km</span>
+                                    <span className="ml-2 text-green-600">₹{variant.discountedPriceRoundTrip}/km</span>
                                 </span>
+                            </p>
+                            <p className="text-gray-600">
+                                <span className="font-medium">Min KM Round Trip:</span> {variant.minKilometersRoundTrip}
                             </p>
                         </div>
                         <div className="space-y-1">
                             <p className="text-gray-600">
-                                <span className="font-medium">One Way:</span>
+                                <span className="font-medium">Local Trip Extra Price:</span>
                                 <span className="ml-2">
-                                    <span className="line-through text-red-600">₹{variant.actualPriceOneWay}</span>
-                                    <span className="ml-2 text-green-600">₹{variant.discountedPriceOneWay}</span>
+                                    <span className="">₹{variant.extraKilometersLocal}/km</span>
+                                    <span className="ml-2">₹{variant.extraHoursLocal}/Hour</span>
                                 </span>
+                            </p>
+                            <p className="text-gray-600">
+                                <span className="font-medium">Airport Trip Extra Price:</span>
+                                <span className="ml-2">
+                                    <span className="">₹{variant.extraKilometersAirport}/km</span>
+                                    <span className="ml-2">₹{variant.extraHoursAirport}/Hour</span>
+                                </span>
+                            </p>
+                            <p className="text-gray-600">
+                                <span className="font-medium">Min KM:</span> {variant.minKilometers}
                             </p>
                             <p className="text-gray-600">
                                 <span className="font-medium">Driver Allowance:</span>

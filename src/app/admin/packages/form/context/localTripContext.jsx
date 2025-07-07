@@ -31,6 +31,10 @@ export default function LocalTripFormContextProvider({ children }) {
         variantDiscountedPrice: ''
     })
 
+    // terms
+    const [tempTerm, setTempTerm] = useState('');
+    const [termsArray, setTermsArray] = useState([]);
+
     function handleVariant(key, value) {
         setVariant(prev => ({
             ...prev,
@@ -120,6 +124,7 @@ export default function LocalTripFormContextProvider({ children }) {
             data, setData, handleData,
             selectedCity, setSelectedCity,
             handleVariant, variant, setVariant, variantList, setVariantList,
+            tempTerm, setTempTerm, termsArray, setTermsArray,
         }}
     >{children}</LocalTripFormContext.Provider>
 }

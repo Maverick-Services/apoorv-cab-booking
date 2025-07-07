@@ -34,6 +34,7 @@ const PickupCityForm = ({ setEditPickup }) => {
         data, setData, handleData,
         handleVariant, variant, setVariant, variantList, setVariantList,
         tempTerm, setTempTerm, termsArray, setTermsArray,
+        setOneWayTermsArray, oneWayTermsArray
     } = usePickupCityForm();
 
 
@@ -45,6 +46,7 @@ const PickupCityForm = ({ setEditPickup }) => {
                 if (pickupCityData) {
                     handleData('name', pickupCityData?.name);
                     setTermsArray(pickupCityData?.terms);
+                    setOneWayTermsArray(pickupCityData?.oneWayTerms);
                     setVariantList(pickupCityData?.variantList)
                     setEditPickup(true);
                 }
@@ -58,6 +60,7 @@ const PickupCityForm = ({ setEditPickup }) => {
         let finalData = {
             ...data,
             terms: [...termsArray],
+            oneWayTerms: [...oneWayTermsArray],
             variantList: variantList
         }
         if (updatePickupCityId) {

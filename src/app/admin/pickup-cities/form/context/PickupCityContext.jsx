@@ -26,10 +26,16 @@ export default function PickupCityFormContexttProvider({ children }) {
     const [variant, setVariant] = useState({
         name: '',
         minKilometers: '',
+        minKilometersRoundTrip: '',
+        minKilometersOneWay: '',
         actualPriceRoundTrip: '',
         discountedPriceRoundTrip: '',
         actualPriceOneWay: '',
         discountedPriceOneWay: '',
+        extraKilometersLocal: '',
+        extraHoursLocal: '',
+        extraKilometersAirport: '',
+        extraHoursAirport: '',
         driverAllowance: '',
     })
     const [editVariant, setEditVariant] = useState(null);
@@ -57,6 +63,8 @@ export default function PickupCityFormContexttProvider({ children }) {
     // terms
     const [tempTerm, setTempTerm] = useState('');
     const [termsArray, setTermsArray] = useState([]);
+    const [tempOneWayTerm, setOneWayTempTerm] = useState('');
+    const [oneWayTermsArray, setOneWayTermsArray] = useState([]);
 
     const handleData = (key, value) => {
         setData((prev) => ({
@@ -145,6 +153,7 @@ export default function PickupCityFormContexttProvider({ children }) {
             data, setData, handleData,
             handleVariant, handleEditVariantList, editVariant, setEditVariant, variant, setVariant, variantList, setVariantList,
             tempTerm, setTempTerm, termsArray, setTermsArray,
+            tempOneWayTerm, setOneWayTempTerm, oneWayTermsArray, setOneWayTermsArray,
         }}
     >{children}</PickupCityFormContext.Provider>
 }

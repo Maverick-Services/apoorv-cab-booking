@@ -28,11 +28,11 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                     dropOffs: trip.dropOffs,
                     noOfDays: trip.noOfDays,
                     totalDistance: tripData.totalDistance,
+                    terms: trip.terms,
                     // tripHours: trip.tripHours,
                     variantList: trip.variantList.map(variant => ({
                         name: variant.cabType,
                         totalDistance: tripData.totalDistance,
-                        // tripHours: trip.tripHours,
                         price: variant.variantAcutalPrice,
                         discountedPrice: variant.variantDiscountedPrice
                     }))
@@ -172,7 +172,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                                                     ))}
                                                 </TabsList>
 
-                                                {/* Tab Contents */}
+                                                {/* Tab Contents - Inclusions */}
                                                 <TabsContent value="inclusions" className="space-y-3">
                                                     <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
                                                         <div className="p-2 bg-teal-100 rounded-full">
@@ -191,7 +191,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                                                     {/* Similar styled blocks for other inclusions */}
                                                 </TabsContent>
 
-                                                {/* Tab Contents */}
+                                                {/* Tab Contents - Facilities */}
                                                 <TabsContent value="facilities" className="space-y-3">
                                                     <div className="flex flex-col gap-1 p-3 bg-white rounded-lg">
                                                         <div className="flex items-center gap-2">
@@ -213,11 +213,19 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                                                     </div>
                                                 </TabsContent>
 
-                                                {/* Tab Contents */}
+                                                {/* Tab Contents - Term and Conditions */}
                                                 <TabsContent value="t&C" className="space-y-3">
                                                     <div className="flex flex-col gap-2 p-3 bg-white rounded-lg">
                                                         {
                                                             currentPickupCity?.terms?.map((tc, id) => (
+                                                                <p key={id} className="flex items-center gap-2">
+                                                                    <ArrowRight size={30} />
+                                                                    {tc}
+                                                                </p>
+                                                            ))
+                                                        }
+                                                        {
+                                                            lt?.terms?.map((tc, id) => (
                                                                 <p key={id} className="flex items-center gap-2">
                                                                     <ArrowRight size={30} />
                                                                     {tc}
