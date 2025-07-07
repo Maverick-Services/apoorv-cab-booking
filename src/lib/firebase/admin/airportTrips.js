@@ -14,7 +14,7 @@ export const createNewAirportTrip = async ({ data }) => {
 
         await updateDoc(docRef, { id: docRef.id });
 
-        return { success: true, message: "airport Trip Added Successfully." };
+        return { success: true, message: "Airport Trip Added Successfully." };
     } catch (error) {
         console.error("Error adding airport Trip:", error);
         throw new Error(error.message || "Something went wrong.");
@@ -38,6 +38,19 @@ export const getAirportTripsByCity = async (cityName) => {
 export const getAirportTripDetails = async (id) => {
     return await getDoc(doc(db, `airportTrips/${id}`));
 }
+
+// Update Airport trip
+export const updateAirportTrip = async ({ data }) => {
+    try {
+        const collectionRef = doc(db, `airportTrips/${data?.id}`);
+        await updateDoc(collectionRef, data);
+        return { success: true, message: "Airport Trip Updated Successfully." };
+
+    } catch (error) {
+        console.error("Error updating Airport Trip:", error);
+        throw new Error(error.message || "Something went wrong.");
+    }
+};
 
 // delete airport trip
 export const deleteAirportTrip = async (id) => {

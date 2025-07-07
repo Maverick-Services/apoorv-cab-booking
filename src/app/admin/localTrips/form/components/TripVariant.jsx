@@ -62,7 +62,6 @@ function TripVariant({ updateLocalTripId }) {
         })
     }
 
-
     const handleDelete = (index) => {
         setDeleteIndex(index);
         setOpenDialog(true);

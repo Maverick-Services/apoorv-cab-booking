@@ -1,6 +1,6 @@
 "use client"
 
-import { createNewAirportTrip } from "@/lib/firebase/admin/airportTrips";
+import { createNewAirportTrip, deleteAirportTrip, getAirportTripDetails, updateAirportTrip } from "@/lib/firebase/admin/airportTrips";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useState } from "react";
 import toast from 'react-hot-toast';
@@ -12,7 +12,6 @@ export default function AirportTripFormContextProvider({ children }) {
     const [data, setData] = useState({});
     const [variantList, setVariantList] = useState([])
     const [otherError, setOtherError] = useState(null);
-
     const [selectedCity, setSelectedCity] = useState({})
 
     // while fetching the data
@@ -37,6 +36,9 @@ export default function AirportTripFormContextProvider({ children }) {
         }))
     }
 
+    const [tempTerm, setTempTerm] = useState('');
+    const [termsArray, setTermsArray] = useState([]);
+
     const handleData = (key, value) => {
         setData((prev) => ({
             ...prev,
@@ -49,12 +51,12 @@ export default function AirportTripFormContextProvider({ children }) {
         setOtherError(null)
         setIsLoading(true)
         try {
-            // const res = await getCabTypeDetails(id);
-            // if (res.exists()) {
-            //     return res.data();
-            // } else {
-            //     throw new Error(`No Cab Type found with id ${id}`);
-            // }
+            const res = await getAirportTripDetails(id);
+            if (res.exists()) {
+                return res.data();
+            } else {
+                throw new Error(`No Data found with id ${id}`);
+            }
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error fetching cab type');
@@ -84,9 +86,9 @@ export default function AirportTripFormContextProvider({ children }) {
         setOtherError(null)
         setCreating(true)
         try {
-            // await updateCabType({ data });
-            // toast.success('Cab Type Updated Successfully!');
-            // router.push('/admin/cab-types');
+            await updateAirportTrip({ data });
+            toast.success('Airport Trip Updated Successfully!');
+            router.push('/admin/airport-trips');
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error updating cab type');
@@ -99,9 +101,9 @@ export default function AirportTripFormContextProvider({ children }) {
         setOtherError(null)
         setDeleting(true)
         try {
-            // await deleteCabType(id);
-            // toast.success('Cab Type Deleted Successfully!');
-            // router.push('/admin/cab-types');
+            await deleteAirportTrip(id);
+            toast.success('Airport Trip Deleted Successfully!');
+            router.push('/admin/airport-trips');
         } catch (error) {
             setOtherError(error?.message);
             toast.error(error?.message || 'Error deleting cab type');
@@ -122,6 +124,7 @@ export default function AirportTripFormContextProvider({ children }) {
             data, setData, handleData,
             selectedCity, setSelectedCity,
             handleVariant, variant, setVariant, variantList, setVariantList,
+            tempTerm, setTempTerm, termsArray, setTermsArray,
         }}
     >{children}</AirportTripFormContext.Provider>
 }

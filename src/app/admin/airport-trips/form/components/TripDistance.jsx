@@ -8,7 +8,7 @@ function TripDistance() {
 
     return (
         <div className="flex flex-col gap-2">
-            <label htmlFor='name' className="text-sm font-medium">Trip Distance</label>
+            <label htmlFor='tripDistance' className="text-sm font-medium">Trip Distance</label>
             {isLoading
                 ? <Skeleton className="h-10 w-full" />
                 : <input
@@ -16,6 +16,7 @@ function TripDistance() {
                     id="tripDistance"
                     placeholder='eg. 8 / 10'
                     onChange={(e) => handleData('tripDistance', e.target.value)}
+                    value={data.tripDistance || ""}
                     className="border p-2 rounded-md"
                 />
             }

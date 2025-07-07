@@ -1,28 +1,10 @@
 "use client"
-import React, { useState } from 'react'
+import React from 'react'
 import { Loader2, Pencil, MapPin, Clock, Route, IndianRupee, Trash2 } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import {
-    Dialog,
-    DialogTrigger,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-} from "@/components/ui/dialog"
-import { deleteAirportTrip } from '@/lib/firebase/admin/airportTrips'
+import { Button } from '@/components/ui/button';
 
-function AirportTripList({ loading, airportTrips, fetchAirportTrips }) {
-    const [deleting, setDeleting] = useState(false)
-
-    async function confirmDelete(id) {
-        setDeleting(true)
-        await deleteAirportTrip(id)
-        fetchAirportTrips()
-        setDeleting(false)
-    }
-
+function AirportTripList({ loading, airportTrips }) {
     return (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4'>
             {loading ? (
@@ -33,7 +15,7 @@ function AirportTripList({ loading, airportTrips, fetchAirportTrips }) {
             ) : airportTrips.length === 0 ? (
                 <div className="col-span-full flex flex-col items-center py-12 space-y-3">
                     <MapPin className="w-12 h-12 text-muted-foreground" />
-                    <p className="text-xl text-muted-foreground font-medium">No airport trips found</p>
+                    <p className="text-xl text-muted-foreground font-medium">No local trips found</p>
                     <p className="text-muted-foreground text-sm">Create your first trip to get started</p>
                 </div>
             ) : (
@@ -56,7 +38,7 @@ function AirportTripList({ loading, airportTrips, fetchAirportTrips }) {
                                     </div>
                                 </div>
                             </div>
-                            {/* <Link href={`/admin/airport-trips/form?id=${trip.id}`}>
+                            <Link href={`/admin/airport-trips/form?id=${trip.id}`}>
                                 <Button
                                     size="icon"
                                     variant="ghost"
@@ -64,37 +46,7 @@ function AirportTripList({ loading, airportTrips, fetchAirportTrips }) {
                                 >
                                     <Pencil className="w-4 h-4 text-muted-foreground" />
                                 </Button>
-                            </Link> */}
-                            <Dialog>
-                                <DialogTrigger asChild>
-                                    <Button variant="destructive">
-                                        <Trash2 />
-                                    </Button>
-                                </DialogTrigger>
-
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Delete Variant</DialogTitle>
-                                    </DialogHeader>
-                                    <p>Are you sure you want to delete this Airport Trip?</p>
-                                    <DialogFooter className="mt-4">
-
-                                        <Button variant="destructive" onClick={() => confirmDelete(trip.id)}>
-                                            {deleting ?
-                                                <div className="flex items-center py-12 gap-3 justify-center text-white">
-                                                    <Loader2 className="animate-spin w-10 h-10 text-white" />
-                                                    <p className="text-white">Deleting...</p>
-                                                </div>
-                                                :
-                                                <div className="flex items-center py-12 gap-3 justify-center text-white">
-                                                    <Trash2 /> Delete
-                                                </div>
-                                            }
-                                        </Button>
-
-                                    </DialogFooter>
-                                </DialogContent>
-                            </Dialog>
+                            </Link>
                         </div>
 
                         <div className="space-y-3">

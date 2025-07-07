@@ -12,7 +12,6 @@ export default function LocalTripFormContextProvider({ children }) {
     const [data, setData] = useState({});
     const [variantList, setVariantList] = useState([])
     const [otherError, setOtherError] = useState(null);
-    console.log(data)
     const [selectedCity, setSelectedCity] = useState({})
 
     // while fetching the data
@@ -36,6 +35,9 @@ export default function LocalTripFormContextProvider({ children }) {
             [key]: value
         }))
     }
+
+    const [tempTerm, setTempTerm] = useState('');
+    const [termsArray, setTermsArray] = useState([]);
 
     const handleData = (key, value) => {
         setData((prev) => ({
@@ -119,6 +121,7 @@ export default function LocalTripFormContextProvider({ children }) {
             data, setData, handleData,
             selectedCity, setSelectedCity,
             handleVariant, variant, setVariant, variantList, setVariantList,
+            tempTerm, setTempTerm, termsArray, setTermsArray,
         }}
     >{children}</LocalTripFormContext.Provider>
 }
