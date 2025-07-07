@@ -155,7 +155,9 @@ export default function PickupCityFormContexttProvider({ children }) {
             tempTerm, setTempTerm, termsArray, setTermsArray,
             tempOneWayTerm, setOneWayTempTerm, oneWayTermsArray, setOneWayTermsArray,
         }}
-    >{children}</PickupCityFormContext.Provider>
+    >
+        {children}
+    </PickupCityFormContext.Provider>
 }
 
 export const usePickupCityForm = () => useContext(PickupCityFormContext);

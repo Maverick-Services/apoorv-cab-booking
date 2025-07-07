@@ -41,7 +41,17 @@ export default function Page() {
         }
     }, [updateId])
 
-    console.log(data)
+    useEffect(() => {
+        if (data?.title && !updateId) {
+            const slug = data.title
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
+            handleData('slug', slug);
+        }
+    }, [data?.title, updateId])
 
     if (isLoading) {
         return <Loader2 />
@@ -62,7 +72,6 @@ export default function Page() {
                 </BreadcrumbList>
             </Breadcrumb>
 
-            {/* <section className="flex"> */}
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -95,12 +104,11 @@ export default function Page() {
                             className="px-4 py-2 rounded-sm border bg-gray-50"
                             placeholder="new-generation-cars"
                             type="text"
+                            value={data?.slug ?? ''}
+                            required
                             onChange={(e) => {
                                 handleData('slug', e.target.value)
                             }}
-                            disabled={updateId}
-                            value={data?.slug ?? ''}
-                            required
                         />
                     </div>
                 </div>
@@ -151,7 +159,6 @@ export default function Page() {
                                     }}
                                 />
 
-                                {/* Custom Upload Button */}
                                 <div className="flex flex-col items-center justify-center px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-500 transition-colors w-full">
                                     <svg
                                         className="w-8 h-8 text-gray-400 mb-2"
@@ -176,14 +183,12 @@ export default function Page() {
                             </label>
                         </div>
 
-                        {/* Selected File Name */}
                         {image && (
                             <p className="text-sm text-gray-600 mt-2">
                                 Selected file: {image.name}
                             </p>
                         )}
                     </div>
-                    {/* Current Image Preview */}
                     {data?.imageURL && (
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-gray-700">Current Image</p>
@@ -197,7 +202,6 @@ export default function Page() {
                         </div>
                     )}
 
-                    {/* New Image Preview */}
                     {image && (
                         <div className="space-y-2">
                             <p className="text-sm font-medium text-gray-700">New Preview</p>
@@ -222,7 +226,6 @@ export default function Page() {
                 {/* Rich text editor */}
                 <RTEField />
 
-                {/* Buttons */}
                 {error && <p className="text-red-500 text-sm">{error}</p>}
 
                 <div className="flex gap-3 items-center justify-end">
@@ -249,7 +252,6 @@ export default function Page() {
                 </h3>}
 
             </form>
-            {/* </section> */}
         </main>
     </InnerLayout>
 }

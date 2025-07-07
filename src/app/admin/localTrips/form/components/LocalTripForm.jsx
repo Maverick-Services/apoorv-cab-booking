@@ -18,6 +18,7 @@ import TripVariant from './TripVariant';
 import TripHours from './TripHours';
 import TripDistance from './TripDistance';
 import { useLocalTripFromForm } from '../context/localTripContext';
+import Terms from './Terms';
 
 const LocalTripForm = () => {
     const searchParams = useSearchParams();
@@ -34,6 +35,7 @@ const LocalTripForm = () => {
         handleDelete,
         data, setData, handleData,
         handleVariant, variant, setVariant, variantList, setVariantList,
+        tempTerm, setTempTerm, termsArray, setTermsArray,
     } = useLocalTripFromForm();
 
 
@@ -44,6 +46,7 @@ const LocalTripForm = () => {
                 const resp = await fetchData(updateLocalTripId);
                 setData(resp)
                 setVariantList(resp?.variantList)
+                setTermsArray(resp?.terms);
             })();
         }
     }, [updateLocalTripId]);
@@ -53,6 +56,7 @@ const LocalTripForm = () => {
         e.preventDefault()
         const finalData = {
             ...data,
+            terms: [...termsArray],
             variantList: variantList
         }
         if (updateLocalTripId) {
@@ -61,8 +65,6 @@ const LocalTripForm = () => {
             handleCreate(finalData);
         }
     };
-
-
 
     return (
         <div className='w-full max-w-4xl mx-auto p-4'>
@@ -80,8 +82,12 @@ const LocalTripForm = () => {
                     </div>
 
                     {/* LocalTrip Variants in city */}
-                    <div className='space-y-6'>
+                    <div className='space-y-6 mb-5'>
                         <TripVariant updateLocalTripId={updateLocalTripId} />
+                    </div>
+
+                    <div>
+                        <Terms updateLocalTripId={updateLocalTripId} />
                     </div>
                 </div>
 
