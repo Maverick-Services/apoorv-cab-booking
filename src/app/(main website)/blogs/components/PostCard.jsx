@@ -22,7 +22,7 @@ export function PostCard({ blog }) {
                 <div className="relative flex-1">
                     <img
                         className="h-48 w-full object-cover rounded-md"
-                        src={blog?.imageURL?.imageURL}
+                        src={blog?.imageURL?.imageURL || "/header2.jpg"}
                         alt={blog?.title}
                     />
                     <h1 className="font-bold mt-2 text-lg text-gray-800">{blog?.title}</h1>

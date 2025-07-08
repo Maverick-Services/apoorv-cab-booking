@@ -20,7 +20,7 @@ export default async function page({ params }) {
     const { slug } = await params;
     const post = await getBlog(slug);
 
-    console.log(post)
+    // console.log(post)
 
     return (
         <div className="">
