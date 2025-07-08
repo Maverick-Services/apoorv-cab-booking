@@ -32,6 +32,7 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
                     pickupCity: trip.cityName,
                     totalDistance: trip.tripDistance,
                     tripHours: trip.tripHours,
+                    terms: trip.terms,
                     variantList: trip.variantList.map(variant => ({
                         name: variant.cabType,
                         totalDistance: trip.tripDistance,
@@ -260,6 +261,14 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
                                                                     <div className="flex flex-col gap-2 p-3 bg-white rounded-lg">
                                                                         {
                                                                             currentPickupCity?.terms?.map((tc, id) => (
+                                                                                <p key={id} className="flex items-center gap-2">
+                                                                                    <ArrowRight size={30} />
+                                                                                    {tc}
+                                                                                </p>
+                                                                            ))
+                                                                        }
+                                                                        {
+                                                                            lt?.terms?.map((tc, id) => (
                                                                                 <p key={id} className="flex items-center gap-2">
                                                                                     <ArrowRight size={30} />
                                                                                     {tc}

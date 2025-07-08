@@ -42,7 +42,6 @@ function OneWayPrice() {
                         className="input-field"
                     />
                 </div>
-                <OneWayTerms />
             </div>
         </div>
     )

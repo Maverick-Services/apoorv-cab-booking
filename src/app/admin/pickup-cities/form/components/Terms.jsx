@@ -18,7 +18,7 @@ function Terms() {
 
     return (
         <div className="flex flex-col gap-2">
-            <label htmlFor='terms' className="text-sm font-medium">Terms and Conditions</label>
+            <label htmlFor='terms' className="text-sm font-medium">For Pickup Cities</label>
 
             <div className="flex gap-2">
                 <input

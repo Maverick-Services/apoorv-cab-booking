@@ -1,5 +1,6 @@
 import React from 'react'
 import { usePickupCityForm } from '../../context/PickupCityContext'
+import RoundTripTerms from '../RoundTripTerms'
 
 function RoundTripPrice() {
     const { handleVariant, variant, setVariant, } = usePickupCityForm()

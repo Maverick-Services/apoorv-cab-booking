@@ -401,6 +401,24 @@ export const CabDetails = () => {
                                                                             </p>
                                                                         ))
                                                                     }
+                                                                    {
+                                                                        tripData?.tripType === TRIP_TYPES.roundTrip
+                                                                            ? currentPickupCity?.roundTripTerms?.map((tc, id) => (
+                                                                                <p key={id} className="flex items-center gap-2">
+                                                                                    <ArrowRight size={30} />
+                                                                                    {tc}
+                                                                                </p>
+                                                                            ))
+                                                                            : (
+                                                                                tripData?.tripType === TRIP_TYPES.oneWay
+                                                                                && currentPickupCity?.oneWayTerms?.map((tc, id) => (
+                                                                                    <p key={id} className="flex items-center gap-2">
+                                                                                        <ArrowRight size={30} />
+                                                                                        {tc}
+                                                                                    </p>
+                                                                                ))
+                                                                            )
+                                                                    }
                                                                 </div>
                                                             </TabsContent>
                                                         </Tabs>

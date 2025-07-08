@@ -17,6 +17,8 @@ import CabVariant from './CabVariant';
 import CityName from './CityName';
 import Terms from './Terms';
 import { usePickupCityForm } from '../context/PickupCityContext';
+import OneWayTerms from './OneWayTerms';
+import RoundTripTerms from './RoundTripTerms';
 
 const PickupCityForm = ({ setEditPickup }) => {
     const searchParams = useSearchParams();
@@ -34,7 +36,8 @@ const PickupCityForm = ({ setEditPickup }) => {
         data, setData, handleData,
         handleVariant, variant, setVariant, variantList, setVariantList,
         tempTerm, setTempTerm, termsArray, setTermsArray,
-        setOneWayTermsArray, oneWayTermsArray
+        setOneWayTermsArray, oneWayTermsArray,
+        setRoundTripTermsArray, roundTripTermsArray
     } = usePickupCityForm();
 
 
@@ -47,6 +50,7 @@ const PickupCityForm = ({ setEditPickup }) => {
                     handleData('name', pickupCityData?.name);
                     setTermsArray(pickupCityData?.terms);
                     setOneWayTermsArray(pickupCityData?.oneWayTerms);
+                    setRoundTripTermsArray(pickupCityData?.roundTripTerms);
                     setVariantList(pickupCityData?.variantList)
                     setEditPickup(true);
                 }
@@ -61,6 +65,7 @@ const PickupCityForm = ({ setEditPickup }) => {
             ...data,
             terms: [...termsArray],
             oneWayTerms: [...oneWayTermsArray],
+            roundTripTerms: [...roundTripTermsArray],
             variantList: variantList
         }
         if (updatePickupCityId) {
@@ -81,12 +86,19 @@ const PickupCityForm = ({ setEditPickup }) => {
                 className="space-y-6 w-full"
             >
                 <div className=''>
-                    <div className='w-full grid grid-cols-1 sm:grid-cols-2 mb-4 gap-4 p-4 bg-white rounded-xl border border-gray-300'>
+                    <div className='w-full flex flex-col mb-4 gap-4 p-4 bg-white rounded-xl border border-gray-300'>
                         {/* City Name */}
                         <CityName />
 
-                        {/* City Terms and Conditions */}
-                        <Terms />
+                        <div>
+                            <h2 className='text-xl text-primary font-bold mb-3'>Terms and Conditions</h2>
+                            {/* City Terms and Conditions */}
+                            <div className='flex flex-col gap-4'>
+                                <Terms />
+                                <OneWayTerms />
+                                <RoundTripTerms />
+                            </div>
+                        </div>
 
                     </div>
                     <div className='w-full'>
