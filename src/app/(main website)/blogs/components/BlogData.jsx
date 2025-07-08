@@ -18,9 +18,6 @@ function BlogData({ post }) {
                         height={1000}
                         width={1000}
                     />
-                    {/* <div className='absolute bottom-3 right-3'>
-                    <CategoryCard categoryId={post.categoryId} />
-                    </div> */}
                 </div>
             )}
             <div className={styles.postStyle}>
