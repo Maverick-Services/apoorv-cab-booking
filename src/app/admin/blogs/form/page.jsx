@@ -150,8 +150,8 @@ export default function Page() {
                                         const file = e.target.files?.[0];
                                         if (!file) return;
 
-                                        if (file.size > 250 * 1024) {
-                                            alert("Image size should be less than 250KB");
+                                        if (file.size > 400 * 1024) {
+                                            alert("Image size should be less than 400KB");
                                             e.target.value = "";
                                             return;
                                         }
@@ -177,7 +177,7 @@ export default function Page() {
                                         Click to upload
                                     </span>
                                     <span className="text-xs text-gray-500 mt-1">
-                                        PNG, JPG (Max 250KB)
+                                        PNG, JPG (Max 400KB)
                                     </span>
                                 </div>
                             </label>

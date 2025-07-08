@@ -9,9 +9,9 @@ export const createNewBlog = async ({ data, image }) => {
     if (!data?.slug) {
         throw new Error("Slug is undefined");
     }
-    if (!image) {
-        throw new Error("Image is not selected");
-    }
+    // if (!image) {
+    //     throw new Error("Image is not selected");
+    // }
 
     const firestoreRef = doc(db, `blogs/${data.slug}`);
 
@@ -21,13 +21,17 @@ export const createNewBlog = async ({ data, image }) => {
         throw new Error("Slug already exists. Please choose a unique slug.");
     }
 
-    const imageURL = await uploadImage(image);
-
-    await setDoc(firestoreRef, {
+    const createPayload = {
         ...data,
-        imageURL: imageURL,
         timestamp: Timestamp.now(),
-    });
+    }
+
+    if (image) {
+        const imageURL = await uploadImage(image);
+        createPayload.imageURL = imageURL;
+    }
+
+    await setDoc(firestoreRef, createPayload);
 
     await updateDoc(firestoreRef, { id: firestoreRef.id });
 
