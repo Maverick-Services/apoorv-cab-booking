@@ -158,7 +158,7 @@ export default function BookingData() {
                                         <div className="flex justify-between">
                                             <span className="text-gray-600">Price per km:</span>
                                             <span className="font-medium">
-                                                ₹{isRoundTrip ? bookingData.cab?.actualPriceRoundTrip : bookingData.cab?.actualPriceOneWay}
+                                                ₹{isRoundTrip ? bookingData.cab?.discountedPriceRoundTrip : bookingData.cab?.discountedPriceOneWay}
                                             </span>
                                         </div>
                                     </div>
