@@ -33,6 +33,7 @@ export async function POST(req) {
 
         // Store admin details in Firestore
         const newUser = await db.collection('Users').doc(userRecord.uid).set({
+            id: userRecord.uid,
             email,
             phoneNo,
             name,
@@ -41,7 +42,7 @@ export async function POST(req) {
             location,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
-        // console.log("New db User", newUser);
+        console.log("New db User", newUser);
 
         // const mailResponse = await mailSender(
         //     newUser?.email,

@@ -28,6 +28,8 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
             .finally(() => setIsLoading(false));
     }, [open]);
 
+    console.log(vendors)
+
     const handleAssignVendor = async () => {
         if (!selectedVendorId) return;
 
@@ -41,15 +43,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 },
             };
 
-
             const assginedVendor = vendors?.filter(v => v?.id === selectedVendorId)[0];
-
-            // console.log(assginedVendor?.name,
-            //     updatedData?.id,
-            //     // updatedData?.id,
-            //     updatedData?.tripType,
-            //     updatedData?.pickupCity,
-            //     `https://apoorv-cab-booking.vercel.app/vendor/my-bookings/bookingDetails?id=${updatedData?.id}`)
 
             await updateBooking(updatedData);
 
@@ -87,27 +81,26 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="bg-gray-200">
                 <DialogTitle>Update Booking</DialogTitle>
-                <div className="space-y-3 w-full flex items-center justify-between">
+                <div className="w-full flex items-center justify-between gap-2">
                     <Select
-                        value={selectedVendorId}
-                        onValueChange={setSelectedVendorId}
+                        value={selectedVendorId || ''}
+                        onValueChange={(e) => {
+                            setSelectedVendorId(e)
+                            // console.log(e)
+                        }}
                         disabled={isLoading || assigning}
                     >
-                        <SelectTrigger className="bg-white">
-                            <SelectValue
-                                placeholder={isLoading ? 'Loading vendors...' : 'Select a Vendor'}
-                            />
+                        <SelectTrigger className="bg-white w-full">
+                            <SelectValue placeholder={isLoading ? 'Loading vendors...' : 'Select a Vendor'} />
                         </SelectTrigger>
                         <SelectContent className="w-full flex-1">
                             {isLoading ? (
-                                <>
+                                <SelectItem>
                                     <Skeleton className="h-8 w-full mb-1 rounded-md" />
-                                    <Skeleton className="h-8 w-full mb-1 rounded-md" />
-                                    <Skeleton className="h-8 w-full rounded-md" />
-                                </>
+                                </SelectItem>
                             ) : vendors.length > 0 ? (
-                                vendors.map((v) => (
-                                    <SelectItem key={v.id} value={v.id} className="w-full">
+                                vendors.map((v, idx) => (
+                                    <SelectItem key={idx} value={v.id} className="w-full">
                                         {v.name} ({v.city})
                                     </SelectItem>
                                 ))

@@ -36,7 +36,7 @@ function UserLogin({ open, onOpenChange }) {
     // 1️⃣ Send OTP via 2Factor
     async function handleSendOtp() {
         const phone = getValues('phone')
-        console.log(phone)
+        // console.log(phone)
 
         if (!/^\d{10}$/.test(phone)) {
             setErrorMessage('Enter a valid 10-digit phone number')
