@@ -65,7 +65,7 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
 
     const handleCabBooking = (cab, lt) => {
 
-        console.log(lt);
+        // console.log(currentPickupCity, lt);
         // return;
 
         let bookingData = {
@@ -77,7 +77,7 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
                 driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance,
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
-                terms: [...currentPickupCity?.terms, ...lt?.terms],
+                terms: lt?.terms ? [...currentPickupCity?.terms, ...lt?.terms] : [...currentPickupCity?.terms],
                 basePrice: tripData?.tripType === "Round Trip"
                     ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceRoundTrip
                     : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceOneWay
@@ -86,8 +86,11 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
             pickupTime: tripData?.pickupTime,
             totalDistance: cab?.totalDistance,
             totalHours: cab?.tripHours,
+            extraKilometersPrice: tripData?.tripType === TRIP_TYPES.local ? currentPickupCity?.extraKilometersLocal
+                : (tripData?.tripType === TRIP_TYPES.airport && currentPickupCity?.extraKilometersAirport),
+            extraHoursPrice: tripData?.tripType === TRIP_TYPES.local ? currentPickupCity?.extraHoursLocal
+                : (tripData?.tripType === TRIP_TYPES.airport && currentPickupCity?.extraHoursAirport),
             price: cab?.discountedPrice,
-
         }
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
@@ -211,9 +214,12 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
                                                                         <div>
                                                                             <p className="font-semibold text-indigo-900">Price for Extra Kms</p>
                                                                             <p className="text-lg font-bold text-teal-600">
-                                                                                ₹{tripData?.tripType === "Local Trip"
+                                                                                ₹{tripData?.tripType === TRIP_TYPES.local
                                                                                     ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraKilometersLocal
-                                                                                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraKilometersAirport
+                                                                                    : (
+                                                                                        tripData?.tripType === TRIP_TYPES.airport &&
+                                                                                        currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraKilometersAirport
+                                                                                    )
                                                                                 }/Km
                                                                             </p>
                                                                         </div>
