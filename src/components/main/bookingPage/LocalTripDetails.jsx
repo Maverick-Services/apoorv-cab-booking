@@ -65,7 +65,9 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
 
     const handleCabBooking = (cab, lt) => {
 
-        // console.log(currentPickupCity, lt);
+        // console.log(cab);
+        // console.log(tripData?.tripType === TRIP_TYPES.local ? cab?.extraKilometersLocal
+        //     : (tripData?.tripType === TRIP_TYPES.airport && cab?.extraKilometersAirport))
         // return;
 
         let bookingData = {
@@ -78,20 +80,24 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
                 terms: lt?.terms ? [...currentPickupCity?.terms, ...lt?.terms] : [...currentPickupCity?.terms],
-                basePrice: tripData?.tripType === "Round Trip"
-                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceRoundTrip
-                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceOneWay
+                basePrice: tripData?.tripType === TRIP_TYPES.local
+                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraKilometersLocal
+                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraKilometersAirport,
+                extraKilometers: tripData?.tripType === TRIP_TYPES.local
+                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraKilometersLocal
+                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraKilometersAirport,
+                extraHours: tripData?.tripType === TRIP_TYPES.local
+                    ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraHoursLocal
+                    : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.extraHoursAirport
             },
             pickupDate: tripData?.pickupDate,
             pickupTime: tripData?.pickupTime,
             totalDistance: cab?.totalDistance,
             totalHours: cab?.tripHours,
-            extraKilometersPrice: tripData?.tripType === TRIP_TYPES.local ? currentPickupCity?.extraKilometersLocal
-                : (tripData?.tripType === TRIP_TYPES.airport && currentPickupCity?.extraKilometersAirport),
-            extraHoursPrice: tripData?.tripType === TRIP_TYPES.local ? currentPickupCity?.extraHoursLocal
-                : (tripData?.tripType === TRIP_TYPES.airport && currentPickupCity?.extraHoursAirport),
             price: cab?.discountedPrice,
         }
+
+        console.log(bookingData);
 
         router.push(`/checkout?bookingData=${encodeURIComponent(JSON.stringify(bookingData))}`);
     }

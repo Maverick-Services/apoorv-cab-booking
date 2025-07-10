@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { BadgeCheck, Car, ClipboardList, Coins, CreditCard, MapPin, MoveLeft, Pencil, Trash, UserRound } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
+import { TRIP_TYPES } from '@/lib/constants/constants';
 
 function BookingFullDetails({ booking, vendor }) {
 
@@ -107,6 +108,19 @@ function BookingFullDetails({ booking, vendor }) {
                         ['Base Price', `₹${booking?.basePrice}`],
                         ['GST', `₹${booking?.gstAmount}`],
                         ['Total Amount', `₹${booking?.totalAmount}`, 'text-blue-600 font-semibold'],
+                        [
+                            'Extra Kms Price',
+                            `${booking?.extraKm || 0}Kms * ${booking?.cab?.basePrice || 0} = ₹${(+booking?.extraKm || 0) * (+booking?.cab?.basePrice || 0)
+                            }`,
+                            'text-blue-600 font-semibold'
+                        ],
+                        [
+                            'Extra Hours Price',
+                            `${booking?.extraHour || 0}Hrs * ${booking?.cab?.extraHours || 0} = ₹${(+booking?.extraHour || 0) * (+booking?.cab?.extraHours || 0)
+                            }`,
+                            'text-blue-600 font-semibold'
+                        ],
+                        ['Extra Charge', `₹${booking?.extraCharge || 0}`, 'text-blue-600 font-semibold']
                     ].map(([label, value, style], idx) => (
                         <div key={idx} className="flex justify-between items-center">
                             <span className="text-gray-500 text-sm">{label}</span>
@@ -123,7 +137,6 @@ function BookingFullDetails({ booking, vendor }) {
                     </div>
                 </div>
             </div>
-
             {/* Booking Summary Card */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
                 <div className="flex items-center gap-3 mb-4">
@@ -179,7 +192,8 @@ function BookingFullDetails({ booking, vendor }) {
                     ) : (
                         [
                             ['Cab Name', booking?.cab?.name],
-                            ['Min Kilometers', `${booking?.cab?.minKilometers} km`],
+                            ['Min Kilometers', `${booking?.tripType === TRIP_TYPES.oneWay ? booking?.cab?.minKilometersOneWay :
+                                    booking?.cab?.minKilometersRoundTrip} km`],
                             ['Driver Allowance', `₹${booking?.cab?.driverAllowance}`],
                             ['Price', `₹${booking?.tripType === "One Way"
                                 ? booking?.cab?.actualPriceOneWay

@@ -117,6 +117,8 @@ export default function CheckoutDetails() {
                 return
             }
 
+            console.log(bookingData);
+
             const options = {
                 key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                 amount: orderData.amount,

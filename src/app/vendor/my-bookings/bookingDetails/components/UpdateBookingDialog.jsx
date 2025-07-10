@@ -13,6 +13,7 @@ import { updateBooking } from '@/lib/firebase/admin/booking';
 import { getVendorAllDrivers } from '@/lib/firebase/vendor/driver';
 import { TRIP_STATUS, TRIP_TYPES } from '@/lib/constants/constants';
 import { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
+import { Input } from '@/components/ui/input';
 
 function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetails, userData }) {
 
@@ -20,8 +21,10 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
     const [assigning, setAssigning] = useState(false);
 
     const [drivers, setDrivers] = useState()
-    const [selectedDriverId, setSelectedDriverId] = useState('')
-    const [tripStatus, setTripStatus] = useState('Not Started')
+    const [selectedDriverId, setSelectedDriverId] = useState(booking?.status?.driver || '')
+    const [tripStatus, setTripStatus] = useState(booking?.status?.trip || 'Not Started')
+    const [extraKm, setExtraKm] = useState(booking?.extraKm || '')
+    const [extraHour, setExtraHour] = useState(booking?.extraHour || '')
 
     useEffect(() => {
         if (!open) return;
@@ -31,6 +34,12 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
 
     const handleUpdateBooking = async () => {
         if (!selectedDriverId) return;
+
+        let extraCharge = 0
+        if (extraKm)
+            extraCharge += (+extraKm) * (+booking?.cab?.basePrice);
+        if (extraHour)
+            extraCharge += (+extraHour) * (+booking?.cab?.extraHours);
 
         setAssigning(true);
         try {
@@ -42,6 +51,9 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                     driver: selectedDriverId,
                     trip: tripStatus
                 },
+                extraKm: tripStatus === TRIP_STATUS.completed ? (+extraKm || 0) : 0,
+                extraHour: tripStatus === TRIP_STATUS.completed ? (+extraHour || 0) : 0,
+                extraCharge: tripStatus === TRIP_STATUS.completed ? extraCharge : 0
             };
 
             const assginedDriver = drivers?.filter(d => d?.id === selectedDriverId)[0];
@@ -237,6 +249,38 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                             <SelectItem value={TRIP_STATUS.completed}>Completed</SelectItem>
                         </SelectContent>
                     </Select>
+                    {
+                        tripStatus === TRIP_STATUS.completed &&
+                        <div className='flex w-full justify-between gap-2 py-1'>
+                            <div className='grow space-y-1'>
+                                <label className="w-full block text-sm font-medium">Extra Km Traveled</label>
+                                <input className='w-full bg-white rounded-md p-2 '
+                                    type="number"
+                                    name="extraKm"
+                                    onChange={(e) => setExtraKm(e.target.value)}
+                                    readOnly={booking?.status?.trip === TRIP_STATUS.completed
+                                        || isLoading || assigning || booking?.extraKm}
+                                    value={extraKm}
+                                    placeholder='Extra Kilometers Traveled'
+                                />
+                            </div>
+                            {
+                                (booking?.tripType === TRIP_TYPES.local || booking?.tripType === TRIP_TYPES.airport) &&
+                                <div className='grow space-y-1'>
+                                    <label className="w-full block text-sm font-medium">Extra Hours Traveled</label>
+                                    <input className='bg-white rounded-md p-2 w-full'
+                                        type="number"
+                                        name="extraHr"
+                                        onChange={(e) => setExtraHour(e.target.value)}
+                                        readOnly={isLoading || assigning || booking?.extraHours ||
+                                            booking?.status?.trip === TRIP_STATUS.completed}
+                                        value={extraHour}
+                                        placeholder='Extra Hours Traveled'
+                                    />
+                                </div>
+                            }
+                        </div>
+                    }
                 </div>
 
                 {/* Assign Button */}

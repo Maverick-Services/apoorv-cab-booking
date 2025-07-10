@@ -1,6 +1,9 @@
 import React from 'react'
 import { Badge } from '@/components/ui/badge';
 import { BadgeCheck, Car, ClipboardList, Coins, CreditCard, MapPin, MoveLeft, Pencil, Trash, UserRound } from 'lucide-react';
+import { formatFirestoreDate } from '@/lib/firebase/services/formatDate';
+import { format } from 'date-fns';
+import { TRIP_TYPES } from '@/lib/constants/constants';
 
 function BookingFullDetails({ booking, vendor }) {
 
@@ -15,13 +18,13 @@ function BookingFullDetails({ booking, vendor }) {
                     </div>
                     <h3 className="font-semibold text-xl text-gray-800">Location Details</h3>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-4 grid grid-cols-2">
                     <div>
                         <p className="text-gray-500 text-xs mb-1">Pickup City</p>
                         <p className="font-medium text-gray-900">{booking?.pickupCity}</p>
                     </div>
 
-                    {booking?.tripType === "Round Trip" && booking?.dropOffs?.length ? (
+                    {booking?.tripType === "Round Trip" && booking?.dropOffs?.length > 0 ? (
                         <div>
                             <p className="text-gray-500 text-xs mb-1">Drop-off Points</p>
                             <div className="space-y-2">
@@ -33,17 +36,39 @@ function BookingFullDetails({ booking, vendor }) {
                                 ))}
                             </div>
                         </div>
-                    ) : (
+                    ) : booking?.tripType === "One Way" ? (
                         <div>
                             <p className="text-gray-500 text-xs mb-1">Drop City</p>
                             <p className="font-medium text-gray-900">{booking?.dropCity || 'N/A'}</p>
                         </div>
-                    )}
+                    ) : null}
 
                     <div>
                         <p className="text-gray-500 text-xs mb-1">Total Distance</p>
                         <p className="font-medium text-gray-900">{booking?.totalDistance} km</p>
                     </div>
+
+                    <div>
+                        <p className="text-gray-500 text-xs mb-1">Pickup Date</p>
+                        <p className="font-medium text-gray-900">
+                            {booking?.pickupDate ? formatFirestoreDate(booking?.pickupDate) : 'N/A'}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p className="text-gray-500 text-xs mb-1">Pickup Time</p>
+                        <p className="font-medium text-gray-900">
+                            {booking?.pickupTime || 'N/A'}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p className="text-gray-500 text-xs mb-1">Exact Pickup Location</p>
+                        <p className="font-medium text-gray-900">
+                            {booking?.userData?.exactPickup || 'N/A'}
+                        </p>
+                    </div>
+
                 </div>
             </div>
 
@@ -82,6 +107,19 @@ function BookingFullDetails({ booking, vendor }) {
                         ['Base Price', `₹${booking?.basePrice}`],
                         ['GST', `₹${booking?.gstAmount}`],
                         ['Total Amount', `₹${booking?.totalAmount}`, 'text-blue-600 font-semibold'],
+                        [
+                            'Extra Kms Price',
+                            `${booking?.extraKm || 0}Kms * ${booking?.cab?.basePrice || 0} = ₹${(+booking?.extraKm || 0) * (+booking?.cab?.basePrice || 0)
+                            }`,
+                            'text-blue-600 font-semibold'
+                        ],
+                        [
+                            'Extra Hours Price',
+                            `${booking?.extraHour || 0}Hrs * ${booking?.cab?.extraHours || 0} = ₹${(+booking?.extraHour || 0) * (+booking?.cab?.extraHours || 0)
+                            }`,
+                            'text-blue-600 font-semibold'
+                        ],
+                        ['Extra Charge', `₹${booking?.extraCharge || 0}`, 'text-blue-600 font-semibold']
                     ].map(([label, value, style], idx) => (
                         <div key={idx} className="flex justify-between items-center">
                             <span className="text-gray-500 text-sm">{label}</span>
@@ -112,7 +150,13 @@ function BookingFullDetails({ booking, vendor }) {
                         ['Booking ID', `#${booking?.id}`, false],
                         ['Trip Type', booking?.tripType, true],
                         ['Distance', `${booking?.totalDistance} km`, false],
-                        ['Created', /* format date */ 'N/A', false],
+                        [
+                            'Created',
+                            booking?.createdAt?.seconds
+                                ? format(new Date(booking.createdAt.seconds * 1000), 'dd MMM yyyy, hh:mm a')
+                                : 'N/A',
+                            false
+                        ], ,
                     ].map(([label, value, isBadge], idx) => (
                         <div key={idx}>
                             <p className="text-gray-500 text-xs mb-1">{label}</p>
@@ -137,20 +181,36 @@ function BookingFullDetails({ booking, vendor }) {
                     <h3 className="font-semibold text-xl text-gray-800">Cab Information</h3>
                 </div>
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                    {[
-                        ['Cab Name', booking?.cab?.name],
-                        ['Min Kilometers', `${booking?.cab?.minKilometers} km`],
-                        ['Driver Allowance', `₹${booking?.cab?.driverAllowance}`],
-                        ['Price', `₹${booking?.tripType === "One Way"
-                            ? booking?.cab?.actualPriceOneWay
-                            : booking?.cab?.actualPriceRoundTrip}`],
-                    ].map(([label, value], idx) => (
-                        value && <div key={idx}>
-                            <p className="text-gray-500 text-xs mb-1">{label}</p>
-                            <p className="font-medium text-gray-900">{value}</p>
-                        </div>
+                    {(booking?.tripType === "Local" || booking?.tripType === "Airport" ? (
+                        [
+                            ['Cab Name', booking?.cab?.name],
+                            ['Total Distance', `${booking?.cab?.totalDistance} km`],
+                            ['Trip Hours', `${booking?.cab?.tripHours} hr`],
+                            ['Base Price', `₹${booking?.cab?.price}`],
+                            ['Discounted Price', `₹${booking?.cab?.discountedPrice}`],
+                        ]
+                    ) : (
+                        [
+                            ['Cab Name', booking?.cab?.name],
+                            ['Min Kilometers', `${booking?.tripType === TRIP_TYPES.oneWay ? booking?.cab?.minKilometersOneWay :
+                                booking?.cab?.minKilometersRoundTrip} km`],
+                            ['Driver Allowance', `₹${booking?.cab?.driverAllowance}`],
+                            ['Price', `₹${booking?.tripType === "One Way"
+                                ? booking?.cab?.actualPriceOneWay
+                                : booking?.cab?.actualPriceRoundTrip}`],
+                        ]
+                    )).map(([label, value], idx) => (
+                        value !== undefined && (
+                            <div key={idx} className="space-y-0.5">
+                                <dt className="text-xs font-medium text-gray-500">{label}</dt>
+                                <dd className="text-sm text-gray-900 font-medium">
+                                    {value || '--'}
+                                </dd>
+                            </div>
+                        )
                     ))}
                 </div>
+
             </div>
 
             {/* Status Card */}

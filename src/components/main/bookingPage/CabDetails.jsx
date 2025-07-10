@@ -114,20 +114,6 @@ export const CabDetails = () => {
             )
         ).toFixed(0)
 
-        //     (
-        //     (
-        //         tripData?.totalDistance && +tripData?.totalDistance > +(cab?.minKilometers * (
-        //             tripData?.tripType === TRIP_TYPES.roundTrip ? 2 : 1
-        //         ))
-        //             ? tripData?.totalDistance : (cab?.minKilometers * noOfDays)
-        //     ) *
-        //     (
-        //         tripData?.tripType === "Round Trip"
-        //             ? cab?.discountedPriceRoundTrip
-        //             : cab?.discountedPriceOneWay
-        //     )
-        // ).toFixed(0)
-
         let bookingData = {
             tripType: tripData?.tripType,
             pickupCity: tripData?.pickupCity,
