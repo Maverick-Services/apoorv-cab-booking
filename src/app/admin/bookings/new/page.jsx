@@ -32,7 +32,6 @@ export default function Page() {
 
     const onSubmit = async (data) => {
 
-        // console.log('Booking Data:', data);
         data = {
             userData: {
                 name: data?.name,
@@ -71,6 +70,7 @@ export default function Page() {
             }
         }
         // console.log('Update Data:', data);
+
         const result = await createNewBooking({ data });
         if (result)
             router.push('/admin/bookings')
