@@ -2,13 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { getBookingDetails } from "@/lib/firebase/admin/booking";
 import { useSearchParams } from "next/navigation";
-import { Pencil } from "lucide-react";
+import { Car, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BookingSkeleton from "./BookingSkeleton";
 import BookingFullDetails from "./BookingFullDetails";
 import UpdateBookingDialog from "./UpdateBookingDialog";
 import { getVendorDetails } from "@/lib/firebase/admin/vendor";
 import useAuthStore from "@/store/useAuthStore";
+import AssignDriverDialog from "./AssignDriverDialog";
 
 function BookingDetails() {
     const searchParams = useSearchParams();
@@ -52,11 +53,17 @@ function BookingDetails() {
         }
     }, [booking]);
 
+    // trip status update dialog
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    // driver assign dialog
+    const [assignDialog, setAssignDialog] = useState(false)
 
     if (loading) {
         return <BookingSkeleton />;
     }
+
+    console.log(booking)
 
     return (
         <div className="bg-gray-100 min-h-screen">
@@ -64,6 +71,18 @@ function BookingDetails() {
                 <div className="flex mb-4 justify-between items-center w-full">
                     <h1 className="text-black font-semibold text-xl">Booking Details</h1>
                     <div className="flex items-center justify-center gap-3">
+                        {booking?.status?.driver}
+                        <Button
+                            variant={"outline"}
+                            className={
+                                "hover:text-green-600 hover:border-green-600 hover:bg-white"
+                            }
+                            onClick={() => setAssignDialog(true)}
+                        >
+                            <Car />
+                            <span className="hidden sm:block"> Assign Driver</span>
+                        </Button>
+
                         <Button
                             variant={"outline"}
                             className={
@@ -86,6 +105,15 @@ function BookingDetails() {
                     fetchOneBookingDetails={fetchOneBookingDetails}
                     userData={userData}
                 />
+
+                <AssignDriverDialog
+                    open={assignDialog}
+                    onOpenChange={setAssignDialog}
+                    booking={booking}
+                    fetchOneBookingDetails={fetchOneBookingDetails}
+                    userData={userData}
+                />
+
             </div>
         </div>
     );
