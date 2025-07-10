@@ -53,7 +53,8 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 },
                 extraKm: tripStatus === TRIP_STATUS.completed ? (+extraKm || 0) : 0,
                 extraHour: tripStatus === TRIP_STATUS.completed ? (+extraHour || 0) : 0,
-                extraCharge: tripStatus === TRIP_STATUS.completed ? extraCharge : 0
+                extraCharge: tripStatus === TRIP_STATUS.completed ? extraCharge : 0,
+                totalAmount: booking?.totalAmount + +extraCharge,
             };
 
             const assginedDriver = drivers?.filter(d => d?.id === selectedDriverId)[0];
