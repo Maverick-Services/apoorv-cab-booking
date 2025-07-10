@@ -69,7 +69,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
         fetchTrips();
     }, [tripData]);
 
-    const handleCabBooking = (cab) => {
+    const handleCabBooking = (cab, lt) => {
 
         let bookingData = {
             tripType: tripData?.tripType,
@@ -83,7 +83,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
                 driverAllowance: currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.driverAllowance,
                 luggageCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity,
                 seatingCapacity: cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity,
-                terms: currentPickupCity?.terms,
+                terms: [...currentPickupCity?.terms, ...lt?.terms],
                 basePrice: tripData?.tripType === "Round Trip"
                     ? currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceRoundTrip
                     : currentPickupCity?.variantList?.filter(cb => cb?.name === cab?.name)[0]?.discountedPriceOneWay
@@ -269,7 +269,7 @@ export const PackageTripDetails = ({ router, tripData, currentPickupCity, cabTyp
 
                             <Button
                                 className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold px-6 py-2 rounded-lg w-full sm:w-auto"
-                                onClick={() => handleCabBooking({ ...cab, noOfDays: lt?.noOfDays })}
+                                onClick={() => handleCabBooking({ ...cab, noOfDays: lt?.noOfDays }, lt)}
                             >
                                 Book Now
                             </Button>
