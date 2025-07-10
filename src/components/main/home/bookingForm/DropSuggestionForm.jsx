@@ -1,36 +1,42 @@
-import { TRIP_TYPES } from "@/lib/constants/constants";
-import { Loader2, MapPin, X } from "lucide-react";
-import { useState, useEffect } from "react";
-import { IoAddCircle } from "react-icons/io5";
+'use client';
 
-const LocationSearch = ({ register,
-    unregister,
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from '@/components/ui/command';
+import { ChevronsUpDown, MapPin, X, Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useState, useEffect } from 'react';
+import { TRIP_TYPES } from '@/lib/constants/constants';
+
+export default function LocationSearch({
+    tripType,
+    register,
     setValue,
     dropOffs,
     setDropOffs,
-    tripType,
     query,
-    setQuery
-}) => {
-    const [loading, setLoading] = useState(false);
-    // const [query, setQuery] = useState("");
+    setQuery,
+    pickupCity,
+}) {
     const [suggestions, setSuggestions] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [selectedCity, setSelectedCity] = useState(null); // one-way or current search
+    const [inputValue, setInputValue] = useState('');
 
-    useEffect(() => {
-        if (tripType === TRIP_TYPES.oneWay) {
-            register("dropCity",
-                // { required: "Drop city is required" }
-            );
-        }
-        else {
-            unregister("dropCity");
-        }
-    }, [tripType, register, unregister]);
-
-    // fetch suggestions
+    // Fetch suggestions
     useEffect(() => {
         const fetchSuggestions = async () => {
-            if (query.length < 1) {
+            if (inputValue.length < 2) {
                 setSuggestions([]);
                 return;
             }
@@ -38,16 +44,12 @@ const LocationSearch = ({ register,
             setLoading(true);
             try {
                 const res = await fetch(
-                    `https://nominatim.openstreetmap.org/search` +
-                    `?format=json` +
-                    `&q=${encodeURIComponent(query)}` +
-                    `&countrycodes=IN` +
-                    `&addressdetails=1`
+                    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(inputValue)}&countrycodes=IN&addressdetails=1`
                 );
                 const data = await res.json();
                 setSuggestions(data);
             } catch (error) {
-                console.error("Error fetching suggestions:", error);
+                console.error('Error fetching suggestions:', error);
             } finally {
                 setLoading(false);
             }
@@ -58,18 +60,40 @@ const LocationSearch = ({ register,
         }, 300);
 
         return () => clearTimeout(debounce);
-    }, [query]);
+    }, [inputValue]);
 
-    const handleAddCity = () => {
-        if (query && !dropOffs.includes(query)) {
-            setDropOffs(prev => [...prev, query]);
-            setQuery("");
+    // Register dropCity for one-way
+    useEffect(() => {
+        if (tripType === TRIP_TYPES.oneWay) {
+            register('dropCity', { required: true });
+        }
+    }, [tripType, register]);
+
+    const handleSelect = (place) => {
+        if (tripType === TRIP_TYPES.oneWay) {
+            setSelectedCity(place);
+            setValue('dropCity', place.display_name);
+            setOpen(false);
+        } else {
+            setSelectedCity(place);
+            setOpen(false); // keep open until user clicks +
+        }
+    };
+
+    const handleAddDropoff = () => {
+        if (
+            selectedCity &&
+            !dropOffs.includes(selectedCity.display_name)
+        ) {
+            setDropOffs((prev) => [...prev, selectedCity.display_name]);
+            setSelectedCity(null);
+            setInputValue('');
             setSuggestions([]);
         }
     };
 
-    const handleRemoveCity = (cityToRemove) => {
-        setDropOffs(prev => prev.filter(city => city !== cityToRemove));
+    const handleRemoveDropoff = (city) => {
+        setDropOffs((prev) => prev.filter((c) => c !== city));
     };
 
     return (
@@ -78,58 +102,68 @@ const LocationSearch = ({ register,
                 <MapPin size={16} className="text-primary" />
                 Drop Location
             </label>
-            <div className="flex gap-2 items-stretch">
-                <div className="relative w-full">
-                    <div className="flex gap-2 px-4 py-1 rounded-lg border border-gray-300">
-                        <input
-                            type="text"
-                            placeholder="Select Drop City"
-                            className="w-full outline-none"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                        />
-                        {loading && (
-                            <span className="px-2 py-1 text-gray-300 flex items-center justify-center h-full">
-                                <Loader2 size={20} className="animate-spin" />
-                            </span>
-                        )}
-                    </div>
-                    {suggestions.length > 0 && (
-                        <ul className="absolute z-10 w-full bg-white border rounded shadow-md max-h-60 overflow-y-auto mt-1">
-                            {suggestions.map((place) => (
-                                <li
-                                    key={place.place_id}
-                                    className="px-4 py-1 hover:bg-gray-100 cursor-pointer"
-                                    onClick={() => {
-                                        setQuery(place?.display_name);
-                                        if (tripType === "One Way") {
-                                            setValue("dropCity", place?.display_name);
-                                        }
-                                        setSuggestions([]);
-                                    }}
-                                >
-                                    {place.display_name}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
 
-                {tripType === "Round Trip" && (
+            {/* Hidden input for react-hook-form in One Way */}
+            {tripType === TRIP_TYPES.oneWay && (
+                <input
+                    type="hidden"
+                    {...register('dropCity', { required: true })}
+                />
+            )}
+
+            <div className="flex gap-2">
+                {/* Command Dropdown */}
+                <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                        <button
+                            type="button"
+                            className={cn(
+                                'w-full flex justify-between items-center rounded-lg border border-gray-300 bg-white px-4 py-2 hover:bg-gray-50 focus:outline-none',
+                                !selectedCity?.display_name && 'text-gray-400'
+                            )}
+                        >
+                            {selectedCity?.display_name || 'Search drop location'}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </button>
+                    </PopoverTrigger>
+
+                    <PopoverContent className="w-[400px] p-0">
+                        <Command>
+                            <CommandInput
+                                value={inputValue}
+                                onValueChange={setInputValue}
+                                placeholder="Search city..."
+                                className="h-10"
+                            />
+                            <CommandEmpty>No location found.</CommandEmpty>
+                            <CommandGroup>
+                                {suggestions.map((place) => (
+                                    <CommandItem
+                                        key={place.place_id}
+                                        onSelect={() => handleSelect(place)}
+                                    >
+                                        {place.display_name}
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </Command>
+                    </PopoverContent>
+                </Popover>
+
+                {/* Plus Button for Round Trip */}
+                {tripType === TRIP_TYPES.roundTrip && (
                     <button
-                        className="px-4 bg-blue-800 text-white rounded hover:bg-blue-950 hover:rounded-4xl transition-all ease-in-out duration-300"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            handleAddCity();
-                        }}
+                        type="button"
+                        onClick={handleAddDropoff}
+                        className="bg-blue-800 hover:bg-blue-900 text-white px-3 rounded-lg"
                     >
-                        <IoAddCircle size={20} />
+                        <Plus size={20} />
                     </button>
                 )}
             </div>
 
-            {/* Show added cities for round trip */}
-            {tripType === "Round Trip" && dropOffs.length > 0 && (
+            {/* DropOffs List */}
+            {tripType === TRIP_TYPES.roundTrip && dropOffs.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
                     {dropOffs.map((city, idx) => (
                         <span
@@ -140,7 +174,7 @@ const LocationSearch = ({ register,
                             <button
                                 type="button"
                                 className="ml-2 text-gray-500 hover:text-red-500"
-                                onClick={() => handleRemoveCity(city)}
+                                onClick={() => handleRemoveDropoff(city)}
                             >
                                 <X size={14} />
                             </button>
@@ -150,6 +184,4 @@ const LocationSearch = ({ register,
             )}
         </div>
     );
-};
-
-export default LocationSearch;
+}
