@@ -65,7 +65,7 @@ export const LocalTripDetails = ({ router, tripData, currentPickupCity, cabTypes
 
     const handleCabBooking = (cab, lt) => {
 
-        // console.log(lt);
+        console.log(lt);
         // return;
 
         let bookingData = {
