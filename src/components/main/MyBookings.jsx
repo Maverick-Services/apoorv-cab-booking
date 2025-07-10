@@ -345,9 +345,11 @@ const BookingHistory = ({ bookings }) => {
                             >
                                 Close
                             </Button>
-                            <Button onClick={generateReceipt}>
-                                View Receipt
-                            </Button>
+                            {selectedBooking.status === "completed" &&
+                                <Button onClick={generateReceipt}>
+                                    View Receipt
+                                </Button>
+                            }
                         </div>
                     </DialogContent>
                 )}
