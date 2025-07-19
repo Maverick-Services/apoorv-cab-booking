@@ -13,7 +13,7 @@ function AirportTripPrice() {
                     <input
                         type="number"
                         min={0}
-                        value={variant.extraKilometersAirport || 0}
+                        value={variant.extraKilometersAirport || null}
                         onChange={(e) => handleVariant('extraKilometersAirport', e.target.value)}
                         placeholder="Eg. 10"
                         className="input-field"
@@ -24,7 +24,7 @@ function AirportTripPrice() {
                     <input
                         type="number"
                         min={0}
-                        value={variant.extraHoursAirport || 0}
+                        value={variant.extraHoursAirport}
                         onChange={(e) => handleVariant('extraHoursAirport', e.target.value)}
                         placeholder="Eg. 10"
                         className="input-field"

@@ -13,7 +13,7 @@ function LocalTripPrice() {
                     <input
                         type="number"
                         min={0}
-                        value={variant.extraKilometersLocal || 0}
+                        value={variant.extraKilometersLocal}
                         onChange={(e) => handleVariant('extraKilometersLocal', e.target.value)}
                         placeholder="Eg. 10"
                         className="input-field"
@@ -24,7 +24,7 @@ function LocalTripPrice() {
                     <input
                         type="number"
                         min={0}
-                        value={variant.extraHoursLocal || 0}
+                        value={variant.extraHoursLocal}
                         onChange={(e) => handleVariant('extraHoursLocal', e.target.value)}
                         placeholder="Eg. 10"
                         className="input-field"

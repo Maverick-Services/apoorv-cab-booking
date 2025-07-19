@@ -14,7 +14,7 @@ function RoundTripPrice() {
                     <input
                         type="number"
                         min={0}
-                        value={variant.minKilometersRoundTrip || 0}
+                        value={variant.minKilometersRoundTrip}
                         onChange={(e) => handleVariant('minKilometersRoundTrip', e.target.value)}
                         placeholder="Eg. 10"
                         className="input-field"
