@@ -32,7 +32,7 @@ function page() {
                 <div className='pb-3'>
                     <div className='w-full flex justify-between px-1 mb-3'>
                         <div className='flex items-start gap-4'>
-                            <p className='font-semibold text-primary'>Total Bookings: {8}</p>
+                            <p className='font-semibold text-primary'>Total Bookings: {bookings?.length || 0}</p>
                         </div>
                     </div>
 

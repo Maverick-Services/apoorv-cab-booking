@@ -63,9 +63,9 @@ const PickupCityForm = ({ setEditPickup }) => {
         e.preventDefault()
         let finalData = {
             ...data,
-            terms: [...termsArray],
-            oneWayTerms: [...oneWayTermsArray],
-            roundTripTerms: [...roundTripTermsArray],
+            terms: termsArray ? [...termsArray] : [],
+            oneWayTerms: oneWayTermsArray ? [...oneWayTermsArray] : [],
+            roundTripTerms: roundTripTermsArray ? [...roundTripTermsArray] : [],
             variantList: variantList
         }
         if (updatePickupCityId) {

@@ -78,6 +78,7 @@ export default function LocationSearch({
             setSelectedCity(place);
             setOpen(false); // keep open until user clicks +
         }
+        setQuery(place?.display_name);
     };
 
     const handleAddDropoff = () => {
@@ -88,6 +89,7 @@ export default function LocationSearch({
             setDropOffs((prev) => [...prev, selectedCity.display_name]);
             setSelectedCity(null);
             setInputValue('');
+            setQuery("");
             setSuggestions([]);
         }
     };

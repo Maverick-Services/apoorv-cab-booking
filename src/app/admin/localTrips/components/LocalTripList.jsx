@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 
 function LocalTripList({ loading, localTrips }) {
     return (
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-4'>
             {loading ? (
                 <div className="col-span-full flex flex-col items-center py-12 space-y-3">
                     <Loader2 className="animate-spin w-10 h-10 text-primary" />
