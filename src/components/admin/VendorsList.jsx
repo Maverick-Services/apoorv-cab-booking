@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { Loader2, MapPin } from 'lucide-react'
+import { Edit2, Edit2Icon, Edit3, Loader2, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -19,6 +19,7 @@ import {
     Calendar,
     Hash
 } from 'lucide-react'
+import Link from 'next/link'
 
 function VendorsList({ vendorLoading, vendors }) {
     const [vendorDrivers, setVendorDrivers] = useState(null)
@@ -105,7 +106,12 @@ function VendorsList({ vendorLoading, vendors }) {
                     <Card key={idx} className="hover:shadow-md transition-shadow">
                         <CardContent className="p-4 space-y-3">
                             <div className="space-y-1.5">
-                                <h3 className="text-lg font-semibold text-primary">{vendor?.name}</h3>
+                                <div className='w-full flex items-center justify-between gap-2 text-primary'>
+                                    <h3 className="text-lg font-semibold">{vendor?.name}</h3>
+                                    <Link href={`/admin/vendors/new?id=${vendor?.id}`} >
+                                        <Edit2 className="h-4 w-4" />
+                                    </Link>
+                                </div>
                                 <p className="text-sm text-muted-foreground flex items-center gap-1">
                                     <MapPin className="h-4 w-4" />
                                     {vendor?.location}
