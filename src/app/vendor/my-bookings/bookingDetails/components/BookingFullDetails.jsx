@@ -7,6 +7,7 @@ import { TRIP_TYPES } from '@/lib/constants/constants';
 
 function BookingFullDetails({ booking, vendor }) {
 
+    console.log(booking?.pickupDate)
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -51,7 +52,7 @@ function BookingFullDetails({ booking, vendor }) {
                     <div>
                         <p className="text-gray-500 text-xs mb-1">Pickup Date</p>
                         <p className="font-medium text-gray-900">
-                            {booking?.pickupDate ? formatFirestoreDate(booking?.pickupDate) : 'N/A'}
+                            {booking?.pickupDate ? booking?.pickupDate : 'N/A'}
                         </p>
                     </div>
 
