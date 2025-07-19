@@ -39,6 +39,7 @@ export default function PickupCityFormContexttProvider({ children }) {
         driverAllowance: '',
     })
     const [editVariant, setEditVariant] = useState(null);
+    const [deleteVariant, setDeleteVariant] = useState(null);
 
     function handleVariant(key, value) {
         setVariant(prev => ({
@@ -57,6 +58,12 @@ export default function PickupCityFormContexttProvider({ children }) {
         const updatedVariantList = variantList?.map(vr => (
             vr?.name === editVariant?.name ? variant : vr
         ));
+        setVariantList(updatedVariantList);
+    }
+
+    function handleDeleteVariantList() {
+
+        const updatedVariantList = variantList?.filter(vr => vr?.name !== deleteVariant?.name);
         setVariantList(updatedVariantList);
     }
 
@@ -153,7 +160,9 @@ export default function PickupCityFormContexttProvider({ children }) {
             handleUpdate,
             handleDelete,
             data, setData, handleData,
-            handleVariant, handleEditVariantList, editVariant, setEditVariant, variant, setVariant, variantList, setVariantList,
+            handleVariant, handleEditVariantList, handleDeleteVariantList,
+            editVariant, setEditVariant, deleteVariant, setDeleteVariant,
+            variant, setVariant, variantList, setVariantList,
             tempTerm, setTempTerm, termsArray, setTermsArray,
             tempOneWayTerm, setOneWayTempTerm, oneWayTermsArray, setOneWayTermsArray,
             tempRoundTripTerm, setRoundTripTempTerm, roundTripTermsArray, setRoundTripTermsArray

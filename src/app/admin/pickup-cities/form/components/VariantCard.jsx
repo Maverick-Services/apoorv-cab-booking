@@ -79,7 +79,9 @@ function VariantCard({ variant, onEdit, onDelete }) {
                         </svg>
                     </button>
                     <button
-                        onClick={onDelete}
+                        type='button'
+                        onClick={() => onDelete(variant)}
+                        // onClick={onDelete}
                         className="p-2 hover:bg-gray-100 rounded-md text-gray-500 hover:text-red-600 transition-colors"
                         aria-label="Delete variant"
                     >

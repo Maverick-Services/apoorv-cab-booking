@@ -15,7 +15,8 @@ import AirportTripPrice from './variant/AirportTripPrice'
 function CabVariant() {
 
     const {
-        variant, setVariant, editVariant, setEditVariant, variantList, setVariantList, handleEditVariantList
+        variant, setVariant, editVariant, setEditVariant, deleteVariant, setDeleteVariant,
+        variantList, setVariantList, handleEditVariantList, handleDeleteVariantList
     } = usePickupCityForm();
 
     function handleAddVariant() {
@@ -61,8 +62,30 @@ function CabVariant() {
         })
     }
 
+    useEffect(() => {
+        // console.log(deleteVariant, variant);
+        if (deleteVariant && variant) {
+            handleDeleteVariantList();
+            setVariant({
+                name: '',
+                minKilometers: '',
+                actualPriceRoundTrip: '',
+                discountedPriceRoundTrip: '',
+                actualPriceOneWay: '',
+                discountedPriceOneWay: '',
+                driverAllowance: '',
+            })
+            setDeleteVariant(null);
+        }
+    }, [deleteVariant])
+
     const onEdit = (vr) => {
         setEditVariant(vr);
+        setVariant(vr);
+    }
+
+    const onDelete = (vr) => {
+        setDeleteVariant(vr);
         setVariant(vr);
     }
 
@@ -108,7 +131,9 @@ function CabVariant() {
                 <div className="mt-8 space-y-4">
                     <h3 className="text-xl font-semibold">Added Cab Variants</h3>
                     {variantList.map((v, idx) => (
-                        <VariantCard key={idx} variant={{ ...v, id: idx }} onEdit={onEdit} />
+                        <VariantCard key={idx} variant={{ ...v, id: idx }}
+                            onEdit={onEdit} onDelete={onDelete}
+                        />
                     ))}
                 </div>
             )}
