@@ -20,7 +20,9 @@ function Pickup({ register, setValue, tripType, pickupCities, setPickupCities })
     setLoading(true)
     try {
       const res = await getAllPickupCities()
-      setPickupCities(res || [])
+
+      //filtering those pickup cities where one or more that one cabtypes are added
+      setPickupCities(res ? res?.filter(pc => pc?.variantList?.length > 0) : [])
     } catch (error) {
       console.error(error)
     }

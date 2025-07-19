@@ -96,9 +96,15 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             }
 
             let allDropOffs = [...dropOffs];
-            if (tripType === TRIP_TYPES.roundTrip && query && !allDropOffs.includes(query)) {
-                allDropOffs.push(query);
+
+            // Add selected city if not already included (user didn’t click "+")
+            if (tripType === TRIP_TYPES.roundTrip && query) {
+                // const trimmedQuery = query;
+                if (!allDropOffs.includes(query)) {
+                    allDropOffs.push(query);
+                }
             }
+
 
             const coordList = [];
             let pickupCoords = null;
@@ -152,7 +158,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             }
 
             if (!editTrip) await createNewEnquiry({ data: bookingData });
-            
+
             router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
             if (editTrip) setEditTrip(false);
         } catch (err) {
