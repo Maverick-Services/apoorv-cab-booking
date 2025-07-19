@@ -24,7 +24,7 @@ function EnquiriesList({ enquiries, fetchAllEnquiries }) {
         try {
             setLoadingId(id);
             await deleteEnquiry(id);
-            fetchAllEnquiries();
+            // fetchAllEnquiries();
         } catch (error) {
             console.error("Error deleting enquiry:", error);
             alert("Failed to delete enquiry. Please try again.");
@@ -61,12 +61,12 @@ function EnquiriesList({ enquiries, fetchAllEnquiries }) {
                                                 <span>{enquiry?.pickupCity}</span>
                                                 <ArrowBigRightDashIcon />
                                             </div>
-                                            {enquiry?.dropOffs?.map((city, index) => (
+                                            {/* {enquiry?.dropOffs?.map((city, index) => (
                                                 <div key={index} className="flex items-center gap-1 text-sm p-1 px-2 rounded-2xl bg-yellow-300">
                                                     <span>{city}</span>
                                                     <ArrowBigRightDashIcon />
                                                 </div>
-                                            ))}
+                                            ))} */}
                                             <span className="text-sm flex items-center bg-yellow-300 p-1 px-2 rounded-2xl">
                                                 {enquiry?.pickupCity}
                                             </span>

@@ -23,6 +23,8 @@ function page() {
         setLoading(false)
     }
 
+    console.log(enquiries)
+
     useEffect(() => {
         if (timeFilter)
             fetchAllEnquiries()
@@ -52,8 +54,9 @@ function page() {
                     <div>
                         {
                             loading || !enquiries ? <Loader2 className='animate-spin text-primary w-10 h-10 mx-auto mt-20' /> :
-
-                                enquiries?.length > 0 ? <EnquiriesList enquiries={enquiries} fetchAllEnquiries={fetchAllEnquiries} /> : <p className='text-center text-lg font-semibold'>No Enquiries Found</p>
+                                enquiries?.length > 0
+                                    ? <EnquiriesList enquiries={enquiries} fetchAllEnquiries={fetchAllEnquiries} />
+                                    : <p className='text-center text-lg font-semibold'>No Enquiries Found</p>
                         }
                     </div>
                 </div>
