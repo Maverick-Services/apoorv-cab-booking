@@ -155,7 +155,7 @@ export default function PickupDate({ register, control, watch }) {
                                     onChange={e => updateTime(hour, minute, e.target.value)}
                                     className="flex-1 px-1 py-1 border rounded-lg border-gray-300"
                                 >
-                                    <option value="">AM/PM</option>
+                                    {/* <option value="">AM/PM</option> */}
                                     {periods.map(p => (<option key={p} value={p}>{p}</option>))}
                                 </select>
                             </div>
