@@ -152,8 +152,9 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             }
 
             if (!editTrip) await createNewEnquiry({ data: bookingData });
-
+            
             router.push(`/Trip?tripData=${encodeURIComponent(JSON.stringify(bookingData))}`);
+            if (editTrip) setEditTrip(false);
         } catch (err) {
             console.error("Error during form submission:", err);
         } finally {
