@@ -61,8 +61,8 @@ export const PackageList = ({ packages }) => {
                                                     {cab.cabType}
                                                 </Badge>
                                             </div>
-                                            <p className="text-sm">Actual Price: {cab?.variantAcutalPrice}Kms</p>
-                                            <p className="text-sm">Discounted Price: {cab?.variantDiscountedPrice}Kms</p>
+                                            <p className="text-sm">Actual Price: ₹{cab?.variantAcutalPrice}</p>
+                                            <p className="text-sm">Discounted Price: ₹{cab?.variantDiscountedPrice}</p>
                                         </div>
                                     ))}
                                 </div>
