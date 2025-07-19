@@ -14,7 +14,7 @@ function OneWayPrice() {
                     <input
                         type="number"
                         min={0}
-                        value={variant.minKilometersOneWay || 0}
+                        value={variant.minKilometersOneWay}
                         onChange={(e) => handleVariant('minKilometersOneWay', e.target.value)}
                         placeholder="Eg. 10"
                         className="input-field"
