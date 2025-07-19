@@ -1,7 +1,7 @@
 import React from 'react'
 // import { useProductForm } from '../contexts/ProductFormContext';
 
-function ProductName({ register, pickupCities }) {
+function ProductName({ register, editVendor, pickupCities }) {
 
     // const { data, handleData } = useProductForm();
 
@@ -36,6 +36,7 @@ function ProductName({ register, pickupCities }) {
                         {...register("email", {
                             required: true,
                         })}
+                        // disabled={editVendor}
                         className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
                         required
                     />
@@ -100,8 +101,9 @@ function ProductName({ register, pickupCities }) {
                 <input
                     type="password"
                     {...register("password", {
-                        required: true,
+                        required: editVendor ? false : true,
                     })}
+                    disabled={editVendor}
                     className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-1 focus:ring-secondary outline-none transition-all"
                     required
                 />

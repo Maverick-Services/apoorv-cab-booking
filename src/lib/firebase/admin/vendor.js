@@ -19,20 +19,50 @@ export const createVendor = async (data) => {
     } catch (error) {
         toast.dismiss(toastId);
         // console.log("CREATE VENDOR ERROR", error);
-        toast.success(error?.response?.data?.message || error?.message);
+        toast.error(error?.response?.data?.message || error?.message);
         return null;
     }
 };
 
-// Update Driver
-export const updateVendor = async ({ data }) => {
+// Update Vendor
+export const updateVendor = async (data) => {
+    const toastId = toast.loading("Updating Vendor...");
     try {
-        const collectionRef = doc(db, `Users/${data?.id}`);
-        await updateDoc(collectionRef, data);
-        return { success: true, message: "Vendor Updated Successfully." };
+        const response = await axios.put("/api/editVendor", data);
+        if (!response?.data?.success)
+            throw new Error(response?.data?.message);
+
+        toast.dismiss(toastId);
+        // console.log("EDIT VENDOR RESPONSE", response?.data?.data);
+        toast.success("Vendor Updated Successfully.");
+        return response?.data?.success;
+
     } catch (error) {
-        console.error("Error updating Vendor:", error);
-        throw new Error(error.message || "Something went wrong.");
+        toast.dismiss(toastId);
+        // console.log("EDIT VENDOR ERROR", error);
+        toast.error(error?.response?.data?.message || error?.message);
+        return null;
+    }
+};
+
+// Delete Vendor
+export const deleteVendor = async (data) => {
+    const toastId = toast.loading("Deleting Vendor...");
+    try {
+        const response = await axios.post("/api/deleteVendor", data);
+        if (!response?.data?.success)
+            throw new Error(response?.data?.message);
+
+        toast.dismiss(toastId);
+        // console.log("DELETE VENDOR RESPONSE", response?.data?.data);
+        toast.success("Vendor Deleted Successfully.");
+        return response?.data?.success;
+
+    } catch (error) {
+        toast.dismiss(toastId);
+        // console.log("DELETE VENDOR ERROR", error);
+        toast.error(error?.response?.data?.message || error?.message);
+        return null;
     }
 };
 

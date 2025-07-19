@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
 import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity';
 import { Loader2 } from 'lucide-react';
-import { getVendorsByCity } from '@/lib/firebase/admin/vendor'
+import { getAllVendors, getVendorsByCity } from '@/lib/firebase/admin/vendor'
 import VendorsList from '@/components/admin/VendorsList'
 
 function page() {
@@ -16,7 +16,7 @@ function page() {
     const [vendorLoading, setVendorLoading] = useState(false);
     const [pickupCities, setPickupCities] = useState([]);
     const [vendors, setVendors] = useState([]);
-    const [vendorFilter, setVendorFilter] = useState(null);
+    const [vendorFilter, setVendorFilter] = useState("all");
 
     useEffect(() => {
         const fetchPickupCities = async () => {
@@ -35,7 +35,7 @@ function page() {
     async function fetchVendorsByCity() {
         setVendorLoading(true)
         try {
-            const res = await getVendorsByCity(vendorFilter);
+            const res = await (vendorFilter == "all" ? getAllVendors() : getVendorsByCity(vendorFilter));
             setVendors(res)
         } catch (error) {
             console.log(error)
@@ -70,6 +70,7 @@ function page() {
                                     onChange={(e) => setVendorFilter(e.target.value)}
                                     defaultValue={vendorFilter ? vendorFilter : pickupCities[0]}
                                 >
+                                    <option value={"all"}>All</option>
                                     {
                                         pickupCities && pickupCities?.length > 0 &&
                                         pickupCities?.map(pc => (
