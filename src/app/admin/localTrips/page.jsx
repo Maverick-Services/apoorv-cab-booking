@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from '@/components/ui/scroll-area';
 import Link from 'next/link';
-import { getLocalTripsByCity } from '@/lib/firebase/admin/localTrips';
+import { getAllLocalTrips, getLocalTripsByCity } from '@/lib/firebase/admin/localTrips';
 import LocalTripList from './components/LocalTripList';
 import { getAllPickupCities } from '@/lib/firebase/admin/pickupCity';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -15,16 +15,16 @@ function page() {
     const [loadingPickupCities, setLoadingPickupCities] = useState(false)
     const [localTrips, setLocalTrips] = useState([])
     const [pickupCities, setPickupCities] = useState([])
-    const [selectedPickupCity, setSelectedPickupCity] = useState()
+    const [selectedPickupCity, setSelectedPickupCity] = useState("all")
 
     async function fetchPickupCities() {
         setLoadingPickupCities(true)
         try {
             const res = await getAllPickupCities()
             setPickupCities(res)
-            if (res.length > 0) {
-                setSelectedPickupCity(res[0].name)
-            }
+            // if (res.length > 0) {
+            //     setSelectedPickupCity(res[0].name)
+            // }
         } catch (error) {
             console.log(error)
         }
@@ -38,7 +38,7 @@ function page() {
     async function fetchLocalTrips() {
         setLoading(true)
         try {
-            let res = await getLocalTripsByCity(selectedPickupCity)
+            let res = await (selectedPickupCity == "all" ? getAllLocalTrips() : getLocalTripsByCity(selectedPickupCity))
             setLocalTrips(res)
         } catch (error) {
             console.log(error)
@@ -77,6 +77,9 @@ function page() {
                                         <SelectValue placeholder={loadingPickupCities ? "Loading cities..." : "Filter by Pickup City"} />
                                     </SelectTrigger>
                                     <SelectContent>
+                                        <SelectItem value={"all"}>
+                                            All
+                                        </SelectItem>
                                         {pickupCities?.map((city) => (
                                             <SelectItem key={city.id} value={city.name}>
                                                 {city.name}
