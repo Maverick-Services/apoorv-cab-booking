@@ -72,7 +72,8 @@
 .postStyle hr {
     border: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #002244, transparent);
+    /* background: linear-gradient(90deg, transparent, #002244, transparent); */
+    background-color: #a6cbf05d;
     margin: 2.5rem 0;
 }
 
