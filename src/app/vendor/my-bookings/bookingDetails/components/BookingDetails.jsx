@@ -63,8 +63,6 @@ function BookingDetails() {
         return <BookingSkeleton />;
     }
 
-    console.log(booking)
-
     return (
         <div className="bg-gray-100 min-h-screen">
             <div className="mx-auto">
@@ -96,7 +94,10 @@ function BookingDetails() {
                     </div>
                 </div>
 
-                <BookingFullDetails booking={booking} vendor={assignedVendor} />
+                <BookingFullDetails
+                    booking={booking}
+                    vendor={assignedVendor}
+                />
 
                 <UpdateBookingDialog
                     open={isDialogOpen}

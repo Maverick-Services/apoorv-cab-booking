@@ -33,7 +33,7 @@ export default function Sidebar({ isOpen, setIsSidebarOpen, sidebarLinks }) {
                     width={160}
                     className="w-full sm:hidden lg:block object-contain"
                 />
-                <h2 className="text-secondary font-bold items-center hidden sm:flex lg:hidden  justify-center text-3xl">TBP</h2>
+                <h2 className="text-primary font-bold items-center hidden sm:flex lg:hidden justify-center text-3xl">TC</h2>
             </div>
 
             <div className="w-full flex flex-col gap-3 transition-all duration-300 ease-in-out">

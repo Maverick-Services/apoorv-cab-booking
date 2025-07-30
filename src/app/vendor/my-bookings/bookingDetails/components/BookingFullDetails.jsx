@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { TRIP_TYPES } from '@/lib/constants/constants';
 
 function BookingFullDetails({ booking, vendor }) {
-
+    console.log(booking)
     console.log(booking?.pickupDate)
 
     return (
@@ -52,7 +52,9 @@ function BookingFullDetails({ booking, vendor }) {
                     <div>
                         <p className="text-gray-500 text-xs mb-1">Pickup Date</p>
                         <p className="font-medium text-gray-900">
-                            {booking?.pickupDate ? booking?.pickupDate : 'N/A'}
+                            {booking?.pickupDate?.seconds
+                                ? format(new Date(booking?.pickupDate?.seconds * 1000), 'dd MMM yyyy, hh:mm a')
+                                : 'N/A'}
                         </p>
                     </div>
 
@@ -157,7 +159,7 @@ function BookingFullDetails({ booking, vendor }) {
                                 ? format(new Date(booking.createdAt.seconds * 1000), 'dd MMM yyyy, hh:mm a')
                                 : 'N/A',
                             false
-                        ], ,
+                        ],
                     ].map(([label, value, isBadge], idx) => (
                         <div key={idx}>
                             <p className="text-gray-500 text-xs mb-1">{label}</p>
