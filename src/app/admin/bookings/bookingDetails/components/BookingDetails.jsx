@@ -62,7 +62,7 @@ function BookingDetails() {
         }
     }, [booking]);
 
-    console.log(assignedVendor)
+    console.log(booking)
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 

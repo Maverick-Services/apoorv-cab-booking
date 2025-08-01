@@ -41,6 +41,9 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
         if (extraHour)
             extraCharge += (+extraHour) * (+booking?.cab?.extraHours);
 
+        const newGST = booking?.gstAmount + (+extraCharge * 5 / 100)
+        const newTotal = booking?.totalAmount + +extraCharge + newGST
+
         setAssigning(true);
         try {
             const updatedData = {
@@ -54,7 +57,13 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 extraKm: tripStatus === TRIP_STATUS.completed ? (+extraKm || 0) : 0,
                 extraHour: tripStatus === TRIP_STATUS.completed ? (+extraHour || 0) : 0,
                 extraCharge: tripStatus === TRIP_STATUS.completed ? extraCharge : 0,
-                totalAmount: booking?.totalAmount + +extraCharge,
+                gstAmount: newGST,
+                totalAmount: newTotal,
+                payment: {
+                    ...updatedData.payment,
+                    isFullPayment: true,
+                    amount: newTotal
+                }
             };
 
             const assginedDriver = drivers?.filter(d => d?.id === selectedDriverId)[0];

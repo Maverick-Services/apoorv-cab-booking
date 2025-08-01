@@ -46,7 +46,7 @@ export default function BookingList({ bookings, loading }) {
     );
 
     const generateInvoice = (selectedBooking) => {
-        console.log(selectedBooking);
+        // console.log(selectedBooking);
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         let yPosition = 15;
@@ -115,7 +115,7 @@ export default function BookingList({ bookings, loading }) {
         const items = [];
         const tripType = selectedBooking?.tripType?.toLowerCase();
 
-        const basePrice = +selectedBooking?.priceWithAllowance
+        const basePrice = +selectedBooking?.priceWithAllowance + +selectedBooking?.extraCharge
 
         // Main Service
         items.push([
@@ -131,7 +131,7 @@ export default function BookingList({ bookings, loading }) {
         // Items Table
         autoTable(doc, {
             startY: yPosition + 10,
-            head: [['#', 'Description', 'Qty', 'Rate', 'IGST', 'Amount']],
+            head: [['#', 'Description', 'Qty', 'Rate', 'IGST', 'Extra Price', 'IGST (Extra)', 'Amount']],
             body: items,
             theme: 'grid',
             styles: { fontSize: 10 },
@@ -141,11 +141,13 @@ export default function BookingList({ bookings, loading }) {
             },
             columnStyles: {
                 0: { cellWidth: 10 },
-                1: { cellWidth: 80 },
+                1: { cellWidth: 60 },
                 2: { cellWidth: 20 },
                 3: { cellWidth: 25 },
                 4: { cellWidth: 35 },
-                5: { cellWidth: 25 }
+                5: { cellWidth: 25 },
+                6: { cellWidth: 25 },
+                7: { cellWidth: 25 }
             }
         });
 
@@ -159,6 +161,7 @@ export default function BookingList({ bookings, loading }) {
         autoTable(doc, {
             startY: doc.lastAutoTable.finalY + 10,
             body: [
+                ["Sub Total", subtotal.toFixed(2)],
                 ["Sub Total", subtotal.toFixed(2)],
                 ["IGST5 (5%)", gst.toFixed(2)],
                 ["Total", total.toFixed(2)],
