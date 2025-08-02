@@ -41,14 +41,21 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
         if (extraHour)
             extraCharge += (+extraHour) * (+booking?.cab?.extraHours);
 
+        //updating gst amount
         const newGST = booking?.gstAmount + (+extraCharge * 5 / 100)
-        const newTotal = booking?.totalAmount + +extraCharge + newGST
+
+        //gst on extra charge
+        const extraChargeGST = (+extraCharge * 5 / 100)
+
+        // adding extra charge + gst on extra charge
+        const newTotal = booking?.totalAmount + +extraCharge + extraChargeGST
 
         setAssigning(true);
         try {
             const updatedData = {
                 ...booking,
-                pickupDate: formatFirestoreDate(booking?.pickupDate),
+                // pickupDate: formatFirestoreDate(booking?.pickupDate),
+                pickupDate: booking?.pickupDate,
                 status: {
                     ...booking.status,
                     driver: selectedDriverId,
@@ -60,7 +67,7 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
                 gstAmount: newGST,
                 totalAmount: newTotal,
                 payment: {
-                    ...updatedData.payment,
+                    ...booking.payment,
                     isFullPayment: true,
                     amount: newTotal
                 }

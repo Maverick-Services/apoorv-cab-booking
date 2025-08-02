@@ -115,7 +115,8 @@ export default function BookingList({ bookings, loading }) {
         const items = [];
         const tripType = selectedBooking?.tripType?.toLowerCase();
 
-        const basePrice = +selectedBooking?.priceWithAllowance + +selectedBooking?.extraCharge
+        // const basePrice = +selectedBooking?.priceWithAllowance + +selectedBooking?.extraCharge
+        const basePrice = +selectedBooking?.priceWithAllowance;
 
         // Main Service
         items.push([
@@ -123,15 +124,15 @@ export default function BookingList({ bookings, loading }) {
             `${selectedBooking?.pickupCity} ${tripType} Service`,
             "1.00",
             basePrice?.toFixed(2),
-            `${(basePrice * 0.05).toFixed(2)} 5%`,
-            (+selectedBooking?.totalAmount)?.toFixed(2)
+            (+selectedBooking?.extraCharge || 0),
+            // `${(basePrice * 0.05).toFixed(2)} 5%`
         ]);
 
 
         // Items Table
         autoTable(doc, {
             startY: yPosition + 10,
-            head: [['#', 'Description', 'Qty', 'Rate', 'IGST', 'Extra Price', 'IGST (Extra)', 'Amount']],
+            head: [['#', 'Description', 'Qty', 'Rate', 'Extra Price']],
             body: items,
             theme: 'grid',
             styles: { fontSize: 10 },
@@ -153,16 +154,17 @@ export default function BookingList({ bookings, loading }) {
 
         // Calculations
         // const subtotal = items.reduce((sum, item) => sum + parseFloat(item[5]), 0);
-        const subtotal = basePrice;
-        const gst = subtotal * 0.05;
-        const total = subtotal + gst;
+        const subtotal = basePrice + (+selectedBooking?.extraCharge || 0);
+        // const gst = subtotal * 0.05;
+        const gst = (+selectedBooking?.gstAmount || 0);
+        const total = (+selectedBooking?.totalAmount || 0);
 
         // Summary Table
         autoTable(doc, {
             startY: doc.lastAutoTable.finalY + 10,
             body: [
                 ["Sub Total", subtotal.toFixed(2)],
-                ["Sub Total", subtotal.toFixed(2)],
+                // ["Sub Total", subtotal.toFixed(2)],
                 ["IGST5 (5%)", gst.toFixed(2)],
                 ["Total", total.toFixed(2)],
                 ["Balance Paid", selectedBooking?.bookingAmount?.toFixed(2)],
