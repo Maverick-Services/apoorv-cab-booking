@@ -40,8 +40,8 @@ export default function CheckoutDetails() {
         if (userData) {
             setFormData({
                 ...formData,
-                name: userData?.name ? userData?.name : "",
-                email: userData?.email ? userData?.email : "",
+                name: userData?.name || formData?.name,
+                email: userData?.email || formData?.email,
             })
         }
 
