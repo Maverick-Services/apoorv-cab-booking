@@ -71,9 +71,9 @@ export default function Page() {
         }
         console.log('Update Data:', data);
 
-        // const result = await createNewBooking({ data });
-        // if (result)
-        //     router.push('/admin/bookings')
+        const result = await createNewBooking({ data });
+        if (result)
+            router.push('/admin/bookings')
     };
 
     return (
