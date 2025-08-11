@@ -69,11 +69,11 @@ export default function Page() {
                 trip: "Not Started",
             }
         }
-        // console.log('Update Data:', data);
+        console.log('Update Data:', data);
 
-        const result = await createNewBooking({ data });
-        if (result)
-            router.push('/admin/bookings')
+        // const result = await createNewBooking({ data });
+        // if (result)
+        //     router.push('/admin/bookings')
     };
 
     return (
