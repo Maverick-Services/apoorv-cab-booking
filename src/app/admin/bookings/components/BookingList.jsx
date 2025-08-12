@@ -46,7 +46,6 @@ export default function BookingList({ bookings, loading }) {
     );
 
     const generateInvoice = (selectedBooking) => {
-        // console.log(selectedBooking);
         const doc = new jsPDF();
         const pageWidth = doc.internal.pageSize.getWidth();
         let yPosition = 15;
@@ -55,26 +54,28 @@ export default function BookingList({ bookings, loading }) {
         doc.setFontSize(18);
         doc.setTextColor(40);
         doc.setFont('helvetica', 'bold');
-        doc.text("BOOKING INVOICE", pageWidth / 2, yPosition, { align: 'center' });
+        doc.text("TAX INVOICE", pageWidth / 2, yPosition, { align: 'center' });
         yPosition += 15;
 
-        // Add logo image (parameters: imageData, x, y, width, height)
+        // Add logo
         doc.addImage(MAIN_WEBSITE.logo, 'PNG', 15, 15, 30, 15)
         yPosition = 30;
 
         // Company Details
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
-        doc.text("C 23 Malviya Nagar, Moradabad Uttar Pradesh 244001", 15, yPosition + 5);
-        doc.text("24*7 7248772488 | INFO@TAPSCABS.COM | GSTIN 09BEWPG1107F12K", 15, yPosition + 10);
-        yPosition += 20;
+        doc.text("C 23 Malviya Nagar | Moradabad Uttar Pradesh 244001", 15, yPosition + 5);
+        doc.text("GSTIN 09BEWPG1107F12K | 7248772488 | INFO@TAPSCABS.COM", 15, yPosition + 15);
+        doc.text("Email: apoorvg30@gmail.com | www.tapscabs.com", 15, yPosition + 20);
+        yPosition += 30;
 
         // Invoice Details
-        const invoiceDate = formatDate(selectedBooking?.createdAt) ? formatDate(selectedBooking?.createdAt)
-            : formatFirestoreDate(selectedBooking?.createdAt);
+        const invoiceDate = formatDate(selectedBooking?.createdAt) ||
+            formatFirestoreDate(selectedBooking?.createdAt);
 
         const createdAt = selectedBooking?.createdAt;
-        const mobile = selectedBooking?.userData?.phoneNumber || selectedBooking?.userData?.phoneNo || "NA";
+        const mobile = selectedBooking?.userData?.phoneNumber ||
+            selectedBooking?.userData?.phoneNo || "NA";
 
         let invoiceId = "INV-UNKNOWN";
         if (createdAt) {
@@ -86,7 +87,6 @@ export default function BookingList({ bookings, loading }) {
 
             invoiceId = `INV-${mobile}-${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
         }
-
 
         doc.text(`Invoice No: TC/${invoiceId}`, 15, yPosition);
         doc.text(`Invoice Date: ${invoiceDate}`, pageWidth - 15, yPosition, { align: 'right' });
@@ -100,44 +100,54 @@ export default function BookingList({ bookings, loading }) {
         doc.text(`Pickup City: ${selectedBooking?.pickupCity}`, pageWidth - 15, yPosition, { align: 'right' });
         yPosition += 20;
 
-        if (selectedBooking?.tripType === TRIP_TYPES.oneWay) {
-            doc.text(`Drop: ${selectedBooking?.dropCity}`, 15, yPosition);
-            // yPosition += 5;
-        } else if (selectedBooking?.tripType === TRIP_TYPES.roundTrip) {
-            doc.text(`Drops:`, 15, yPosition);
-            for (let i = 0; i < selectedBooking?.dropOffs?.length; i++) {
-                doc.text(`\n\t${i + 1}. ${selectedBooking?.dropOffs[i]}`, 15, yPosition + 5 * i);
-            }
-            yPosition += 10;
+        // FIXED: Handle all trip types correctly
+        let dropText = "";
+        if (selectedBooking?.tripType === TRIP_TYPES.roundTrip && selectedBooking?.dropOffs?.length) {
+            dropText = `Drops: ${selectedBooking.dropOffs.join(', ')}`;
+        } else if (selectedBooking?.dropCity && selectedBooking.dropCity !== "-") {
+            dropText = `Drop: ${selectedBooking.dropCity}`;
+        } else if (selectedBooking?.dropOffs?.length) {
+            dropText = `Drop: ${selectedBooking.dropOffs[0]}`;
         }
+
+        doc.text(dropText, 15, yPosition);
+        yPosition += 10;
 
         // Calculate line items
         const items = [];
         const tripType = selectedBooking?.tripType?.toLowerCase();
 
-        // const basePrice = +selectedBooking?.priceWithAllowance + +selectedBooking?.extraCharge
-        const basePrice = +selectedBooking?.priceWithAllowance;
+        // FIXED: Use correct price values from booking data
+        const basePrice = parseFloat(selectedBooking?.price || 0);
+        const extraCharge = parseFloat(selectedBooking?.extraCharge || 0);
+        const bookingAmount = parseFloat(selectedBooking?.bookingAmount || 0);
+
+        const subtotal = basePrice + extraCharge;
+        const gstAmount = subtotal * 0.05;
+        const totalAmount = subtotal + gstAmount;
+
+        // Correct description without HTML tags
+        const description = `${selectedBooking?.pickupCity} ${tripType}\nCar Type: ${selectedBooking?.cab?.name}\nGuest: ${selectedBooking?.userData?.name}`;
 
         // Main Service
         items.push([
             1,
-            `${selectedBooking?.pickupCity} ${tripType} Service`,
+            description,
             "1.00",
-            basePrice?.toFixed(2),
-            (+selectedBooking?.extraCharge || 0),
-            // `${(basePrice * 0.05).toFixed(2)} 5%`
+            subtotal.toFixed(2),
+            gstAmount.toFixed(2),
+            totalAmount.toFixed(2)
         ]);
-
 
         // Items Table
         autoTable(doc, {
-            startY: yPosition + 10,
-            head: [['#', 'Description', 'Qty', 'Rate', 'Extra Price']],
+            startY: yPosition + 1,
+            head: [['#', 'Description', 'Qty', 'Rate', 'IGST (5%)', 'Amount']],
             body: items,
             theme: 'grid',
             styles: { fontSize: 10 },
             headStyles: {
-                fillColor: [0, 0, 0],  // Black color
+                fillColor: [0, 0, 0],
                 textColor: [255, 255, 255]
             },
             columnStyles: {
@@ -147,28 +157,22 @@ export default function BookingList({ bookings, loading }) {
                 3: { cellWidth: 25 },
                 4: { cellWidth: 35 },
                 5: { cellWidth: 25 },
-                6: { cellWidth: 25 },
-                7: { cellWidth: 25 }
             }
         });
 
         // Calculations
-        // const subtotal = items.reduce((sum, item) => sum + parseFloat(item[5]), 0);
-        const subtotal = basePrice + (+selectedBooking?.extraCharge || 0);
-        // const gst = subtotal * 0.05;
-        const gst = (+selectedBooking?.gstAmount || 0);
-        const total = (+selectedBooking?.totalAmount || 0);
+        // const dueAmount = totalAmount - bookingAmount;
+
 
         // Summary Table
         autoTable(doc, {
             startY: doc.lastAutoTable.finalY + 10,
             body: [
                 ["Sub Total", subtotal.toFixed(2)],
-                // ["Sub Total", subtotal.toFixed(2)],
-                ["IGST5 (5%)", gst.toFixed(2)],
-                ["Total", total.toFixed(2)],
-                ["Balance Paid", selectedBooking?.bookingAmount?.toFixed(2)],
-                ["Balance Due", (total.toFixed(2) - selectedBooking?.bookingAmount?.toFixed(2)).toFixed(2)]
+                [`IGST (5%)`, gstAmount.toFixed(2)],
+                ["Total", totalAmount.toFixed(2)],
+                // ["Amount Paid", bookingAmount.toFixed(2)],
+                // ["Balance Due", dueAmount.toFixed(2)]
             ],
             theme: 'plain',
             styles: { fontSize: 12, fontStyle: 'bold' },
@@ -180,7 +184,8 @@ export default function BookingList({ bookings, loading }) {
 
         // Total in Words
         doc.setFont('helvetica', 'bold');
-        doc.text(`Total in Words: Indian Rupee ${toWords(total.toFixed(2)).replace(/ point/g, ' and')} Only`, 15, doc.lastAutoTable.finalY + 15);
+        doc.text(`Total in Words: Indian Rupee ${toWords(totalAmount.toFixed(2)).replace(/ point/g, ' and')} Only`,
+            15, doc.lastAutoTable.finalY + 15);
 
         // Footer
         const footerY = doc.internal.pageSize.getHeight() - 30;

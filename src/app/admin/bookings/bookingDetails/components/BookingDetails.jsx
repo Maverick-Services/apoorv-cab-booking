@@ -4,13 +4,6 @@ import { getBookingDetails } from "@/lib/firebase/admin/booking";
 import { useSearchParams } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import {
-    BadgeCheck,
-    Car,
-    ClipboardList,
-    Coins,
-    CreditCard,
-    MapPin,
-    MoveLeft,
     Pencil,
     Trash,
     UserRound,

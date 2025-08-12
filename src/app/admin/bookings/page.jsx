@@ -57,7 +57,7 @@ function Page() {
                     startDate = startTimestamp.toDate();
                     endDate = endTimestamp.toDate();
                 } else {
-                    startDate = range.start.toDate()          // Timestamp -> Date
+                    startDate = range.start.toDate()
                     endDate = range.end.toDate()
                 }
 
@@ -70,6 +70,7 @@ function Page() {
                 // console.log(res);
             }
             setBookings(res);
+            console.log(res)
         } catch (error) {
             console.log(error);
         }
