@@ -17,11 +17,11 @@ export default function Login({ onSuccess, onClose }) {
         e.preventDefault();
         try {
             await handleSignInWithEmail(email, password);
-            toast.success("Login Successful");
+            // toast.success("Login Successful");
             onSuccess?.();
             onClose?.();
         } catch (err) {
-            toast.error("Login Failed");
+            // toast.error("Login Failed");
             console.error(err);
         }
     };
