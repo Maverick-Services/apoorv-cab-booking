@@ -58,6 +58,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
             try {
                 const parsed = JSON.parse(decodeURIComponent(tripDataString));
                 setTripData(parsed);
+                console.log(parsed)
                 setDropOffs(parsed.dropOffs || []);
                 reset({
                     pickupCity: parsed.pickupCity || "",
@@ -183,6 +184,7 @@ export default function BookingForm({ editTrip, setEditTrip }) {
                 <div className="grid grid-cols-1 gap-4">
                     {/* Pickup City */}
                     <Pickup
+                        sCity={pickupCity}
                         register={register}
                         setValue={setValue}
                         tripType={tripType}
