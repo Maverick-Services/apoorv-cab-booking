@@ -162,17 +162,20 @@ const LocalTripForm = () => {
                     </div>
 
                     <div className='flex items-center gap-6'>
-                        <div className="flex flex-col my-4">
-                            <label className="text-sm font-medium text-gray-700 mb-1">No of Days</label>
-                            <input
-                                type="number"
-                                min={0}
-                                value={data?.noOfDays}
-                                onChange={(e) => handleData('noOfDays', e.target.value)}
-                                placeholder="Eg. 4"
-                                className="input-field"
-                            />
-                        </div>
+                        {
+                            tripType === TRIP_TYPES.roundTrip &&
+                            <div className="flex flex-col my-4">
+                                <label className="text-sm font-medium text-gray-700 mb-1">No of Days</label>
+                                <input
+                                    type="number"
+                                    min={0}
+                                    value={data?.noOfDays}
+                                    onChange={(e) => handleData('noOfDays', e.target.value)}
+                                    placeholder="Eg. 4"
+                                    className="input-field"
+                                />
+                            </div>
+                        }
                         {/* Terms and Conditions */}
                         <Terms />
                     </div>

@@ -43,8 +43,9 @@ export const CabDetails = () => {
     const { userData } = useAuthStore()
 
     const tripDataString = searchParams.get("tripData");
-    const tripData = tripDataString ? JSON.parse(tripDataString) : null;
+    // const tripData = tripDataString ? JSON.parse(tripDataString) : null;
 
+    const [tripData, setTripData] = useState(null);
     const [currentPickupCity, setCurrentPickupCity] = useState([]);
     const [noOfDays, setNoOfDays] = useState(null);
     const [cabTypes, setCabTypes] = useState([]);
@@ -52,6 +53,14 @@ export const CabDetails = () => {
     const [editTrip, setEditTrip] = useState(false);
     const [loading, setLoading] = useState(false);
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+    useEffect(() => {
+        if (tripDataString) {
+            setTripData(JSON.parse(tripDataString));
+        } else {
+            setTripData(null);
+        }
+    }, [tripDataString]);
 
     async function fetchPickupCities() {
         setLoading(true);
@@ -90,13 +99,20 @@ export const CabDetails = () => {
     }
 
     useEffect(() => {
-        fetchPickupCities();
-        fetchAllCabTypes();
-    }, []);
+
+        if (tripData) {
+            fetchPickupCities();
+            fetchAllCabTypes();
+
+        }
+
+    }, [tripData]);
 
     useEffect(() => {
         if (tripData) {
             setDays();
+            // fetchPickupCities();
+            // fetchAllCabTypes();
         }
     }, [tripData])
 
@@ -151,7 +167,7 @@ export const CabDetails = () => {
     }
     // console.log("No of days trip", noOfDays);
 
-    if (loading || !currentPickupCity || !noOfDays)
+    if (loading || !currentPickupCity || !noOfDays || !tripData)
         return <div className="h-52 flex w-full items-center justify-center">
             <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
         </div>

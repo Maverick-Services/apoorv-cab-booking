@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { signup as firebaseSignup } from "@/lib/firebase/services/auth";
+import toast from "react-hot-toast";
 
 const useAuthStore = create(
     persist(
@@ -52,7 +53,9 @@ const useAuthStore = create(
                 set({ isLoading: true, error: null });
                 try {
                     await signInWithEmailAndPassword(auth, email, password);
+                    toast.success("Login Successful");
                 } catch (err) {
+                    toast.error("Login Failed");
                     set({ error: "Invalid email or password" });
                     return;
                 } finally {
