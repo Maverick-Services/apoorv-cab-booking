@@ -42,14 +42,14 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
         if (km) extraCharge += km * (+booking?.cab?.basePrice);
         if (hr) extraCharge += hr * (+booking?.cab?.extraHours);
 
-        //gst on extra charge
-        const extraChargeGST = (extraCharge * 5) / 100;
+        // gst on extra charge (2 decimals)
+        const extraChargeGST = parseFloat(((extraCharge * 5) / 100).toFixed(2));
 
-        //updating gst amount
-        const newGST = booking?.gstAmount + extraChargeGST;
+        // updating gst amount (2 decimals)
+        const newGST = parseFloat((booking?.gstAmount + extraChargeGST).toFixed(2));
 
-        // adding extra charge + gst on extra charge
-        const newTotal = booking?.totalAmount + extraCharge + extraChargeGST;
+        // adding extra charge + gst on extra charge (2 decimals)
+        const newTotal = parseFloat((booking?.totalAmount + extraCharge + extraChargeGST).toFixed(2));
 
         setAssigning(true);
         try {
