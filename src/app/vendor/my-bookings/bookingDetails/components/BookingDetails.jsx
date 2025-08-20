@@ -63,34 +63,39 @@ function BookingDetails() {
         return <BookingSkeleton />;
     }
 
+    console.log(booking)
+
     return (
         <div className="bg-gray-100 min-h-screen">
             <div className="mx-auto">
                 <div className="flex mb-4 justify-between items-center w-full">
                     <h1 className="text-black font-semibold text-xl">Booking Details</h1>
                     <div className="flex items-center justify-center gap-3">
-                        {booking?.status?.driver}
-                        <Button
-                            variant={"outline"}
-                            className={
-                                "hover:text-green-600 hover:border-green-600 hover:bg-white"
-                            }
-                            onClick={() => setAssignDialog(true)}
-                        >
-                            <Car />
-                            <span className="hidden sm:block"> Assign Driver</span>
-                        </Button>
+                        {!booking?.status?.driver &&
+                            <Button
+                                variant={"outline"}
+                                className={
+                                    "hover:text-green-600 hover:border-green-600 hover:bg-white"
+                                }
+                                onClick={() => setAssignDialog(true)}
+                            >
+                                <Car />
+                                <span className="hidden sm:block"> Assign Driver</span>
+                            </Button>
+                        }
 
-                        <Button
-                            variant={"outline"}
-                            className={
-                                "hover:text-green-600 hover:border-green-600 hover:bg-white"
-                            }
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            <Pencil />
-                            <span className="hidden sm:block"> Update</span>
-                        </Button>
+                        {!booking?.status?.trip === 'Completed' || !booking?.extraCharge &&
+                            <Button
+                                variant={"outline"}
+                                className={
+                                    "hover:text-green-600 hover:border-green-600 hover:bg-white"
+                                }
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                <Pencil />
+                                <span className="hidden sm:block"> Update</span>
+                            </Button>
+                        }
                     </div>
                 </div>
 

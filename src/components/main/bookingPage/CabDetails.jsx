@@ -172,6 +172,9 @@ export const CabDetails = () => {
             <Loader2 className="animate-spin text-blue-600 w-10 h-10 mx-auto mt-20" />;
         </div>
 
+    // console.log('Trip Data', tripData)
+    // console.log('cab', currentPickupCity)
+
     return (
         <div className="w-full flex justify-center">
             <div className="w-full max-w-5xl space-y-4">
@@ -325,126 +328,6 @@ export const CabDetails = () => {
                                                     {cab?.name}
                                                 </h3>
 
-                                                {/* Terms and Details Tab */}
-                                                <Dialog
-                                                    onOpenChange={(isOpen) => {
-                                                        if (!isOpen) setCurrentCab(null);
-                                                    }}
-                                                >
-                                                    {(
-                                                        <DialogTrigger
-                                                            className="text-sm text-teal-600 hover:text-teal-800 mt-1 flex items-center gap-1"
-                                                            onClick={() =>
-                                                                setCurrentCab(
-                                                                    cabTypes.find(
-                                                                        (cb) =>
-                                                                            cb?.name_lower === cab?.name?.toLowerCase()
-                                                                    )
-                                                                )
-                                                            }
-                                                        >
-                                                            <Info className="w-4 h-4" />
-                                                            View Full Specifications
-                                                        </DialogTrigger>
-                                                    )}
-
-                                                    {/* Dialog Content */}
-                                                    <DialogContent className="max-w-4xl rounded-2xl bg-gradient-to-b from-indigo-50 to-white">
-                                                        <DialogHeader>
-                                                            <DialogTitle className="text-2xl font-bold text-indigo-900">
-                                                                {cab?.name} Specifications
-                                                                <div className="h-1 bg-gradient-to-r from-teal-400 to-purple-400 w-24 mt-2 rounded-full" />
-                                                            </DialogTitle>
-                                                        </DialogHeader>
-
-                                                        <Tabs defaultValue="inclusions" className="w-full">
-                                                            <TabsList className="w-full grid grid-cols-4 gap-2 bg-indigo-50 rounded-xl p-2 mb-6">
-                                                                {["inclusions", "facilities", "t&C"].map((tab) => (
-                                                                    <TabsTrigger
-                                                                        key={tab}
-                                                                        value={tab}
-                                                                        className="data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 rounded-lg py-2"
-                                                                    >
-                                                                        {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                                                                    </TabsTrigger>
-                                                                ))}
-                                                            </TabsList>
-
-                                                            {/* Tab Contents - inclusions */}
-                                                            <TabsContent value="inclusions" className="space-y-3">
-                                                                <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
-                                                                    <div className="p-2 bg-teal-100 rounded-full">
-                                                                        <Fuel className="w-5 h-5 text-teal-600" />
-                                                                    </div>
-                                                                    <div>
-                                                                        <p className="font-semibold text-indigo-900">Base Fare</p>
-                                                                        <p className="text-lg font-bold text-teal-600">
-                                                                            ₹{tripData?.tripType === "Round Trip"
-                                                                                ? cab?.discountedPriceRoundTrip
-                                                                                : cab?.discountedPriceOneWay
-                                                                            }/Km
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                                {/* Similar styled blocks for other inclusions */}
-                                                            </TabsContent>
-
-                                                            {/* Tab Contents - facilities */}
-                                                            <TabsContent value="facilities" className="space-y-3">
-                                                                <div className="flex flex-col gap-1 p-3 bg-white rounded-lg">
-                                                                    <div className="flex items-center gap-2">
-                                                                        <p className="font-bold text-indigo-900">Luggage Capacity: </p>
-                                                                        <p className="font-semibold text-teal-600">
-                                                                            {
-                                                                                cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity
-                                                                            }
-                                                                        </p>
-                                                                    </div>
-                                                                    <div className="flex items-center gap-2">
-                                                                        <p className="font-bold text-indigo-900">Seating Capacity: </p>
-                                                                        <p className="font-semibold text-teal-600">
-                                                                            {
-                                                                                cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity
-                                                                            }
-                                                                        </p>
-                                                                    </div>
-                                                                </div>
-                                                            </TabsContent>
-
-                                                            {/* Tab Contents - t&c */}
-                                                            <TabsContent value="t&C" className="space-y-3">
-                                                                <div className="flex flex-col gap-2 p-3 bg-white rounded-lg">
-                                                                    {
-                                                                        currentPickupCity?.terms?.map((tc, id) => (
-                                                                            <p key={id} className="flex items-center gap-2">
-                                                                                <ArrowRight size={30} />
-                                                                                {tc}
-                                                                            </p>
-                                                                        ))
-                                                                    }
-                                                                    {
-                                                                        tripData?.tripType === TRIP_TYPES.roundTrip
-                                                                            ? currentPickupCity?.roundTripTerms?.map((tc, id) => (
-                                                                                <p key={id} className="flex items-center gap-2">
-                                                                                    <ArrowRight size={30} />
-                                                                                    {tc}
-                                                                                </p>
-                                                                            ))
-                                                                            : (
-                                                                                tripData?.tripType === TRIP_TYPES.oneWay
-                                                                                && currentPickupCity?.oneWayTerms?.map((tc, id) => (
-                                                                                    <p key={id} className="flex items-center gap-2">
-                                                                                        <ArrowRight size={30} />
-                                                                                        {tc}
-                                                                                    </p>
-                                                                                ))
-                                                                            )
-                                                                    }
-                                                                </div>
-                                                            </TabsContent>
-                                                        </Tabs>
-                                                    </DialogContent>
-                                                </Dialog>
                                             </div>
                                         </div>
 
@@ -454,7 +337,7 @@ export const CabDetails = () => {
                                                 {/* {tripData?.totalDistance} Kms Included */}
                                                 {
                                                     (
-                                                        tripData?.totalDistance && +tripData?.totalDistance > +(tripData?.tripType === TRIP_TYPES.roundTrip ? cab?.minKilometersRoundTrip * 2 : cab?.minKilometersOneWay * 1)
+                                                        +tripData?.totalDistance && +tripData?.totalDistance > (tripData?.tripType === TRIP_TYPES.roundTrip ? +cab?.minKilometersRoundTrip * 2 : cab?.minKilometersOneWay * 1)
                                                             ? tripData?.totalDistance : (tripData?.tripType === TRIP_TYPES.roundTrip ? cab?.minKilometersRoundTrip * noOfDays : cab?.minKilometersOneWay * noOfDays)
                                                     )
                                                 } Kms Included
@@ -511,3 +394,127 @@ export const CabDetails = () => {
         </div>
     );
 };
+
+
+
+
+{/* Terms and Details Tab */ }
+// <Dialog
+//     onOpenChange={(isOpen) => {
+//         if (!isOpen) setCurrentCab(null);
+//     }}
+// >
+//     {(
+//         <DialogTrigger
+//             className="text-sm text-teal-600 hover:text-teal-800 mt-1 flex items-center gap-1"
+//             onClick={() =>
+//                 setCurrentCab(
+//                     cabTypes.find(
+//                         (cb) =>
+//                             cb?.name_lower === cab?.name?.toLowerCase()
+//                     )
+//                 )
+//             }
+//         >
+//             <Info className="w-4 h-4" />
+//             View Full Specifications
+//         </DialogTrigger>
+//     )}
+
+//     {/* Dialog Content */}
+//     <DialogContent className="max-w-4xl rounded-2xl bg-gradient-to-b from-indigo-50 to-white">
+//         <DialogHeader>
+//             <DialogTitle className="text-2xl font-bold text-indigo-900">
+//                 {cab?.name} Specifications
+//                 <div className="h-1 bg-gradient-to-r from-teal-400 to-purple-400 w-24 mt-2 rounded-full" />
+//             </DialogTitle>
+//         </DialogHeader>
+
+//         <Tabs defaultValue="inclusions" className="w-full">
+//             <TabsList className="w-full grid grid-cols-4 gap-2 bg-indigo-50 rounded-xl p-2 mb-6">
+//                 {["inclusions", "facilities", "t&C"].map((tab) => (
+//                     <TabsTrigger
+//                         key={tab}
+//                         value={tab}
+//                         className="data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-indigo-600 rounded-lg py-2"
+//                     >
+//                         {tab.charAt(0).toUpperCase() + tab.slice(1)}
+//                     </TabsTrigger>
+//                 ))}
+//             </TabsList>
+
+//             {/* Tab Contents - inclusions */}
+//             <TabsContent value="inclusions" className="space-y-3">
+//                 <div className="flex items-center gap-3 p-3 bg-white rounded-lg">
+//                     <div className="p-2 bg-teal-100 rounded-full">
+//                         <Fuel className="w-5 h-5 text-teal-600" />
+//                     </div>
+//                     <div>
+//                         <p className="font-semibold text-indigo-900">Base Fare</p>
+//                         <p className="text-lg font-bold text-teal-600">
+//                             ₹{tripData?.tripType === "Round Trip"
+//                                 ? cab?.discountedPriceRoundTrip
+//                                 : cab?.discountedPriceOneWay
+//                             }/Km
+//                         </p>
+//                     </div>
+//                 </div>
+//                 {/* Similar styled blocks for other inclusions */}
+//             </TabsContent>
+
+//             {/* Tab Contents - facilities */}
+//             <TabsContent value="facilities" className="space-y-3">
+//                 <div className="flex flex-col gap-1 p-3 bg-white rounded-lg">
+//                     <div className="flex items-center gap-2">
+//                         <p className="font-bold text-indigo-900">Luggage Capacity: </p>
+//                         <p className="font-semibold text-teal-600">
+//                             {
+//                                 cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.luggageCapacity
+//                             }
+//                         </p>
+//                     </div>
+//                     <div className="flex items-center gap-2">
+//                         <p className="font-bold text-indigo-900">Seating Capacity: </p>
+//                         <p className="font-semibold text-teal-600">
+//                             {
+//                                 cabTypes?.filter(cb => cb?.name_lower === cab?.name?.toLowerCase())[0]?.seatingCapacity
+//                             }
+//                         </p>
+//                     </div>
+//                 </div>
+//             </TabsContent>
+
+//             {/* Tab Contents - t&c */}
+//             <TabsContent value="t&C" className="space-y-3">
+//                 <div className="flex flex-col gap-2 p-3 bg-white rounded-lg">
+//                     {
+//                         currentPickupCity?.terms?.map((tc, id) => (
+//                             <p key={id} className="flex items-center gap-2">
+//                                 <ArrowRight size={30} />
+//                                 {tc}
+//                             </p>
+//                         ))
+//                     }
+//                     {
+//                         tripData?.tripType === TRIP_TYPES.roundTrip
+//                             ? currentPickupCity?.roundTripTerms?.map((tc, id) => (
+//                                 <p key={id} className="flex items-center gap-2">
+//                                     <ArrowRight size={30} />
+//                                     {tc}
+//                                 </p>
+//                             ))
+//                             : (
+//                                 tripData?.tripType === TRIP_TYPES.oneWay
+//                                 && currentPickupCity?.oneWayTerms?.map((tc, id) => (
+//                                     <p key={id} className="flex items-center gap-2">
+//                                         <ArrowRight size={30} />
+//                                         {tc}
+//                                     </p>
+//                                 ))
+//                             )
+//                     }
+//                 </div>
+//             </TabsContent>
+//         </Tabs>
+//     </DialogContent>
+// </Dialog>

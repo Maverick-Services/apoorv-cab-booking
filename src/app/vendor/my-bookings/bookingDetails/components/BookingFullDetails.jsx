@@ -6,8 +6,8 @@ import { format } from 'date-fns';
 import { TRIP_TYPES } from '@/lib/constants/constants';
 
 function BookingFullDetails({ booking, vendor }) {
-    console.log(booking)
-    console.log(booking?.pickupDate)
+    // console.log(booking)
+    // console.log(booking?.pickupDate)
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">

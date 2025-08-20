@@ -58,7 +58,11 @@ export default function BookingList({ bookings, loading }) {
         yPosition += 15;
 
         // Add logo
-        doc.addImage(MAIN_WEBSITE.logo, 'PNG', 15, 15, 30, 15)
+        try {
+            doc.addImage(MAIN_WEBSITE.logo, 'PNG', 15, 15, 30, 15);
+        } catch (e) {
+            // if image fails, continue silently
+        }
         yPosition = 30;
 
         // Company Details
@@ -71,20 +75,16 @@ export default function BookingList({ bookings, loading }) {
 
         // Invoice Details
         const invoiceDate = formatDate(selectedBooking?.createdAt) ||
-            formatFirestoreDate(selectedBooking?.createdAt);
+            (selectedBooking?.createdAt ? formatFirestoreDate(selectedBooking?.createdAt) : 'N/A');
 
         const createdAt = selectedBooking?.createdAt;
         const mobile = selectedBooking?.userData?.phoneNumber ||
             selectedBooking?.userData?.phoneNo || "NA";
 
         let invoiceId = "INV-UNKNOWN";
-        if (createdAt) {
-            const date = new Date(createdAt.seconds * 1000 + createdAt.nanoseconds / 1e6);
+        if (createdAt && createdAt.seconds != null) {
+            const date = new Date(createdAt.seconds * 1000 + (createdAt.nanoseconds || 0) / 1e6);
             const pad = (n) => n.toString().padStart(2, "0");
-            const hours = pad(date.getHours() % 12 || 12);
-            const minutes = pad(date.getMinutes());
-            const ampm = date.getHours() >= 12 ? "PM" : "AM";
-
             invoiceId = `INV-${mobile}-${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
         }
 
@@ -94,13 +94,14 @@ export default function BookingList({ bookings, loading }) {
 
         // Customer Details
         doc.setFont('helvetica', 'bold');
-        doc.text(`${selectedBooking?.userData?.name}`, 15, yPosition);
-        doc.text(`${selectedBooking?.userData?.email}`, 15, yPosition + 5);
-        doc.text(`${selectedBooking?.userData?.phoneNo}`, 15, yPosition + 10);
-        doc.text(`Pickup City: ${selectedBooking?.pickupCity}`, pageWidth - 15, yPosition, { align: 'right' });
+        doc.text(`${selectedBooking?.userData?.name || 'N/A'}`, 15, yPosition);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${selectedBooking?.userData?.email || ''}`, 15, yPosition + 5);
+        doc.text(`${selectedBooking?.userData?.phoneNo || ''}`, 15, yPosition + 10);
+        doc.text(`Pickup City: ${selectedBooking?.pickupCity || ''}`, pageWidth - 15, yPosition, { align: 'right' });
         yPosition += 20;
 
-        // FIXED: Handle all trip types correctly
+        // Drop info
         let dropText = "";
         if (selectedBooking?.tripType === TRIP_TYPES.roundTrip && selectedBooking?.dropOffs?.length) {
             dropText = `Drops: ${selectedBooking.dropOffs.join(', ')}`;
@@ -109,37 +110,64 @@ export default function BookingList({ bookings, loading }) {
         } else if (selectedBooking?.dropOffs?.length) {
             dropText = `Drop: ${selectedBooking.dropOffs[0]}`;
         }
-
         doc.text(dropText, 15, yPosition);
         yPosition += 10;
 
-        // Calculate line items
+        // --- Line items: base price, driver allowance, extra charges ---
+        const toNum = (v) => {
+            if (v === undefined || v === null || v === '') return 0;
+            const n = Number(v);
+            return Number.isFinite(n) ? n : 0;
+        };
+
+        const basePrice = toNum(selectedBooking?.basePrice ?? selectedBooking?.price);
+        const driverAllowance = toNum(selectedBooking?.driverAllowance ?? selectedBooking?.cab?.driverAllowance);
+        const extraCharge = toNum(selectedBooking?.extraCharge);
+
         const items = [];
-        const tripType = selectedBooking?.tripType?.toLowerCase();
+        let index = 1;
 
-        // FIXED: Use correct price values from booking data
-        const basePrice = parseFloat(selectedBooking?.price || 0);
-        const extraCharge = parseFloat(selectedBooking?.extraCharge || 0);
-        const bookingAmount = parseFloat(selectedBooking?.bookingAmount || 0);
+        const TAX_RATE = 0.05; // 5%
 
-        const subtotal = basePrice + extraCharge;
-        const gstAmount = subtotal * 0.05;
-        const totalAmount = subtotal + gstAmount;
+        const pushLine = (desc, rate) => {
+            if (rate <= 0) return;
+            const qty = 1.0;
+            const gst = +(rate * TAX_RATE);
+            const amount = +(rate + gst);
+            items.push([
+                index++,
+                desc,
+                qty.toFixed(2),
+                rate.toFixed(2),
+                gst.toFixed(2),
+                amount.toFixed(2)
+            ]);
+            return { rate, gst, amount };
+        };
 
-        // Correct description without HTML tags
-        const description = `${selectedBooking?.pickupCity} ${tripType}\nCar Type: ${selectedBooking?.cab?.name}\nGuest: ${selectedBooking?.userData?.name}`;
+        const partsSummary = []; // store each line's numeric values for totals
+        if (basePrice > 0) {
+            const res = pushLine(`${selectedBooking?.pickupCity || ''} ${String(selectedBooking?.tripType || '')}\nCar: ${selectedBooking?.cab?.name || ''}`, basePrice);
+            if (res) partsSummary.push(res);
+        }
 
-        // Main Service
-        items.push([
-            1,
-            description,
-            "1.00",
-            subtotal.toFixed(2),
-            gstAmount.toFixed(2),
-            totalAmount.toFixed(2)
-        ]);
+        if (driverAllowance > 0) {
+            const res = pushLine('Driver Allowance', driverAllowance);
+            if (res) partsSummary.push(res);
+        }
 
-        // Items Table
+        if (extraCharge > 0) {
+            const res = pushLine('Extra Charges', extraCharge);
+            if (res) partsSummary.push(res);
+        }
+
+        // If no items were pushed, add a fallback line (to avoid empty table)
+        if (items.length === 0) {
+            const res = pushLine('Service Charges', toNum(selectedBooking?.totalAmount) || 0);
+            if (res) partsSummary.push(res);
+        }
+
+        // Draw the items table
         autoTable(doc, {
             startY: yPosition + 1,
             head: [['#', 'Description', 'Qty', 'Rate', 'IGST (5%)', 'Amount']],
@@ -152,40 +180,51 @@ export default function BookingList({ bookings, loading }) {
             },
             columnStyles: {
                 0: { cellWidth: 10 },
-                1: { cellWidth: 60 },
-                2: { cellWidth: 20 },
-                3: { cellWidth: 25 },
-                4: { cellWidth: 35 },
-                5: { cellWidth: 25 },
+                1: { cellWidth: 50 },
+                2: { cellWidth: 20, halign: 'right' },
+                3: { cellWidth: 30, halign: 'right' },
+                4: { cellWidth: 30, halign: 'right' },
+                5: { cellWidth: 30, halign: 'right' },
             }
         });
 
-        // Calculations
-        // const dueAmount = totalAmount - bookingAmount;
+        // Totals calculation
+        const subtotal = partsSummary.reduce((s, p) => s + (p.rate || 0), 0);
+        const igstSum = partsSummary.reduce((s, p) => s + (p.gst || 0), 0);
+        const totalSum = subtotal + igstSum;
 
-
-        // Summary Table
+        // Summary table
         autoTable(doc, {
             startY: doc.lastAutoTable.finalY + 10,
             body: [
                 ["Sub Total", subtotal.toFixed(2)],
-                [`IGST (5%)`, gstAmount.toFixed(2)],
-                ["Total", totalAmount.toFixed(2)],
-                // ["Amount Paid", bookingAmount.toFixed(2)],
-                // ["Balance Due", dueAmount.toFixed(2)]
+                ["IGST (5%)", igstSum.toFixed(2)],
+                ["Total", totalSum.toFixed(2)],
             ],
             theme: 'plain',
             styles: { fontSize: 12, fontStyle: 'bold' },
             columnStyles: {
-                0: { halign: 'right', cellWidth: 100 },
+                0: { halign: 'right', cellWidth: 120 },
                 1: { cellWidth: 50, halign: 'right' }
             }
         });
 
-        // Total in Words
+        // Convert total to words with paise
+        const rupeeToWords = (value) => {
+            const fixed = Number(value || 0).toFixed(2);
+            const [intPart, decPart] = fixed.split('.');
+            const intNum = Number(intPart);
+            const paiseNum = Number(decPart);
+            const rupeesWords = toWords(intNum);
+            if (paiseNum > 0) {
+                return `Indian Rupee ${rupeesWords} and ${paiseNum}/100 Only`;
+            } else {
+                return `Indian Rupee ${rupeesWords} Only`;
+            }
+        };
+
         doc.setFont('helvetica', 'bold');
-        doc.text(`Total in Words: Indian Rupee ${toWords(totalAmount.toFixed(2)).replace(/ point/g, ' and')} Only`,
-            15, doc.lastAutoTable.finalY + 15);
+        doc.text(`Total in Words: ${rupeeToWords(totalSum)}`, 15, doc.lastAutoTable.finalY + 15);
 
         // Footer
         const footerY = doc.internal.pageSize.getHeight() - 30;
@@ -198,6 +237,7 @@ export default function BookingList({ bookings, loading }) {
         // Save PDF
         doc.save(`invoice-${invoiceId}.pdf`);
     };
+
 
     if (loading)
         return (

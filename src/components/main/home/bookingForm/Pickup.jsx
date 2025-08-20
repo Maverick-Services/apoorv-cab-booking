@@ -11,10 +11,12 @@ import { getAllLocalTrips } from "@/lib/firebase/admin/localTrips"
 import { TRIP_TYPES } from "@/lib/constants/constants"
 import { getAllAirportTrips } from "@/lib/firebase/admin/airportTrips"
 
-function Pickup({ register, setValue, tripType, pickupCities, setPickupCities }) {
+function Pickup({ register, setValue, tripType, pickupCities, setPickupCities, sCity }) {
   const [loading, setLoading] = useState(false)
   const [open, setOpen] = useState(false)
   const [selectedCity, setSelectedCity] = useState(null)
+
+
 
   const fetchPickupCities = async () => {
     setLoading(true)
@@ -55,8 +57,11 @@ function Pickup({ register, setValue, tripType, pickupCities, setPickupCities })
       fetchLocalTrips();
     else
       fetchPickupCities();
+    if (sCity) {
+      setSelectedCity(sCity)
+    }
 
-  }, [tripType])
+  }, [tripType, sCity])
   // console.log("Pikup Cities", pickupCities);
 
   const handleCitySelect = (city) => {

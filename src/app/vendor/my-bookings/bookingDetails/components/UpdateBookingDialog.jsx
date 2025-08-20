@@ -218,11 +218,11 @@ function UpdateBookingDialog({ open, onOpenChange, booking, fetchOneBookingDetai
 
                 {/* Driver Select with Label */}
                 <div className="w-full space-y-1">
-                    <label className="block text-sm font-medium">Select Driver</label>
+                    <label className="block text-sm font-medium">Driver</label>
                     <Select
                         value={selectedDriverId}
                         onValueChange={setSelectedDriverId}
-                        disabled={isLoading || assigning}
+                        disabled={isLoading || assigning || booking?.status?.driver}
                     >
                         <SelectTrigger className="bg-white w-full">
                             <SelectValue
