@@ -63,6 +63,8 @@ function BookingDetails() {
         return <BookingSkeleton />;
     }
 
+    console.log(booking)
+
     return (
         <div className="bg-gray-100 min-h-screen">
             <div className="mx-auto">
@@ -82,16 +84,18 @@ function BookingDetails() {
                             </Button>
                         }
 
-                        <Button
-                            variant={"outline"}
-                            className={
-                                "hover:text-green-600 hover:border-green-600 hover:bg-white"
-                            }
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            <Pencil />
-                            <span className="hidden sm:block"> Update</span>
-                        </Button>
+                        {!booking?.status?.trip === 'Completed' || !booking?.extraCharge &&
+                            <Button
+                                variant={"outline"}
+                                className={
+                                    "hover:text-green-600 hover:border-green-600 hover:bg-white"
+                                }
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                <Pencil />
+                                <span className="hidden sm:block"> Update</span>
+                            </Button>
+                        }
                     </div>
                 </div>
 
